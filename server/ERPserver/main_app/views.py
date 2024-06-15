@@ -6,9 +6,17 @@ class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    def perform_create(self, serializer):
+        is_staff = self.request.data.get('is_staff', False)
+        serializer.save(is_staff=is_staff)
+
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
+    def perform_update(self, serializer):
+        is_staff = self.request.data.get('is_staff', serializer.instance.is_staff)
+        serializer.save(is_staff=is_staff)
 
 class SupplyListCreateView(generics.ListCreateAPIView):
     queryset = Supply.objects.all()

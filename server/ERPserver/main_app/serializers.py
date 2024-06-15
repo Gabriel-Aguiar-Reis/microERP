@@ -6,10 +6,11 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    is_staff = serializers.BooleanField(required=False)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name']
+        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff']
 
     def create(self, validated_data):
         user = User(
@@ -17,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
+            is_staff=validated_data.get('is_staff', False)
         )
         user.set_password(validated_data['password'])
         user.save()
@@ -28,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         password = validated_data.get('password', None)
+        instance.is_staff = validated_data.get('is_staff', instance.is_staff)
         if password:
             instance.set_password(password)
         instance.save()
