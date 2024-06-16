@@ -4,6 +4,12 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    
+    def __str__(self):
+        if self.is_staff == True:
+            return f'|STAFF| {self.get_username()}'
+        else:
+            return f'|SELLER| {self.get_username()}'
 
 class Supply(models.Model):
     class Meta:
