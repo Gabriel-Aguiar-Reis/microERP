@@ -20,14 +20,6 @@ class Supply(models.Model):
     
     def __str__(self):
         return f'<{self.commercial_id}> {self.supply_date}'
-
-class Sale(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False, related_name='sales')
-    sale_date = models.DateField(auto_now_add=True)
-    
-    def __str__(self):
-        return f'<{self.seller.get_full_name()}> {self.sale_date}'
     
 class Inventory(models.Model):
     class Meta:
@@ -40,6 +32,15 @@ class Inventory(models.Model):
     
     def __str__(self):
         return f'<{self.name}> {self.owner}'
+    
+class Sale(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False, related_name='sales')
+    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE, blank=False, null=False, related_name='sales')
+    sale_date = models.DateField(auto_now_add=True)
+    
+    def __str__(self):
+        return f'<{self.seller.get_full_name()}> {self.sale_date}'
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
