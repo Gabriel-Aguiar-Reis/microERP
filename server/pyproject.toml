@@ -3,7 +3,7 @@ name = "microerp"
 version = "0.1.0"
 description = ""
 authors = ["Gabriel Aguiar"]
-readme = "README.md"
+readme = ""
 
 [tool.poetry.dependencies]
 python = "^3.12"
