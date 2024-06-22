@@ -11,12 +11,26 @@ class User(AbstractUser):
         else:
             return f'|SELLER| {self.get_username()}'
 
+class Product(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    commercial_id = models.CharField(max_length=100, blank=False, editable=True, unique=False)
+    name = models.CharField(max_length=255, unique=False, blank=False, editable=True)
+    description = models.TextField(blank=True)
+    cost_price = models.FloatField(default=0, blank=True, editable=True)
+    sell_price = models.FloatField(default=0, blank=True, editable=True)
+    units = models.IntegerField(default=0, blank=True, editable=True)
+    
+    def __str__(self):
+        return f'<{self.name}> {self.commercial_id}'
+    
 class Supply(models.Model):
     class Meta:
         verbose_name_plural = 'Supplies'
+        
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     commercial_id = models.CharField(max_length=100, blank=False, editable=True, unique=True)
     supply_date = models.DateField(auto_now_add=True)
+    products = models.ManyToManyField(Product, blank=False, related_name='supplies')
     
     def __str__(self):
         return f'<{self.commercial_id}> {self.supply_date}'
@@ -29,6 +43,7 @@ class Inventory(models.Model):
     name = models.CharField(max_length=255, unique=True, blank=False, editable=True)
     description = models.TextField(blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False, related_name='inventories')
+    products = models.ManyToManyField(Product, blank=False, related_name='inventories')
     
     def __str__(self):
         return f'<{self.name}> {self.owner}'
@@ -38,21 +53,7 @@ class Sale(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False, related_name='sales')
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE, blank=False, null=False, related_name='sales')
     sale_date = models.DateField(auto_now_add=True)
+    products = models.ManyToManyField(Product, blank=False, related_name='sales')
     
     def __str__(self):
         return f'<{self.seller.get_full_name()}> {self.sale_date}'
-
-class Product(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-    commercial_id = models.CharField(max_length=100, blank=False, editable=True, unique=False)
-    supply = models.ForeignKey(Supply, on_delete=models.CASCADE, blank=False, null=False, related_name='products')
-    sales = models.ManyToManyField(Sale, blank=True, related_name='products')
-    name = models.CharField(max_length=255, unique=False, blank=False, editable=True)
-    description = models.TextField(blank=True)
-    cost_price = models.FloatField(default=0, blank=True, editable=True)
-    sell_price = models.FloatField(default=0, blank=True, editable=True)
-    units = models.IntegerField(default=0, blank=True, editable=True)
-    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE, blank=False, null=False, related_name='products')
-    
-    def __str__(self):
-        return f'<{self.name}> {self.supply.commercial_id}'

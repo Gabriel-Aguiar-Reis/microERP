@@ -20,12 +20,39 @@ class InventorySerializer(serializers.ModelSerializer):
         model = Inventory
         fields = ['id', 'name', 'description', 'owner', 'products']
         
+class ProductUnitSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    units = serializers.IntegerField()
+        
 class SaleSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
-    products = ProductSerializer(many=True, read_only=False)
+    products = ProductUnitSerializer(many=True)
+    products_details = ProductSerializer(source='products', many=True)
+    
     class Meta:
         model = Sale
-        fields = ['id', 'seller', 'sale_date', 'products']
+        fields = ['id', 'seller', 'sale_date', 'products', 'products_details']
+
+    def create(self, validated_data):
+        products_data = validated_data.pop('products')
+        sale = Sale.objects.create(**validated_data)
+        for product_data in products_data:
+            product = Product.objects.get(id=product_data['id'])
+            sale.products.add(product, through_defaults={'units': product_data['units']})
+        return sale
+
+    def update(self, instance, validated_data):
+        products_data = validated_data.pop('products')
+        instance.seller = validated_data.get('seller', instance.seller)
+        instance.sale_date = validated_data.get('sale_date', instance.sale_date)
+        instance.save()
+        
+        instance.products.clear()
+        for product_data in products_data:
+            product = Product.objects.get(id=product_data['id'])
+            instance.products.add(product, through_defaults={'units': product_data['units']})
+        
+        return instance
         
 class SupplySerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
