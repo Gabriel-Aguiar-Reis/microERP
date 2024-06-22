@@ -11,7 +11,7 @@ fi
 # Install dependencies
 poetry install
 
-cd ERPserver
+cd Root
 
 # Collect static files
 python manage.py collectstatic --no-input
