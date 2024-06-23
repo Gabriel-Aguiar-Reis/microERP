@@ -1,14 +1,17 @@
 from rest_framework import generics
 from .models import User, Supply, Sale, Inventory, Product
 from .serializers import UserSerializer, SupplySerializer, SaleSerializer, InventorySerializer, ProductSerializer
+from .permissions import IsStaffOrCreatingNonStaff
 
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsStaffOrCreatingNonStaff]
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsStaffOrCreatingNonStaff]
 
 class SupplyListCreateView(generics.ListCreateAPIView):
     queryset = Supply.objects.all()
