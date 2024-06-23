@@ -1,12 +1,12 @@
-import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import uuid
 
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     
     def __str__(self):
-        if self.is_staff == True:
+        if self.is_staff:
             return f'|STAFF| {self.get_username()}'
         else:
             return f'|SELLER| {self.get_username()}'
@@ -43,17 +43,27 @@ class Inventory(models.Model):
     name = models.CharField(max_length=255, unique=True, blank=False, editable=True)
     description = models.TextField(blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False, related_name='inventories')
-    products = models.ManyToManyField(Product, blank=False, related_name='inventories')
+    products = models.ManyToManyField(Product, through='InventoryProduct', related_name='inventories')
     
     def __str__(self):
         return f'<{self.name}> {self.owner}'
-    
+
+class InventoryProduct(models.Model):
+    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+class SaleProduct(models.Model):
+    sale = models.ForeignKey('Sale', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
 class Sale(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False, related_name='sales')
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE, blank=False, null=False, related_name='sales')
     sale_date = models.DateField(auto_now_add=True)
-    products = models.ManyToManyField(Product, blank=False, related_name='sales')
+    products = models.ManyToManyField(Product, through=SaleProduct, related_name='sales')
     
     def __str__(self):
         return f'<{self.seller.get_full_name()}> {self.sale_date}'
