@@ -1,5 +1,13 @@
 from rest_framework import serializers
-from .models import User, Supply, Sale, Inventory, Product, SaleProduct, InventoryProduct
+from .models import (
+    User,
+    Supply,
+    Sale,
+    Inventory,
+    Product,
+    SaleProduct,
+    InventoryProduct
+)
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -28,30 +36,50 @@ class InventoryProductSerializer(serializers.ModelSerializer):
 class InventorySerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     products = ProductUnitSerializer(many=True)
-    products_details = InventoryProductSerializer(source='inventoryproduct_set', many=True, read_only=True)
+    products_details = InventoryProductSerializer(
+        source='inventoryproduct_set', many=True, read_only=True
+    )
     class Meta:
         model = Inventory
-        fields = ['id', 'name', 'description', 'owner', 'products', 'products_details']
+        fields = [
+            'id',
+            'name',
+            'description',
+            'owner',
+            'products',
+            'products_details'
+        ]
 
     def create(self, validated_data):
         products_data = validated_data.pop('products')
         inventory = Inventory.objects.create(**validated_data)
         for product_data in products_data:
             product = Product.objects.get(id=product_data['id'])
-            InventoryProduct.objects.create(inventory=inventory, product=product, quantity=product_data['quantity'])
+            InventoryProduct.objects.create(
+                inventory=inventory,
+                product=product,
+                quantity=product_data['quantity']
+            )
         return inventory
 
     def update(self, instance, validated_data):
         products_data = validated_data.pop('products')
         instance.name = validated_data.get('name', instance.name)
-        instance.description = validated_data.get('description', instance.description)
+        instance.description = validated_data.get(
+            'description',
+            instance.description
+        )
         instance.owner = validated_data.get('owner', instance.owner)
         instance.save()
         
         instance.inventoryproduct_set.all().delete()
         for product_data in products_data:
             product = Product.objects.get(id=product_data['id'])
-            InventoryProduct.objects.create(inventory=instance, product=product, quantity=product_data['quantity'])
+            InventoryProduct.objects.create(
+                inventory=instance,
+                product=product,
+                quantity=product_data['quantity']
+            )
         
         return instance
 
@@ -66,18 +94,39 @@ class SaleProductSerializer(serializers.ModelSerializer):
 class SaleSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     products = ProductUnitSerializer(many=True)
-    products_details = SaleProductSerializer(source='saleproduct_set', many=True, read_only=True)
+    products_details = SaleProductSerializer(
+        source='saleproduct_set',
+        many=True,
+        read_only=True
+    )
     
     class Meta:
         model = Sale
         fields = ['id', 'seller', 'sale_date', 'products', 'products_details']
+
+    def validate(self, data):
+        seller = data['seller']
+        inventory = seller.inventory
+        products_data = data['products']
+
+        for product_data in products_data:
+            product = Product.objects.get(id=product_data['id'])
+            if not inventory.products.filter(id=product.id).exists():
+                raise serializers.ValidationError(
+                    f"Produto {product.name} não faz parte do inventário.")
+
+        return data
 
     def create(self, validated_data):
         products_data = validated_data.pop('products')
         sale = Sale.objects.create(**validated_data)
         for product_data in products_data:
             product = Product.objects.get(id=product_data['id'])
-            SaleProduct.objects.create(sale=sale, product=product, quantity=product_data['quantity'])
+            SaleProduct.objects.create(
+                sale=sale,
+                product=product,
+                quantity=product_data['quantity']
+            )
         return sale
 
     def update(self, instance, validated_data):
@@ -89,10 +138,14 @@ class SaleSerializer(serializers.ModelSerializer):
         instance.saleproduct_set.all().delete()
         for product_data in products_data:
             product = Product.objects.get(id=product_data['id'])
-            SaleProduct.objects.create(sale=instance, product=product, quantity=product_data['quantity'])
+            SaleProduct.objects.create(
+                sale=instance,
+                product=product,
+                quantity=product_data['quantity']
+            )
         
         return instance
-        
+
 class SupplySerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
     products = ProductSerializer(many=True, read_only=False)
@@ -105,10 +158,24 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     is_staff = serializers.BooleanField(required=False)
     sales = SaleSerializer(many=True, read_only=True)
+    inventory = serializers.PrimaryKeyRelatedField(
+        queryset=Inventory.objects.all(),
+        required=False
+    )
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name', 'is_staff', 'sales']
+        fields = [
+            'id',
+            'username',
+            'password',
+            'email',
+            'first_name',
+            'last_name',
+            'is_staff',
+            'sales',
+            'inventory'
+        ]
 
     def create(self, validated_data):
         is_staff = validated_data.get('is_staff', False)
@@ -117,7 +184,8 @@ class UserSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
-            is_staff=is_staff
+            is_staff=is_staff,
+            inventory=validated_data.get('inventory', None)
         )
         user.set_password(validated_data['password'])
         user.save()
@@ -126,10 +194,14 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.username = validated_data.get('username', instance.username)
         instance.email = validated_data.get('email', instance.email)
-        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.first_name = validated_data.get(
+            'first_name',
+            instance.first_name
+        )
         instance.last_name = validated_data.get('last_name', instance.last_name)
         password = validated_data.get('password', None)
         instance.is_staff = validated_data.get('is_staff', instance.is_staff)
+        instance.inventory = validated_data.get('inventory', instance.inventory)
         if password:
             instance.set_password(password)
         instance.save()
