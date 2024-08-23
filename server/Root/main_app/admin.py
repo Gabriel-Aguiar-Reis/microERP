@@ -1,16 +1,15 @@
-from django import forms
 from django.contrib import admin
 from .models import (
     Inventory, 
-    InventoryProduct, 
     Product, 
     Sale, 
     SaleProduct, 
-    Supply, 
+    Supply,
+    SupplyProduct, 
     User
 )
 
-admin.site.register([SaleProduct, InventoryProduct])
+admin.site.register([SaleProduct, SupplyProduct])
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -31,16 +30,23 @@ class SaleAdmin(admin.ModelAdmin):
     list_display = ('seller', 'sale_date')
     inlines = [SaleProductInline]
 
-class InventoryProductInline(admin.TabularInline):
-    model = InventoryProduct
-    extra = 1
-    autocomplete_fields = ['product']
-
 @admin.register(Inventory)
 class InventoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'owner')
-    inlines = [InventoryProductInline]
+
+
+    def has_add_permission(self, request, obj=None):
+        return request.user.is_staff
+
+class SupplyProductInline(admin.TabularInline):
+    model = SupplyProduct
+    extra = 1
+    autocomplete_fields = ['product']
 
 @admin.register(Supply)
 class SupplyAdmin(admin.ModelAdmin):
     list_display = ('commercial_id', 'supply_date')
+    inlines = [SupplyProductInline]
+
+    def has_add_permission(self, request, obj=None):
+        return request.user.is_staff
