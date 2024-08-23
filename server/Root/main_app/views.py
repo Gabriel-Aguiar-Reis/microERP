@@ -1,7 +1,7 @@
 from rest_framework import generics
 from .models import User, Supply, Sale, Inventory, Product
 from .serializers import UserSerializer, SupplySerializer, SaleSerializer, InventorySerializer, ProductSerializer
-from .permissions import IsStaffOrCreatingNonStaff
+from .permissions import IsStaffOrCreatingNonStaff, IsStaffOrReadOnly
 
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
@@ -16,10 +16,17 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
 class SupplyListCreateView(generics.ListCreateAPIView):
     queryset = Supply.objects.all()
     serializer_class = SupplySerializer
+    permission_classes = [IsStaffOrReadOnly]
 
-class SupplyDetailView(generics.RetrieveUpdateDestroyAPIView):
+# class SupplyDetailView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Supply.objects.all()
+#     serializer_class = SupplySerializer
+#     permission_classes = [IsStaffOrReadOnly]
+
+class SupplyDestroyView(generics.DestroyAPIView):
     queryset = Supply.objects.all()
     serializer_class = SupplySerializer
+    permission_classes = [IsStaffOrReadOnly]
 
 class SaleListCreateView(generics.ListCreateAPIView):
     queryset = Sale.objects.all()
@@ -32,15 +39,19 @@ class SaleDetailView(generics.RetrieveUpdateDestroyAPIView):
 class InventoryListCreateView(generics.ListCreateAPIView):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
+    permission_classes = [IsStaffOrReadOnly]
 
 class InventoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
+    permission_classes = [IsStaffOrReadOnly]
 
 class ProductListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsStaffOrReadOnly]
 
 class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [IsStaffOrReadOnly]

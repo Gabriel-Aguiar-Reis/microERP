@@ -4,8 +4,8 @@ from drf_yasg import openapi
 from rest_framework import permissions
 
 from .views import (
-    UserListCreateView, UserDetailView,
-    SupplyListCreateView, SupplyDetailView,
+    SupplyDestroyView, UserListCreateView, UserDetailView,
+    SupplyListCreateView, # SupplyDetailView,
     SaleListCreateView, SaleDetailView,
     InventoryListCreateView, InventoryDetailView,
     ProductListCreateView, ProductDetailView
@@ -28,7 +28,8 @@ urlpatterns = [
     path('users/', UserListCreateView.as_view(), name='user-list-create'),
     path('users/<uuid:pk>/', UserDetailView.as_view(), name='user-detail'),
     path('supplies/', SupplyListCreateView.as_view(), name='supply-list-create'),
-    path('supplies/<uuid:pk>/', SupplyDetailView.as_view(), name='supply-detail'),
+   #  path('supplies/<uuid:pk>/', SupplyDetailView.as_view(), name='supply-detail'),
+    path('supplies/<uuid:pk>/', SupplyDestroyView.as_view(), name='supply-destroy'),
     path('sales/', SaleListCreateView.as_view(), name='sale-list-create'),
     path('sales/<uuid:pk>/', SaleDetailView.as_view(), name='sale-detail'),
     path('inventories/', InventoryListCreateView.as_view(), name='inventory-list-create'),
