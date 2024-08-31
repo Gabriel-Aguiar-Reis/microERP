@@ -6,11 +6,12 @@ import {
   Copy,
   File,
   Home,
-  LineChart,
   ListFilter,
   MoreVertical,
   Package,
   PanelLeft,
+  Plus,
+  PlusCircle,
   Search,
   Settings,
   ShoppingCart,
@@ -167,47 +168,50 @@ export function RecentSales() {
             </SheetTrigger>
             <SheetContent side="left" className="sm:max-w-xs">
               <nav className="grid gap-6 text-lg font-medium">
-                <Link
-                  href="#"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                >
-                  <User className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">Acme Inc</span>
-                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
+                    <Button
+                      size="icon"
+                      className="overflow-hidden rounded-full"
+                    >
+                      <User color="white" className="h-4 w-4 transition-all group-hover:scale-110" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="mx-12">
+                    <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Configurações</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Sair</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <Link
                   href="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <Home className="h-5 w-5" />
-                  Dashboard
+                  Tela Inicial
                 </Link>
                 <Link
                   href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground"
+                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <ShoppingCart className="h-5 w-5" />
-                  Orders
+                  Vendas
                 </Link>
                 <Link
                   href="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <Package className="h-5 w-5" />
-                  Products
+                  Produtos
                 </Link>
                 <Link
                   href="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <Users2 className="h-5 w-5" />
-                  Customers
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <LineChart className="h-5 w-5" />
-                  Settings
+                  Vendedores
                 </Link>
               </nav>
             </SheetContent>
@@ -239,25 +243,35 @@ export function RecentSales() {
               className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
             />
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
-              <Button
-                size="icon"
-                className="overflow-hidden rounded-full"
-              >
-                <User color="white" className="h-4 w-4 transition-all group-hover:scale-110" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="mx-12">
-              <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Configurações</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Sair</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="max-sm:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
+                <Button
+                  size="icon"
+                  className="overflow-hidden rounded-full"
+                >
+                  <User color="white" className="h-4 w-4 transition-all group-hover:scale-110" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="mx-12">
+                <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Configurações</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Sair</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+          <div className="fixed top-100 bottom-4 right-4">
+            <Button
+              size="icon"
+              className="sm:hidden overflow-hidden rounded-full"
+            >
+              <Plus color="white" className="h-4 w-4" />
+            </Button>
+          </div>
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             <Tabs defaultValue="week">
               <div className="flex items-center">
@@ -266,9 +280,6 @@ export function RecentSales() {
                   <TabsTrigger value="month">Mês</TabsTrigger>
                   <TabsTrigger value="year">Ano</TabsTrigger>
                 </TabsList>
-                <div className="ml-4">
-                  <Button>Criar Nova Venda</Button>
-                </div>
                 <div className="ml-auto flex items-center gap-2">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -303,6 +314,14 @@ export function RecentSales() {
                     <File className="h-3.5 w-3.5" />
                     <span className="sr-only sm:not-sr-only">Exportar</span>
                   </Button>
+                  <div className="max-sm:hidden">
+                    <Button size="sm" className="h-8 gap-1">
+                      <PlusCircle className="h-3.5 w-3.5" />
+                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                        Criar Nova Venda
+                      </span>
+                    </Button>
+                  </div>
                 </div>
               </div>
               <TabsContent value="week">
@@ -318,7 +337,9 @@ export function RecentSales() {
                       <TableHeader>
                         <TableRow>
                           <TableHead>Código</TableHead>
-                          <TableHead>Vendedor</TableHead>
+                          <TableHead className="hidden md:table-cell">
+                            Vendedor
+                          </TableHead>
                           <TableHead className="hidden md:table-cell">
                             Data
                           </TableHead>
@@ -327,12 +348,12 @@ export function RecentSales() {
                       </TableHeader>
                       <TableBody>
                         <TableRow className="bg-accent">
-                          <TableCell className="hidden md:table-cell">
+                          <TableCell>
                             <Badge className="text-xs" variant="secondary">
                               AB013C
                             </Badge>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             <div className="font-medium">Liam Johnson</div>
                             <div className="hidden text-sm text-muted-foreground md:inline">
                               liam@example.com
@@ -357,7 +378,7 @@ export function RecentSales() {
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
-                    Venda Oe31b70H
+                    Venda AB013C
                     <Button
                       size="icon"
                       variant="outline"
