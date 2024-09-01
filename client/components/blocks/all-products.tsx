@@ -1,11 +1,13 @@
 import Link from "next/link"
 import {
   ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
   File,
   Home,
-  LineChart,
   ListFilter,
-  MoreHorizontal,
+  MoreVertical,
   Package,
   PanelLeft,
   Plus,
@@ -13,6 +15,7 @@ import {
   Search,
   Settings,
   ShoppingCart,
+  Truck,
   User,
   Users2,
 } from "lucide-react"
@@ -66,6 +69,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip"
+import { Pagination, PaginationContent, PaginationItem } from "../ui/pagination"
 
 export function AllProducts() {
   return (
@@ -115,6 +119,20 @@ export function AllProducts() {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Produtos</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="#"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                  <Truck className="h-5 w-5" />
+                  <span className="sr-only">Fornecimentos</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Fornecimentos</TooltipContent>
             </Tooltip>
           </TooltipProvider>
           <TooltipProvider>
@@ -199,18 +217,18 @@ export function AllProducts() {
                         Produtos
                         </Link>
                         <Link
-                        href="#"
-                        className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                          href="#"
+                          className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                         >
-                        <Users2 className="h-5 w-5" />
-                        Vendedores
+                          <Truck className="h-5 w-5" />
+                          Fornecimentos
                         </Link>
                         <Link
                         href="#"
                         className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                         >
-                        <LineChart className="h-5 w-5" />
-                        Configurações
+                        <Users2 className="h-5 w-5" />
+                        Vendedores
                         </Link>
                     </nav>
                 </SheetContent>
@@ -262,8 +280,8 @@ export function AllProducts() {
             </DropdownMenu>
           </div>
         </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-        <div className="fixed top-100 bottom-4 right-4">
+        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+          <div className="fixed top-100 bottom-4 right-4">
             <Button
               size="icon"
               className="sm:hidden overflow-hidden rounded-full"
@@ -271,6 +289,7 @@ export function AllProducts() {
               <Plus color="white" className="h-4 w-4" />
             </Button>
           </div>
+          <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
           <Tabs defaultValue="all">
             <div className="flex items-center">
               <TabsList>
@@ -335,13 +354,10 @@ export function AllProducts() {
                           Fornecimento
                         </TableHead>
                         <TableHead className="hidden md:table-cell">
-                          Qte.
+                          Un
                         </TableHead>
                         <TableHead className="hidden md:table-cell">
                           Preço
-                        </TableHead>
-                        <TableHead>
-                          <span className="sr-only">Actions</span>
                         </TableHead>
                       </TableRow>
                     </TableHeader>
@@ -363,28 +379,7 @@ export function AllProducts() {
                           25
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          $499.99
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Ações</DropdownMenuLabel>
-                              <DropdownMenuSeparator></DropdownMenuSeparator>
-                              <DropdownMenuItem>Abrir</DropdownMenuItem>
-                              <DropdownMenuItem>Editar</DropdownMenuItem>
-                              <DropdownMenuItem>Deletar</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          $19.99
                         </TableCell>
                       </TableRow>
                     </TableBody>
@@ -399,6 +394,92 @@ export function AllProducts() {
               </Card>
             </TabsContent>
           </Tabs>
+          </div>
+          <div>
+            <Card
+              className="overflow-hidden" x-chunk="dashboard-05-chunk-4"
+            >
+              <CardHeader className="flex flex-row items-start bg-muted/50">
+                <div className="grid gap-0.5">
+                  <CardTitle className="group flex items-center gap-2 text-lg">
+                    Nome do Produto
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      <Copy className="h-3 w-3" />
+                      <span className="sr-only">Copiar Código do Produto</span>
+                    </Button>
+                  </CardTitle>
+                  <CardDescription>Código Comercial: PD01</CardDescription>
+                </div>
+                <div className="ml-auto flex items-center gap-1">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button size="icon" variant="outline" className="h-8 w-8">
+                        <MoreVertical className="h-3.5 w-3.5" />
+                        <span className="sr-only">Mais</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Editar</DropdownMenuItem>
+                      <DropdownMenuItem>Exportar</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>Apagar</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </CardHeader>
+              <CardContent className="p-6 text-sm">
+                <div>
+                  <ul className="grid gap-3">
+                    <li>
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold">Preço de Custo</span>
+                        <span>R$ 9,99</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold">Preço de Venda</span>
+                        <span>R$ 19,99</span>
+                      </div>
+                    </li>
+                    <li>
+                      <span className="font-semibold">Descrição</span>
+                    </li>
+                    <li>
+                      <Card className="overflow-hidden p-2 text-sm" x-chunk="dashboard-05-chunk-4">
+                        <p>Uma descrição de produto.</p>
+                      </Card>
+                    </li>
+                  </ul>
+                </div>
+              </CardContent>
+              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+                <div className="text-xs text-muted-foreground">
+                  Atualizado <time dateTime="2023-11-23">23 de Novembro de 2023</time>
+                </div>
+                <Pagination className="ml-auto mr-0 w-auto">
+                  <PaginationContent>
+                    <PaginationItem>
+                      <Button size="icon" variant="outline" className="h-6 w-6">
+                        <ChevronLeft className="h-3.5 w-3.5" />
+                        <span className="sr-only">Venda Anterior</span>
+                      </Button>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <Button size="icon" variant="outline" className="h-6 w-6">
+                        <ChevronRight className="h-3.5 w-3.5" />
+                        <span className="sr-only">Próxima Venda</span>
+                      </Button>
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </CardFooter>
+            </Card>
+          </div>
         </main>
       </div>
     </div>

@@ -15,6 +15,7 @@ import {
   Search,
   Settings,
   ShoppingCart,
+  Truck,
   User,
   Users2,
 } from "lucide-react"
@@ -132,6 +133,20 @@ export function RecentSales() {
                   href="#"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
+                  <Truck className="h-5 w-5" />
+                  <span className="sr-only">Fornecimentos</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Fornecimentos</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="#"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
                   <Users2 className="h-5 w-5" />
                   <span className="sr-only">Vendedores</span>
                 </Link>
@@ -205,6 +220,13 @@ export function RecentSales() {
                 >
                   <Package className="h-5 w-5" />
                   Produtos
+                </Link>
+                <Link
+                  href="#"
+                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                >
+                  <Truck className="h-5 w-5" />
+                  Fornecimentos
                 </Link>
                 <Link
                   href="#"
