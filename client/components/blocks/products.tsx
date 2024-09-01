@@ -10,11 +10,13 @@ import {
   MoreVertical,
   Package,
   PanelLeft,
+  PencilRuler,
   Plus,
   PlusCircle,
   Search,
   Settings,
   ShoppingCart,
+  Store,
   Truck,
   User,
   Users2,
@@ -63,6 +65,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { Textarea } from "../ui/textarea";
 import {
   Tooltip,
   TooltipContent,
@@ -70,8 +73,12 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip"
 import { Pagination, PaginationContent, PaginationItem } from "../ui/pagination"
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "@radix-ui/react-dialog"
+import { DialogClose, DialogFooter, DialogHeader } from "../ui/dialog"
+import { Label } from "../ui/label"
+import EditProductDialog from "./edit-product-dialog"
 
-export function AllProducts() {
+export function Products() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -91,6 +98,20 @@ export function AllProducts() {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Tela Inicial</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                    href="#"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                    <Store className="h-5 w-5" />
+                    <span className="sr-only">Estoque</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Estoque</TooltipContent>
             </Tooltip>
           </TooltipProvider>
           <TooltipProvider>
@@ -206,6 +227,13 @@ export function AllProducts() {
                         href="#"
                         className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                         >
+                        <Store className="h-5 w-5" />
+                        Estoque
+                        </Link>
+                        <Link
+                        href="#"
+                        className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                        >
                         <ShoppingCart className="h-5 w-5" />
                         Vendas
                         </Link>
@@ -237,7 +265,7 @@ export function AllProducts() {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link href="#">Tela Inicial</Link>
+                  <Link href="/">Tela Inicial</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
@@ -245,10 +273,6 @@ export function AllProducts() {
                 <BreadcrumbLink asChild>
                   <Link href="#">Produtos</Link>
                 </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Todos os Produtos</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -292,11 +316,6 @@ export function AllProducts() {
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
           <Tabs defaultValue="all">
             <div className="flex items-center">
-              <TabsList>
-                <TabsTrigger value="all">Todos</TabsTrigger>
-                <TabsTrigger value="active" className="hidden sm:flex">Ativos</TabsTrigger>
-                <TabsTrigger value="draft">Esgotados</TabsTrigger>
-              </TabsList>
               <div className="ml-auto flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -319,7 +338,7 @@ export function AllProducts() {
                     </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Button size="sm" variant="outline" className="h-7 gap-1 text-sm">
+                <Button size="sm" variant="outline" className="h-8 gap-1 text-sm">
                   <File className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only">Exportar</span>
                 </Button>
@@ -379,7 +398,7 @@ export function AllProducts() {
                           25
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          $19.99
+                          R$ 19.99
                         </TableCell>
                       </TableRow>
                     </TableBody>
@@ -399,7 +418,7 @@ export function AllProducts() {
             <Card
               className="overflow-hidden" x-chunk="dashboard-05-chunk-4"
             >
-              <CardHeader className="flex flex-row items-start bg-muted/50">
+              <CardHeader className="flex flex-row justify-between items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
                     Nome do Produto
@@ -414,22 +433,16 @@ export function AllProducts() {
                   </CardTitle>
                   <CardDescription>Código Comercial: PD01</CardDescription>
                 </div>
-                <div className="ml-auto flex items-center gap-1">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="outline" className="h-8 w-8">
-                        <MoreVertical className="h-3.5 w-3.5" />
-                        <span className="sr-only">Mais</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Editar</DropdownMenuItem>
-                      <DropdownMenuItem>Exportar</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Apagar</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <div className="flex items-center">
+              <div className="ml-auto flex items-center gap-2">
+                <div className="flex">
+                  <Button size="sm" variant="destructive" className="h-8 gap-1 text-sm">
+                    <span className="sr-only sm:not-sr-only">Deletar</span>
+                  </Button>
                 </div>
+                <EditProductDialog/>
+              </div>
+            </div>
               </CardHeader>
               <CardContent className="p-6 text-sm">
                 <div>

@@ -15,6 +15,7 @@ import {
   Search,
   Settings,
   ShoppingCart,
+  Store,
   Truck,
   User,
   Users2,
@@ -96,6 +97,20 @@ export function RecentSales() {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Tela Inicial</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                    href="#"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                >
+                    <Store className="h-5 w-5" />
+                    <span className="sr-only">Estoque</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">Estoque</TooltipContent>
             </Tooltip>
           </TooltipProvider>
           <TooltipProvider>
@@ -206,6 +221,13 @@ export function RecentSales() {
                 >
                   <Home className="h-5 w-5" />
                   Tela Inicial
+                </Link>
+                <Link
+                  href="#"
+                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                  <Store className="h-5 w-5" />
+                  Estoque
                 </Link>
                 <Link
                   href="#"
