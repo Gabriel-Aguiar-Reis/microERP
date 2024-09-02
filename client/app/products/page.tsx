@@ -1,10 +1,7 @@
-"use client"
+'use client'
 
-import { Products } from "@/components/blocks/products";
-
+import { Products } from '@/components/blocks/products'
 
 export default function Home() {
-  return (
-    <Products/>
-  );
+  return <Products />
 }

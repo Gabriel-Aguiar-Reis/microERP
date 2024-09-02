@@ -1,17 +1,9 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import {
   ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
-  Copy,
-  File,
   Home,
-  ListFilter,
   Package,
   PanelLeft,
-  Plus,
-  PlusCircle,
   Search,
   Settings,
   ShoppingCart,
@@ -20,16 +12,6 @@ import {
   User,
   Users2
 } from 'lucide-react'
-
-import { Badge } from '@/components/ui/badge'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -39,9 +21,9 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -49,31 +31,23 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui/table'
-import { Tabs, TabsContent } from '@/components/ui/tabs'
-import {
+  TooltipProvider,
   Tooltip,
-  TooltipContent,
   TooltipTrigger,
-  TooltipProvider
+  TooltipContent
 } from '@/components/ui/tooltip'
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem
-} from '@/components/ui/pagination'
-import EditProductDialog from '@/components/blocks/edit-product-dialog'
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage
+} from '@/components/ui/breadcrumb'
 
-export function Products() {
+export function SettingsPage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -130,8 +104,8 @@ export function Products() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 bg-slate-200"
+                  href="/products"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Package className="h-5 w-5" />
                   <span className="sr-only">Produtos</span>
@@ -175,7 +149,7 @@ export function Products() {
               <TooltipTrigger asChild>
                 <Link
                   href="/settings"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 bg-slate-200"
                 >
                   <Settings className="h-5 w-5" />
                   <span className="sr-only">Configurações</span>
@@ -221,7 +195,7 @@ export function Products() {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <Link
-                  href="#"
+                  href="/"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <Home className="h-5 w-5" />
@@ -235,14 +209,14 @@ export function Products() {
                   Estoque
                 </Link>
                 <Link
-                  href="#"
+                  href="/sales"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <ShoppingCart className="h-5 w-5" />
                   Vendas
                 </Link>
                 <Link
-                  href="#"
+                  href="/products"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <Package className="h-5 w-5" />
@@ -274,9 +248,7 @@ export function Products() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Produtos</BreadcrumbPage>
-                </BreadcrumbItem>
+                <BreadcrumbPage>Configurações</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -311,209 +283,71 @@ export function Products() {
             </DropdownMenu>
           </div>
         </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
-          <div className="fixed top-100 bottom-4 right-4">
-            <Button
-              size="icon"
-              className="sm:hidden overflow-hidden rounded-full"
+        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
+          <div className="mx-auto grid w-full max-w-6xl gap-2">
+            <h1 className="text-3xl font-semibold">Settings</h1>
+          </div>
+          <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
+            <nav
+              className="grid gap-4 text-sm text-muted-foreground"
+              x-chunk="dashboard-04-chunk-0"
             >
-              <Plus color="white" className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
-            <Tabs defaultValue="all">
-              <div className="flex items-center">
-                <div className="ml-auto flex items-center gap-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-8 gap-1">
-                        <ListFilter className="h-3.5 w-3.5" />
-                        <span className="sr-only sm:not-sr-only">Filtrar</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Filtrar por</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuCheckboxItem checked>
-                        Active
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Archived
-                      </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="h-8 gap-1 text-sm"
-                  >
-                    <File className="h-3.5 w-3.5" />
-                    <span className="sr-only sm:not-sr-only">Exportar</span>
-                  </Button>
-                  <div className="max-sm:hidden">
-                    <Button size="sm" className="h-8 gap-1">
-                      <PlusCircle className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Criar Novo Produto
-                      </span>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <TabsContent value="all">
-                <Card x-chunk="dashboard-06-chunk-0">
-                  <CardHeader>
-                    <CardTitle>Produtos</CardTitle>
-                    <CardDescription>
-                      Produtos presentes no estoque.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="hidden sm:table-cell">
-                            Imagem
-                          </TableHead>
-                          <TableHead>Código</TableHead>
-                          <TableHead>Nome</TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Preço de Custo
-                          </TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Preço de Venda
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell className="hidden sm:table-cell">
-                            <div className="bg-slate-200 rounded-lg h-16 w-16"></div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge className="text-xs" variant="secondary">
-                              PD01
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="font-medium">
-                            Laser Lemonade Machine
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            R$ 9,99
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            R$ 19,99
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </CardContent>
-                  <CardFooter>
-                    <div className="text-xs text-muted-foreground">
-                      Mostrando <strong>1-10</strong> de <strong>1</strong>{' '}
-                      produtos
-                    </div>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
-          <div>
-            <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
-              <CardHeader className="flex flex-row justify-between items-start bg-muted/50">
-                <div className="grid gap-0.5">
-                  <CardTitle className="group flex items-center gap-2 text-lg">
-                    Nome do Produto
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                    >
-                      <Copy className="h-3 w-3" />
-                      <span className="sr-only">Copiar Código do Produto</span>
-                    </Button>
-                  </CardTitle>
-                  <CardDescription>Código Comercial: PD01</CardDescription>
-                </div>
-                <div className="flex items-center">
-                  <div className="ml-auto flex items-center gap-2">
-                    <div className="flex">
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="h-8 gap-1 text-sm"
+              <Link href="#" className="font-semibold text-primary">
+                General
+              </Link>
+              <Link href="#">Security</Link>
+              <Link href="#">Integrations</Link>
+              <Link href="#">Support</Link>
+              <Link href="#">Organizations</Link>
+              <Link href="#">Advanced</Link>
+            </nav>
+            <div className="grid gap-6">
+              <Card x-chunk="dashboard-04-chunk-1">
+                <CardHeader>
+                  <CardTitle>Store Name</CardTitle>
+                  <CardDescription>
+                    Used to identify your store in the marketplace.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form>
+                    <Input placeholder="Store Name" />
+                  </form>
+                </CardContent>
+                <CardFooter className="border-t px-6 py-4">
+                  <Button>Save</Button>
+                </CardFooter>
+              </Card>
+              <Card x-chunk="dashboard-04-chunk-2">
+                <CardHeader>
+                  <CardTitle>Plugins Directory</CardTitle>
+                  <CardDescription>
+                    The directory within your project, in which your plugins are
+                    located.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form className="flex flex-col gap-4">
+                    <Input
+                      placeholder="Project Name"
+                      defaultValue="/content/plugins"
+                    />
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="include" defaultChecked />
+                      <label
+                        htmlFor="include"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
-                        <span className="sr-only sm:not-sr-only">Deletar</span>
-                      </Button>
+                        Allow administrators to change the directory.
+                      </label>
                     </div>
-                    <EditProductDialog />
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6 text-sm">
-                <div>
-                  <ul className="grid gap-3">
-                    <li>
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold">Preço de Custo</span>
-                        <span>R$ 9,99</span>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold">Preço de Venda</span>
-                        <span>R$ 19,99</span>
-                      </div>
-                    </li>
-                    <Separator className="my-2" />
-                    <li>
-                      <span className="font-semibold">Descrição</span>
-                    </li>
-                    <li>
-                      <div className="overflow-y-auto max-h-20 p-2 text-sm">
-                        <p>Uma descrição de produto.</p>
-                      </div>
-                    </li>
-                    <Separator className="my-2" />
-                    <li>
-                      <span className="font-semibold">Imagem</span>
-                      <div className="self-center p-2">
-                        <Image
-                          alt="Imagem do produto"
-                          className="aspect-square bg-slate-200 rounded-lg m-auto object-cover"
-                          height="200"
-                          src=""
-                          width="200"
-                        />
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                <div className="text-xs text-muted-foreground">
-                  Atualizado{' '}
-                  <time dateTime="2023-11-23">23 de Novembro de 2023</time>
-                </div>
-                <Pagination className="ml-auto mr-0 w-auto">
-                  <PaginationContent>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronLeft className="h-3.5 w-3.5" />
-                        <span className="sr-only">Venda Anterior</span>
-                      </Button>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronRight className="h-3.5 w-3.5" />
-                        <span className="sr-only">Próxima Venda</span>
-                      </Button>
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </CardFooter>
-            </Card>
+                  </form>
+                </CardContent>
+                <CardFooter className="border-t px-6 py-4">
+                  <Button>Save</Button>
+                </CardFooter>
+              </Card>
+            </div>
           </div>
         </main>
       </div>

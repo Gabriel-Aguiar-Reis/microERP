@@ -71,6 +71,7 @@ import {
   TooltipTrigger,
   TooltipProvider
 } from '@/components/ui/tooltip'
+import EditProductDialog from '@/components/blocks/edit-product-dialog'
 
 export function Sales() {
   return (
@@ -173,7 +174,7 @@ export function Sales() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/settings"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Settings className="h-5 w-5" />
@@ -420,7 +421,7 @@ export function Sales() {
           </div>
           <div>
             <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
-              <CardHeader className="flex flex-row items-start bg-muted/50">
+              <CardHeader className="flex flex-row justify-between items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
                     Venda AB013C
@@ -430,28 +431,26 @@ export function Sales() {
                       className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
                     >
                       <Copy className="h-3 w-3" />
-                      <span className="sr-only">Copiar ID da Venda</span>
+                      <span className="sr-only">Copiar Código da Venda</span>
                     </Button>
                   </CardTitle>
                   <CardDescription>
                     Data: 23 de Novembro de 2023
                   </CardDescription>
                 </div>
-                <div className="ml-auto flex items-center gap-1">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="outline" className="h-8 w-8">
-                        <MoreVertical className="h-3.5 w-3.5" />
-                        <span className="sr-only">Mais</span>
+                <div className="flex items-center">
+                  <div className="ml-auto flex items-center gap-2">
+                    <div className="flex">
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="h-8 gap-1 text-sm"
+                      >
+                        <span className="sr-only sm:not-sr-only">Deletar</span>
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Editar</DropdownMenuItem>
-                      <DropdownMenuItem>Exportar</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Apagar</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    </div>
+                    <EditProductDialog />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="p-6 text-sm">
