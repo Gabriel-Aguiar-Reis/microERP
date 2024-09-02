@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from 'next/link'
 import {
   ArrowLeft,
   ChevronLeft,
@@ -18,27 +18,27 @@ import {
   Store,
   Truck,
   User,
-  Users2,
-} from "lucide-react"
+  Users2
+} from 'lucide-react'
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from '@/components/ui/badge'
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
+  BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+  CardTitle
+} from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -46,36 +46,31 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
 import {
   Pagination,
   PaginationContent,
-  PaginationItem,
-} from "@/components/ui/pagination"
-import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+  PaginationItem
+} from '@/components/ui/pagination'
+import { Separator } from '@/components/ui/separator'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+  TableRow
+} from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider
-} from "@/components/ui/tooltip"
+} from '@/components/ui/tooltip'
 
 export function RecentSales() {
   return (
@@ -83,17 +78,20 @@ export function RecentSales() {
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <Button size="icon" className="overflow-hidden rounded-full">
-            <ArrowLeft color="white" className="h-5 w-5 transition-all group-hover:scale-110" />
+            <ArrowLeft
+              color="white"
+              className="h-5 w-5 transition-all group-hover:scale-110"
+            />
           </Button>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                    href="#"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  href="#"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
-                    <Home className="h-5 w-5" />
-                    <span className="sr-only">Tela Inicial</span>
+                  <Home className="h-5 w-5" />
+                  <span className="sr-only">Tela Inicial</span>
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Tela Inicial</TooltipContent>
@@ -103,11 +101,11 @@ export function RecentSales() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                    href="#"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  href="#"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
-                    <Store className="h-5 w-5" />
-                    <span className="sr-only">Estoque</span>
+                  <Store className="h-5 w-5" />
+                  <span className="sr-only">Estoque</span>
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Estoque</TooltipContent>
@@ -175,11 +173,11 @@ export function RecentSales() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                    href="#"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  href="#"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
-                    <Settings className="h-5 w-5" />
-                    <span className="sr-only">Configurações</span>
+                  <Settings className="h-5 w-5" />
+                  <span className="sr-only">Configurações</span>
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right">Configurações</TooltipContent>
@@ -199,12 +197,18 @@ export function RecentSales() {
             <SheetContent side="left" className="sm:max-w-xs">
               <nav className="grid gap-6 text-lg font-medium">
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
+                  <DropdownMenuTrigger
+                    asChild
+                    className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+                  >
                     <Button
                       size="icon"
                       className="overflow-hidden rounded-full"
                     >
-                      <User color="white" className="h-4 w-4 transition-all group-hover:scale-110" />
+                      <User
+                        color="white"
+                        className="h-4 w-4 transition-all group-hover:scale-110"
+                      />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="mx-12">
@@ -225,7 +229,7 @@ export function RecentSales() {
                 <Link
                   href="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                  >
+                >
                   <Store className="h-5 w-5" />
                   Estoque
                 </Link>
@@ -289,12 +293,15 @@ export function RecentSales() {
           </div>
           <div className="max-sm:hidden">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base">
-                <Button
-                  size="icon"
-                  className="overflow-hidden rounded-full"
-                >
-                  <User color="white" className="h-4 w-4 transition-all group-hover:scale-110" />
+              <DropdownMenuTrigger
+                asChild
+                className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+              >
+                <Button size="icon" className="overflow-hidden rounded-full">
+                  <User
+                    color="white"
+                    className="h-4 w-4 transition-all group-hover:scale-110"
+                  />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="mx-12">
@@ -387,7 +394,9 @@ export function RecentSales() {
                           <TableHead className="hidden md:table-cell">
                             Data
                           </TableHead>
-                          <TableHead className="text-right">Valor Total</TableHead>
+                          <TableHead className="text-right">
+                            Valor Total
+                          </TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -416,9 +425,7 @@ export function RecentSales() {
             </Tabs>
           </div>
           <div>
-            <Card
-              className="overflow-hidden" x-chunk="dashboard-05-chunk-4"
-            >
+            <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
@@ -432,7 +439,9 @@ export function RecentSales() {
                       <span className="sr-only">Copiar ID da Venda</span>
                     </Button>
                   </CardTitle>
-                  <CardDescription>Data: 23 de Novembro de 2023</CardDescription>
+                  <CardDescription>
+                    Data: 23 de Novembro de 2023
+                  </CardDescription>
                 </div>
                 <div className="ml-auto flex items-center gap-1">
                   <DropdownMenu>
@@ -476,7 +485,9 @@ export function RecentSales() {
                     </li>
                     <li>
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold">Método de Pagamento</span>
+                        <span className="font-semibold">
+                          Método de Pagamento
+                        </span>
                         <span>Cartão de Credito</span>
                       </div>
                     </li>
@@ -499,7 +510,9 @@ export function RecentSales() {
                     <div className="flex items-center justify-between">
                       <dt className="text-muted-foreground">Telefone</dt>
                       <dd>
-                        <a href="https://api.whatsapp.com/send?phone=">+55 12 98123-4567</a>
+                        <a href="https://api.whatsapp.com/send?phone=">
+                          +55 12 98123-4567
+                        </a>
                       </dd>
                     </div>
                   </dl>
@@ -507,7 +520,8 @@ export function RecentSales() {
               </CardContent>
               <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
                 <div className="text-xs text-muted-foreground">
-                  Atualizado <time dateTime="2023-11-23">23 de Novembro de 2023</time>
+                  Atualizado{' '}
+                  <time dateTime="2023-11-23">23 de Novembro de 2023</time>
                 </div>
                 <Pagination className="ml-auto mr-0 w-auto">
                   <PaginationContent>
