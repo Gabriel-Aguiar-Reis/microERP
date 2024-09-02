@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
   const router = useRouter()
@@ -10,25 +10,20 @@ export default function Home() {
       <ul>
         <li>
           <button type="button" onClick={() => router.push('/login')}>
-          Login
-        </button>
+            Login
+          </button>
         </li>
         <li>
-          <button type="button" onClick={() => router.push('/products/all-products')}>
-          Produtos
-        </button>
+          <button type="button" onClick={() => router.push('/products')}>
+            Produtos
+          </button>
         </li>
         <li>
-          <button type="button" onClick={() => router.push('/products/edit-product')}>
-          Editar Produto
-        </button>
-        </li>
-        <li>
-          <button type="button" onClick={() => router.push('/sales/recent-sales')}>
-          Vendas
-        </button>
+          <button type="button" onClick={() => router.push('/sales')}>
+            Vendas
+          </button>
         </li>
       </ul>
     </div>
-  );
+  )
 }

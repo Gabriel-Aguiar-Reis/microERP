@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   ArrowLeft,
@@ -94,7 +95,7 @@ export function Products() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Home className="h-5 w-5" />
@@ -122,7 +123,7 @@ export function Products() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/sales"
                   className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <ShoppingCart className="h-5 w-5" />
@@ -280,9 +281,9 @@ export function Products() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="#">Produtos</Link>
-                </BreadcrumbLink>
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Produtos</BreadcrumbPage>
+                </BreadcrumbItem>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -384,14 +385,17 @@ export function Products() {
                           </TableHead>
                           <TableHead>Código</TableHead>
                           <TableHead>Nome</TableHead>
-                          <TableHead className="hidden md:table-cell">
+                          {/* <TableHead className="hidden md:table-cell">
                             Fornecimento
                           </TableHead>
                           <TableHead className="hidden md:table-cell">
                             Un
+                          </TableHead> */}
+                          <TableHead className="hidden md:table-cell">
+                            Preço de Custo
                           </TableHead>
                           <TableHead className="hidden md:table-cell">
-                            Preço
+                            Preço de Venda
                           </TableHead>
                         </TableRow>
                       </TableHeader>
@@ -408,16 +412,19 @@ export function Products() {
                           <TableCell className="font-medium">
                             Laser Lemonade Machine
                           </TableCell>
-                          <TableCell className="hidden md:table-cell">
+                          {/* <TableCell className="hidden md:table-cell">
                             <Badge className="text-xs" variant="secondary">
                               SP0012024
                             </Badge>
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
                             25
+                          </TableCell>  */}
+                          <TableCell className="hidden md:table-cell">
+                            R$ 9,99
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
-                            R$ 19.99
+                            R$ 19,99
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -484,12 +491,21 @@ export function Products() {
                       <span className="font-semibold">Descrição</span>
                     </li>
                     <li>
-                      <Card
-                        className="overflow-hidden p-2 text-sm"
-                        x-chunk="dashboard-05-chunk-4"
-                      >
+                      <div className="overflow-y-auto max-h-20 p-2 text-sm">
                         <p>Uma descrição de produto.</p>
-                      </Card>
+                      </div>
+                    </li>
+                    <li>
+                      <span className="font-semibold">Imagem</span>
+                      <div className="self-center p-2">
+                        <Image
+                          alt="Imagem do produto"
+                          className="aspect-square bg-slate-200 rounded-lg m-auto object-cover"
+                          height="200"
+                          src=""
+                          width="200"
+                        />
+                      </div>
                     </li>
                   </ul>
                 </div>
