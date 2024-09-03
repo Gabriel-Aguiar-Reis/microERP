@@ -49,8 +49,8 @@ import {
 
 export function SettingsPage() {
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+    <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
+      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-white sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <Button size="icon" className="overflow-hidden rounded-full">
             <ArrowLeft
@@ -62,7 +62,7 @@ export function SettingsPage() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="/"
+                  href="/home"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Home className="h-5 w-5" />
@@ -132,7 +132,7 @@ export function SettingsPage() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/sellers"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Users2 className="h-5 w-5" />
@@ -283,22 +283,18 @@ export function SettingsPage() {
             </DropdownMenu>
           </div>
         </header>
-        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
-          <div className="mx-auto grid w-full max-w-6xl gap-2">
-            <h1 className="text-3xl font-semibold">Settings</h1>
-          </div>
+        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:px-10 py-4">
           <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
             <nav
               className="grid gap-4 text-sm text-muted-foreground"
               x-chunk="dashboard-04-chunk-0"
             >
               <Link href="#" className="font-semibold text-primary">
-                General
+                Geral
               </Link>
-              <Link href="#">Security</Link>
-              <Link href="#">Integrations</Link>
-              <Link href="#">Support</Link>
-              <Link href="#">Organizations</Link>
+              <Link href="#">Segurança</Link>
+              <Link href="#">Integrações</Link>
+              <Link href="#">Suporte</Link>
               <Link href="#">Advanced</Link>
             </nav>
             <div className="grid gap-6">

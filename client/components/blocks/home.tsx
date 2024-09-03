@@ -63,8 +63,8 @@ import {
 
 export function HomePage() {
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+    <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
+      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-white sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <Button size="icon" className="overflow-hidden rounded-full">
             <ArrowLeft
@@ -76,7 +76,7 @@ export function HomePage() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="/"
+                  href="/home"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 bg-slate-200"
                 >
                   <Home className="h-5 w-5" />
@@ -146,7 +146,7 @@ export function HomePage() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/sellers"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Users2 className="h-5 w-5" />
@@ -260,6 +260,9 @@ export function HomePage() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+          <h1 className="rounded-md bg-slate-100 text-slate-500 px-2">
+            Preciosas Semijoias
+          </h1>
           <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground translate-y-0.5" />
             <Input

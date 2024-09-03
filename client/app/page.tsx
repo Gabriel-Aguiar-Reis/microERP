@@ -1,7 +1,7 @@
 'use client'
 
-import { HomePage } from '@/components/blocks/home'
+import { LoginForm } from '@/components/blocks/login-form'
 
 export default function Home() {
-  return <HomePage />
+  return <LoginForm />
 }

@@ -75,8 +75,8 @@ import EditProductDialog from '@/components/blocks/edit-product-dialog'
 
 export function Sales() {
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
+    <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
+      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-white sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <Button size="icon" className="overflow-hidden rounded-full">
             <ArrowLeft
@@ -88,7 +88,7 @@ export function Sales() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="/"
+                  href="/home"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Home className="h-5 w-5" />
@@ -116,7 +116,7 @@ export function Sales() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/sales"
                   className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8  bg-slate-200"
                 >
                   <ShoppingCart className="h-5 w-5" />
@@ -158,7 +158,7 @@ export function Sales() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/sellers"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Users2 className="h-5 w-5" />

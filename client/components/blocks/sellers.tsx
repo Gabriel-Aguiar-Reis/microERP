@@ -5,6 +5,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Copy,
+  Expand,
   File,
   Home,
   ListFilter,
@@ -21,6 +22,7 @@ import {
   Users2
 } from 'lucide-react'
 
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import {
   Breadcrumb,
@@ -73,7 +75,7 @@ import {
 } from '@/components/ui/pagination'
 import EditProductDialog from '@/components/blocks/edit-product-dialog'
 
-export function Products() {
+export function Sellers() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-white sm:flex">
@@ -130,8 +132,8 @@ export function Products() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 bg-slate-200"
+                  href="/products"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Package className="h-5 w-5" />
                   <span className="sr-only">Produtos</span>
@@ -159,7 +161,7 @@ export function Products() {
               <TooltipTrigger asChild>
                 <Link
                   href="/sellers"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  className="bg-slate-200 flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Users2 className="h-5 w-5" />
                   <span className="sr-only">Vendedores</span>
@@ -187,7 +189,7 @@ export function Products() {
         </nav>
       </aside>
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
             <SheetTrigger asChild>
               <Button size="icon" variant="outline" className="sm:hidden">
@@ -275,7 +277,7 @@ export function Products() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Produtos</BreadcrumbPage>
+                  <BreadcrumbPage>Vendedores</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbItem>
             </BreadcrumbList>
@@ -355,7 +357,7 @@ export function Products() {
                     <Button size="sm" className="h-8 gap-1">
                       <PlusCircle className="h-3.5 w-3.5" />
                       <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Criar Novo Produto
+                        Criar Novo Usuário
                       </span>
                     </Button>
                   </div>
@@ -364,46 +366,74 @@ export function Products() {
               <TabsContent value="all">
                 <Card x-chunk="dashboard-06-chunk-0">
                   <CardHeader>
-                    <CardTitle>Produtos</CardTitle>
+                    <CardTitle>Vendedores</CardTitle>
                     <CardDescription>
-                      Produtos presentes no estoque.
+                      Vendedores associados ao estoque.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="hidden sm:table-cell">
-                            Imagem
+                          <TableHead className="hidden sm:table-cell w-16">
+                            Avatar
                           </TableHead>
-                          <TableHead>Código</TableHead>
-                          <TableHead>Nome</TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Preço de Custo
-                          </TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Preço de Venda
-                          </TableHead>
+                          <TableHead>Usuário</TableHead>
+                          <TableHead>Cargo</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         <TableRow>
                           <TableCell className="hidden sm:table-cell">
-                            <div className="bg-slate-200 rounded-lg h-16 w-16"></div>
+                            <Avatar className="hidden h-12 w-12 sm:flex">
+                              <AvatarFallback>SD</AvatarFallback>
+                            </Avatar>
                           </TableCell>
                           <TableCell>
-                            <Badge className="text-xs" variant="secondary">
-                              PD01
-                            </Badge>
+                            <div className="grid gap-1">
+                              <p className="text-sm font-medium leading-none">
+                                Sofia Davis
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                sofia.davis@email.com
+                              </p>
+                            </div>
                           </TableCell>
-                          <TableCell className="font-medium">
-                            Laser Lemonade Machine
+                          <TableCell>
+                            <ul>
+                              <li>
+                                <Badge variant="secondary">Vendedor</Badge>
+                              </li>
+                            </ul>
                           </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            R$ 9,99
+                        </TableRow>
+                        <TableRow>
+                          <TableCell className="hidden sm:table-cell">
+                            <Avatar className="hidden h-12 w-12 sm:flex">
+                              <AvatarFallback>MR</AvatarFallback>
+                            </Avatar>
                           </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            R$ 19,99
+                          <TableCell>
+                            <div className="grid gap-1">
+                              <p className="text-sm font-medium leading-none">
+                                Max Robinson
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                max.robin@email.com
+                              </p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <ul>
+                              <li>
+                                <Badge variant="secondary" className="mb-1">
+                                  Vendedor
+                                </Badge>
+                              </li>
+                              <li>
+                                <Badge variant="secondary">Administrador</Badge>
+                              </li>
+                            </ul>
                           </TableCell>
                         </TableRow>
                       </TableBody>
@@ -411,8 +441,8 @@ export function Products() {
                   </CardContent>
                   <CardFooter>
                     <div className="text-xs text-muted-foreground">
-                      Mostrando <strong>1-10</strong> de <strong>1</strong>{' '}
-                      produtos
+                      Mostrando <strong>1-10</strong> de <strong>2</strong>{' '}
+                      vendedores
                     </div>
                   </CardFooter>
                 </Card>
@@ -424,17 +454,17 @@ export function Products() {
               <CardHeader className="flex flex-row justify-between items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
-                    Nome do Produto
+                    Sofia Davis
                     <Button
                       size="icon"
                       variant="outline"
                       className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
                     >
                       <Copy className="h-3 w-3" />
-                      <span className="sr-only">Copiar Código do Produto</span>
+                      <span className="sr-only">Copiar nome de usuário</span>
                     </Button>
                   </CardTitle>
-                  <CardDescription>Código Comercial: PD01</CardDescription>
+                  <CardDescription>sofia.davis@email.com</CardDescription>
                 </div>
                 <div className="flex items-center">
                   <div className="ml-auto flex items-center gap-2">
@@ -455,37 +485,61 @@ export function Products() {
                 <div>
                   <ul className="grid gap-3">
                     <li>
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold">Preço de Custo</span>
-                        <span>R$ 9,99</span>
+                      <span className="font-semibold">Avatar</span>
+                    </li>
+                    <li className="flex justify-center">
+                      <Avatar className="m-2 hidden h-36 w-36 sm:flex">
+                        <AvatarFallback>SD</AvatarFallback>
+                      </Avatar>
+                    </li>
+                    <Separator className="my-2" />
+                    <div className="flex justify-between">
+                      <div>
+                        <li>
+                          <span className="font-semibold">Nome</span>
+                        </li>
+                        <li>
+                          <span>Sofia</span>
+                        </li>
                       </div>
+                      <div>
+                        <li>
+                          <span className="font-semibold">Sobrenome</span>
+                        </li>
+                        <li>
+                          <span>Davis</span>
+                        </li>
+                      </div>
+                      <div>
+                        <li>
+                          <span className="font-semibold">Usuário</span>
+                        </li>
+                        <li>
+                          <span>Sofia Davis</span>
+                        </li>
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <li>
+                      <span className="font-semibold">Cargo</span>
                     </li>
                     <li>
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold">Preço de Venda</span>
-                        <span>R$ 19,99</span>
+                      <div className="p-2 text-sm">
+                        <Badge variant="secondary">Vendedor</Badge>
                       </div>
                     </li>
                     <Separator className="my-2" />
                     <li>
-                      <span className="font-semibold">Descrição</span>
-                    </li>
-                    <li>
-                      <div className="overflow-y-auto max-h-20 p-2 text-sm">
-                        <p>Uma descrição de produto.</p>
-                      </div>
-                    </li>
-                    <Separator className="my-2" />
-                    <li>
-                      <span className="font-semibold">Imagem</span>
-                      <div className="self-center p-2">
-                        <Image
-                          alt="Imagem do produto"
-                          className="aspect-square bg-slate-200 rounded-lg m-auto object-cover"
-                          height="200"
-                          src=""
-                          width="200"
-                        />
+                      <div className="flex items-center">
+                        <span className="font-semibold">Vendas</span>
+                        <Button
+                          size="icon"
+                          variant="secondary"
+                          className="ml-2 h-6 w-6"
+                        >
+                          <Expand className="h-4 w-4" />
+                          <span className="sr-only">Visualizar vendas</span>
+                        </Button>
                       </div>
                     </li>
                   </ul>

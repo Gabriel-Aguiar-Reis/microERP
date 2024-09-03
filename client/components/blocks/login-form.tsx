@@ -14,10 +14,8 @@ export function LoginForm() {
     <div className="h-screen flex items-center justify-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Informe as credenciais para fazer login.
-          </CardDescription>
+          <CardTitle className="text-2xl">Entrar</CardTitle>
+          <CardDescription>Informe as credenciais para entrar.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
@@ -34,16 +32,18 @@ export function LoginForm() {
               </div>
               <Input id="password" type="password" required />
             </div>
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
+            <Link href="/home">
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
+            </Link>
             {/* <Button variant="outline" className="w-full">
                     Login with Google
                 </Button> */}
           </div>
           <div className="mt-4 text-center text-sm">
             Não possui uma conta?{' '}
-            <Link href="#" className="underline">
+            <Link href="/signin" className="underline">
               Se cadastrar
             </Link>
           </div>
