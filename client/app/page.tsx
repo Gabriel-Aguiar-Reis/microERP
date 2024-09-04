@@ -1,7 +1,5 @@
-'use client'
-
-import { LoginForm } from '@/components/blocks/login-form'
+import { redirect } from 'next/navigation'
 
 export default function Home() {
-  return <LoginForm />
+  redirect('/login')
 }
