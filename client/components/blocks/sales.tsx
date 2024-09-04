@@ -7,7 +7,6 @@ import {
   File,
   Home,
   ListFilter,
-  MoreVertical,
   Package,
   PanelLeft,
   Plus,
@@ -102,7 +101,7 @@ export function Sales() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/inventory"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Store className="h-5 w-5" />
@@ -144,7 +143,7 @@ export function Sales() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/supplies"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Truck className="h-5 w-5" />
@@ -415,6 +414,12 @@ export function Sales() {
                       </TableBody>
                     </Table>
                   </CardContent>
+                  <CardFooter>
+                    <div className="text-xs text-muted-foreground">
+                      Mostrando <strong>1-10</strong> de <strong>1</strong>{' '}
+                      vendas
+                    </div>
+                  </CardFooter>
                 </Card>
               </TabsContent>
             </Tabs>

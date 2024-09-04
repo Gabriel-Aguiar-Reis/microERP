@@ -1,17 +1,36 @@
 import Link from 'next/link'
 import {
   ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
+  Expand,
+  File,
   Home,
+  ListFilter,
   Package,
   PanelLeft,
+  Plus,
+  PlusCircle,
   Search,
   Settings,
   ShoppingCart,
   Store,
+  Trash2,
   Truck,
   User,
   Users2
 } from 'lucide-react'
+
+import { Badge } from '@/components/ui/badge'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -21,9 +40,9 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -31,23 +50,31 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem
+} from '@/components/ui/pagination'
+import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent
-} from '@/components/ui/tooltip'
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage
-} from '@/components/ui/breadcrumb'
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider
+} from '@/components/ui/tooltip'
+import EditProductDialog from '@/components/blocks/edit-product-dialog'
 
-export function SettingsPage() {
+export function Supplies() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-white sm:flex">
@@ -119,7 +146,7 @@ export function SettingsPage() {
               <TooltipTrigger asChild>
                 <Link
                   href="/supplies"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 bg-slate-200"
                 >
                   <Truck className="h-5 w-5" />
                   <span className="sr-only">Fornecimentos</span>
@@ -149,7 +176,7 @@ export function SettingsPage() {
               <TooltipTrigger asChild>
                 <Link
                   href="/settings"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 bg-slate-200"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Settings className="h-5 w-5" />
                   <span className="sr-only">Configurações</span>
@@ -195,7 +222,7 @@ export function SettingsPage() {
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <Link
-                  href="/"
+                  href="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <Home className="h-5 w-5" />
@@ -209,14 +236,14 @@ export function SettingsPage() {
                   Estoque
                 </Link>
                 <Link
-                  href="/sales"
+                  href="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <ShoppingCart className="h-5 w-5" />
                   Vendas
                 </Link>
                 <Link
-                  href="/products"
+                  href="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                 >
                   <Package className="h-5 w-5" />
@@ -248,7 +275,7 @@ export function SettingsPage() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Configurações</BreadcrumbPage>
+                <BreadcrumbPage>Fornecimentos</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -283,67 +310,150 @@ export function SettingsPage() {
             </DropdownMenu>
           </div>
         </header>
-        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:px-10 py-4">
-          <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
-            <nav
-              className="grid gap-4 text-sm text-muted-foreground"
-              x-chunk="dashboard-04-chunk-0"
+        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+          <div className="fixed top-100 bottom-4 right-4">
+            <Button
+              size="icon"
+              className="sm:hidden overflow-hidden rounded-full"
             >
-              <Link href="#" className="font-semibold text-primary">
-                Geral
-              </Link>
-              <Link href="#">Segurança</Link>
-              <Link href="#">Integrações</Link>
-              <Link href="#">Suporte</Link>
-              <Link href="#">Advanced</Link>
-            </nav>
-            <div className="grid gap-6">
-              <Card x-chunk="dashboard-04-chunk-1">
-                <CardHeader>
-                  <CardTitle>Store Name</CardTitle>
-                  <CardDescription>
-                    Used to identify your store in the marketplace.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form>
-                    <Input placeholder="Store Name" />
-                  </form>
-                </CardContent>
-                <CardFooter className="border-t px-6 py-4">
-                  <Button>Save</Button>
-                </CardFooter>
-              </Card>
-              <Card x-chunk="dashboard-04-chunk-2">
-                <CardHeader>
-                  <CardTitle>Plugins Directory</CardTitle>
-                  <CardDescription>
-                    The directory within your project, in which your plugins are
-                    located.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form className="flex flex-col gap-4">
-                    <Input
-                      placeholder="Project Name"
-                      defaultValue="/content/plugins"
-                    />
-                    <div className="flex items-center space-x-2">
-                      <Checkbox id="include" defaultChecked />
-                      <label
-                        htmlFor="include"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              <Plus color="white" className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-3 ">
+            <Tabs defaultValue="all">
+              <div className="flex items-center">
+                <div className="ml-auto flex items-center gap-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-7 gap-1 text-sm"
                       >
-                        Allow administrators to change the directory.
-                      </label>
+                        <ListFilter className="h-3.5 w-3.5" />
+                        <span className="sr-only sm:not-sr-only">Filtrar</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Filtrar por</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuCheckboxItem checked>
+                        Fulfilled
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem>
+                        Declined
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem>
+                        Refunded
+                      </DropdownMenuCheckboxItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-7 gap-1 text-sm"
+                  >
+                    <File className="h-3.5 w-3.5" />
+                    <span className="sr-only sm:not-sr-only">Exportar</span>
+                  </Button>
+                  <div className="max-sm:hidden">
+                    <Button size="sm" className="h-8 gap-1">
+                      <PlusCircle className="h-3.5 w-3.5" />
+                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                        Criar Novo Fornecimento
+                      </span>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <TabsContent value="all">
+                <Card x-chunk="dashboard-05-chunk-3">
+                  <CardHeader className="px-7">
+                    <CardTitle>Fornecimento</CardTitle>
+                    <CardDescription>
+                      Fornecimentos recentes do seu estoque.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Código</TableHead>
+                          <TableHead className="hidden md:table-cell">
+                            Registrado por
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell">
+                            Data
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell">
+                            Produtos
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell">
+                            Valor Total
+                          </TableHead>
+                          <TableHead className="hidden md:table-cell"></TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        <TableRow className="bg-accent">
+                          <TableCell>
+                            <Badge className="text-xs" variant="secondary">
+                              F082024
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <div className="font-medium">Liam Johnson</div>
+                            <div className="hidden text-sm text-muted-foreground md:inline">
+                              liam@example.com
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2023-11-23
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <div className="flex">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-8 gap-1 text-sm items-center"
+                              >
+                                <Expand className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only">
+                                  Visualizar
+                                </span>
+                              </Button>
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            R$329,00
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <div className="flex">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-8 gap-1 text-sm items-center"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                                <span className="sr-only sm:not-sr-only">
+                                  Deletar
+                                </span>
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                  <CardFooter>
+                    <div className="text-xs text-muted-foreground">
+                      Mostrando <strong>1-10</strong> de <strong>1</strong>{' '}
+                      fornecimentos
                     </div>
-                  </form>
-                </CardContent>
-                <CardFooter className="border-t px-6 py-4">
-                  <Button>Save</Button>
-                </CardFooter>
-              </Card>
-            </div>
+                  </CardFooter>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
         </main>
       </div>

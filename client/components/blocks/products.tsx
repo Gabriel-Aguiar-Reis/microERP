@@ -102,7 +102,7 @@ export function Products() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/inventory"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Store className="h-5 w-5" />
@@ -144,7 +144,7 @@ export function Products() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/supplies"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Truck className="h-5 w-5" />
@@ -366,7 +366,8 @@ export function Products() {
                   <CardHeader>
                     <CardTitle>Produtos</CardTitle>
                     <CardDescription>
-                      Produtos presentes no estoque.
+                      Produtos criados e relacionados aos fornecimentos e
+                      estoque.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -501,13 +502,13 @@ export function Products() {
                     <PaginationItem>
                       <Button size="icon" variant="outline" className="h-6 w-6">
                         <ChevronLeft className="h-3.5 w-3.5" />
-                        <span className="sr-only">Venda Anterior</span>
+                        <span className="sr-only">Produto Anterior</span>
                       </Button>
                     </PaginationItem>
                     <PaginationItem>
                       <Button size="icon" variant="outline" className="h-6 w-6">
                         <ChevronRight className="h-3.5 w-3.5" />
-                        <span className="sr-only">Próxima Venda</span>
+                        <span className="sr-only">Próximo Produto</span>
                       </Button>
                     </PaginationItem>
                   </PaginationContent>

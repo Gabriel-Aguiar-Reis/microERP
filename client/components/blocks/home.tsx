@@ -90,7 +90,7 @@ export function HomePage() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/inventory"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Store className="h-5 w-5" />
@@ -132,7 +132,7 @@ export function HomePage() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
+                  href="/supplies"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
                   <Truck className="h-5 w-5" />
@@ -295,74 +295,62 @@ export function HomePage() {
           </div>
         </header>
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-            <Card x-chunk="dashboard-01-chunk-0">
+          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3 mx-auto">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Custos</CardTitle>
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-red-500">
+                  - R$ 4.231,89
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  + 20.1% em relação a julho
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Revenue
+                  Faturamento
                 </CardTitle>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">$45,231.89</div>
+                <div className="text-2xl font-bold text-green-500">
+                  + R$ 16.745,99
+                </div>
                 <p className="text-xs text-muted-foreground">
-                  +20.1% from last month
-                </p>
-              </CardContent>
-            </Card>
-            <Card x-chunk="dashboard-01-chunk-1">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Subscriptions
-                </CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">+2350</div>
-                <p className="text-xs text-muted-foreground">
-                  +180.1% from last month
+                  + 60.7% em relação a julho
                 </p>
               </CardContent>
             </Card>
             <Card x-chunk="dashboard-01-chunk-2">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Sales</CardTitle>
+                <CardTitle className="text-sm font-medium">Vendas</CardTitle>
                 <CreditCard className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">+12,234</div>
+                <div className="text-2xl font-bold">+ 138</div>
                 <p className="text-xs text-muted-foreground">
-                  +19% from last month
-                </p>
-              </CardContent>
-            </Card>
-            <Card x-chunk="dashboard-01-chunk-3">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Active Now
-                </CardTitle>
-                <Activity className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">+573</div>
-                <p className="text-xs text-muted-foreground">
-                  +201 since last hour
+                  + 19% em relação a julho
                 </p>
               </CardContent>
             </Card>
           </div>
           <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-            <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
+            <Card className="xl:col-span-2 mb-8">
               <CardHeader className="flex flex-row items-center">
                 <div className="grid gap-2">
-                  <CardTitle>Transactions</CardTitle>
+                  <CardTitle>Vendas</CardTitle>
                   <CardDescription>
-                    Recent transactions from your store.
+                    Vendas recentes do seu estoque.
                   </CardDescription>
                 </div>
                 <Button asChild size="sm" className="ml-auto gap-1">
-                  <Link href="#">
-                    View All
+                  <Link href="/sales">
+                    Ver tudo
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
                 </Button>
@@ -371,198 +359,60 @@ export function HomePage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Customer</TableHead>
-                      <TableHead className="hidden xl:table-column">
-                        Type
+                      <TableHead>Vendedor</TableHead>
+                      <TableHead className="hidden md:table-cell">
+                        Data
                       </TableHead>
-                      <TableHead className="hidden xl:table-column">
-                        Status
-                      </TableHead>
-                      <TableHead className="hidden xl:table-column">
-                        Date
-                      </TableHead>
-                      <TableHead className="text-right">Amount</TableHead>
+                      <TableHead className="text-right">Total</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow>
                       <TableCell>
-                        <div className="font-medium">Liam Johnson</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          liam@example.com
+                        <div className="flex">
+                          <Avatar className="hidden h-9 w-9 sm:flex mr-4">
+                            <AvatarFallback>OM</AvatarFallback>
+                          </Avatar>
+                          <div className="grid gap-1">
+                            <p className="text-sm font-medium leading-none">
+                              Olivia Martin
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              olivia.martin@email.com
+                            </p>
+                          </div>
                         </div>
                       </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        Sale
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Approved
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      <TableCell className="hidden md:table-cell">
                         2023-06-23
                       </TableCell>
                       <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Olivia Smith</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          olivia@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        Refund
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Declined
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                        2023-06-24
-                      </TableCell>
-                      <TableCell className="text-right">$150.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Noah Williams</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          noah@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        Subscription
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Approved
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                        2023-06-25
-                      </TableCell>
-                      <TableCell className="text-right">$350.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Emma Brown</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          emma@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        Sale
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Approved
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                        2023-06-26
-                      </TableCell>
-                      <TableCell className="text-right">$450.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Liam Johnson</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          liam@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        Sale
-                      </TableCell>
-                      <TableCell className="hidden xl:table-column">
-                        <Badge className="text-xs" variant="outline">
-                          Approved
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
-                        2023-06-27
-                      </TableCell>
-                      <TableCell className="text-right">$550.00</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </CardContent>
             </Card>
-            <Card x-chunk="dashboard-01-chunk-5">
+            <Card>
               <CardHeader>
-                <CardTitle>Recent Sales</CardTitle>
+                <div className="flex items-center">
+                  <CardTitle>Produtos em Estoque</CardTitle>
+                  <Button asChild size="sm" className="ml-4 gap-1">
+                    <Link href="/inventory">
+                      Ver tudo
+                      <ArrowUpRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className="grid gap-8">
                 <div className="flex items-center gap-4">
-                  <Avatar className="hidden h-9 w-9 sm:flex">
-                    <AvatarFallback>OM</AvatarFallback>
-                  </Avatar>
+                  <div className="bg-slate-200 rounded-lg h-16 w-16"></div>
                   <div className="grid gap-1">
                     <p className="text-sm font-medium leading-none">
-                      Olivia Martin
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      olivia.martin@email.com
+                      Laser Lemonade Machine
                     </p>
                   </div>
-                  <div className="ml-auto font-medium">+$1,999.00</div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Avatar className="hidden h-9 w-9 sm:flex">
-                    <AvatarFallback>JL</AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none">
-                      Jackson Lee
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      jackson.lee@email.com
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium">+$39.00</div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Avatar className="hidden h-9 w-9 sm:flex">
-                    <AvatarFallback>IN</AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none">
-                      Isabella Nguyen
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      isabella.nguyen@email.com
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium">+$299.00</div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Avatar className="hidden h-9 w-9 sm:flex">
-                    <AvatarFallback>WK</AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none">
-                      William Kim
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      will@email.com
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium">+$99.00</div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Avatar className="hidden h-9 w-9 sm:flex">
-                    <AvatarFallback>SD</AvatarFallback>
-                  </Avatar>
-                  <div className="grid gap-1">
-                    <p className="text-sm font-medium leading-none">
-                      Sofia Davis
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      sofia.davis@email.com
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium">+$39.00</div>
+                  <div className="ml-auto">15 Un.</div>
                 </div>
               </CardContent>
             </Card>
