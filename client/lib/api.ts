@@ -19,3 +19,24 @@ export async function postToken(username: string, password: string) {
     return Promise.reject(e)
   }
 }
+
+export async function postUser(
+  username: string,
+  password: string,
+  firstName: string,
+  lastName: string,
+  email: string
+) {
+  const data = {
+    username,
+    password,
+    firstName,
+    lastName,
+    email
+  }
+  try {
+    await api.post('api/users/', data)
+  } catch (e) {
+    return e
+  }
+}
