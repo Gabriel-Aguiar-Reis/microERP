@@ -84,7 +84,7 @@ export function LoginForm() {
               </div>
             )}
 
-            <Button onClick={handleLogin} type="button" className="w-full">
+            <Button onClick={handleLogin} type="submit" className="w-full">
               Login
             </Button>
           </div>
