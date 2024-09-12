@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import {
   ArrowLeft,
@@ -74,6 +73,7 @@ import {
   PaginationItem
 } from '@/components/ui/pagination'
 import EditProductDialog from '@/components/blocks/edit-product-dialog'
+import { SellersTableRow } from '@/components/custom/sellers-table-row'
 
 export function Sellers() {
   return (
@@ -276,9 +276,7 @@ export function Sellers() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Vendedores</BreadcrumbPage>
-                </BreadcrumbItem>
+                <BreadcrumbPage>Vendedores</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -383,59 +381,24 @@ export function Sellers() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        <TableRow>
-                          <TableCell className="hidden sm:table-cell">
-                            <Avatar className="hidden h-12 w-12 sm:flex">
-                              <AvatarFallback>SD</AvatarFallback>
-                            </Avatar>
-                          </TableCell>
-                          <TableCell>
-                            <div className="grid gap-1">
-                              <p className="text-sm font-medium leading-none">
-                                Sofia Davis
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                sofia.davis@email.com
-                              </p>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <ul>
-                              <li>
-                                <Badge variant="secondary">Vendedor</Badge>
-                              </li>
-                            </ul>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell className="hidden sm:table-cell">
-                            <Avatar className="hidden h-12 w-12 sm:flex">
-                              <AvatarFallback>MR</AvatarFallback>
-                            </Avatar>
-                          </TableCell>
-                          <TableCell>
-                            <div className="grid gap-1">
-                              <p className="text-sm font-medium leading-none">
-                                Max Robinson
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                max.robin@email.com
-                              </p>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <ul>
-                              <li>
-                                <Badge variant="secondary" className="mb-1">
-                                  Vendedor
-                                </Badge>
-                              </li>
-                              <li>
-                                <Badge variant="secondary">Administrador</Badge>
-                              </li>
-                            </ul>
-                          </TableCell>
-                        </TableRow>
+                        {SellersTableRow(
+                          'GA',
+                          'Gabriel Aguiar',
+                          'gabriel@email.com',
+                          false
+                        )}
+                        {SellersTableRow(
+                          'GA',
+                          'Gabriel Aguiar',
+                          'gabriel@email.com',
+                          false
+                        )}
+                        {SellersTableRow(
+                          'GA',
+                          'Gabriel Aguiar',
+                          'gabriel@email.com',
+                          true
+                        )}
                       </TableBody>
                     </Table>
                   </CardContent>
