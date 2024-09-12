@@ -37,6 +37,6 @@ export async function postUser(
   try {
     await api.post('api/users/', data)
   } catch (e) {
-    return e
+    return Promise.reject(e)
   }
 }

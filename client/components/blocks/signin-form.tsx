@@ -14,6 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { postUser } from '@/lib/api'
+import { AxiosError } from 'axios'
 
 export function SignInForm() {
   const [username, setUsername] = useState('')
@@ -22,12 +23,14 @@ export function SignInForm() {
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [errorResponse, setErrorResponse] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const router = useRouter()
 
   // Error states
   const [firstNameError, setFirstNameError] = useState('')
   const [lastNameError, setLastNameError] = useState('')
   const [emailError, setEmailError] = useState('')
+  const [formError, setFormError] = useState('') // General form error
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -70,13 +73,35 @@ export function SignInForm() {
   }
 
   async function handleSignIn() {
+    if (
+      !firstName.trim() ||
+      !lastName.trim() ||
+      !email.trim() ||
+      !username.trim() ||
+      !password.trim()
+    ) {
+      setFormError('Todos os campos são obrigatórios.')
+      return
+    }
+
+    if (
+      firstName === 'Max' ||
+      lastName === 'Robinson' ||
+      email === 'm@example.com'
+    ) {
+      setFormError('Os valores não podem ser iguais aos placeholders.')
+      return
+    }
+
     try {
       if (!firstNameError && !lastNameError && !emailError) {
         await postUser(username, password, firstName, lastName, email)
         setErrorResponse(false)
+        router.push('/login')
       }
-    } catch (error) {
+    } catch (error: any) {
       setErrorResponse(true)
+      setErrorMessage(error.response.data.username[0])
     }
   }
 
@@ -99,7 +124,7 @@ export function SignInForm() {
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  onBlur={handleBlurFirstName} // Validation onBlur
+                  onBlur={handleBlurFirstName}
                   placeholder="Max"
                   required
                 />
@@ -116,7 +141,7 @@ export function SignInForm() {
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  onBlur={handleBlurLastName} // Validation onBlur
+                  onBlur={handleBlurLastName}
                   placeholder="Robinson"
                   required
                 />
@@ -134,7 +159,7 @@ export function SignInForm() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onBlur={handleBlurEmail} // Validation onBlur
+                onBlur={handleBlurEmail}
                 placeholder="m@example.com"
                 required
               />
@@ -148,7 +173,7 @@ export function SignInForm() {
               <Label htmlFor="username">Nome de Usuário</Label>
               <Input
                 id="username"
-                type="username"
+                type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Max_Robinson"
@@ -165,17 +190,20 @@ export function SignInForm() {
                 required
               />
             </div>
+            {formError && (
+              <div className="text-red-500 text-sm p-2 bg-red-100 rounded-md">
+                <p>{formError}</p>
+              </div>
+            )}
             <div className="grid mt-4">
-              <Link href="/login">
-                <Button type="submit" onClick={handleSignIn} className="w-full">
-                  Criar uma conta
-                </Button>
-              </Link>
+              <Button type="submit" onClick={handleSignIn} className="w-full">
+                Criar uma conta
+              </Button>
             </div>
           </div>
           {errorResponse && (
-            <div className="text-red-500 text-sm p-2 bg-red-100 rounded-md">
-              <p>Houve erro ao tentar criar um novo usuário.</p>
+            <div className="mt-2 text-red-500 text-sm p-2 bg-red-100 rounded-md">
+              <p>{errorMessage}</p>
             </div>
           )}
           <div className="mt-4 text-center text-sm">
