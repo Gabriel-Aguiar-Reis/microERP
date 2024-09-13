@@ -2,6 +2,7 @@ import { PencilRuler } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -135,7 +136,9 @@ export default function EditProductDialog() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Salvar</Button>
+          <DialogClose>
+            <Button type="submit">Salvar</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

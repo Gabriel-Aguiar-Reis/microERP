@@ -70,7 +70,7 @@ import {
   TooltipTrigger,
   TooltipProvider
 } from '@/components/ui/tooltip'
-import EditProductDialog from '@/components/blocks/edit-product-dialog'
+import EditProductDialog from '@/components/custom/edit-product-dialog'
 
 export function Sales() {
   return (

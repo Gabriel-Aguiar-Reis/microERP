@@ -14,9 +14,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { postUser } from '@/lib/api'
-import { AxiosError } from 'axios'
 
-export function SignInForm() {
+interface SignInFormProps {
+  CreateAccountButton?: React.ReactNode
+}
+
+export function SignInForm({ CreateAccountButton }: SignInFormProps) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
@@ -31,13 +34,6 @@ export function SignInForm() {
   const [lastNameError, setLastNameError] = useState('')
   const [emailError, setEmailError] = useState('')
   const [formError, setFormError] = useState('') // General form error
-
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      router.push('/home')
-    }
-  }, [router])
 
   // Validation functions
   const validateName = (name: string) => /^[a-zA-ZÀ-ÿ\s]+$/.test(name) // Allow letters and accents
@@ -97,7 +93,6 @@ export function SignInForm() {
       if (!firstNameError && !lastNameError && !emailError) {
         await postUser(username, password, firstName, lastName, email)
         setErrorResponse(false)
-        router.push('/login')
       }
     } catch (error: any) {
       setErrorResponse(true)
@@ -111,7 +106,7 @@ export function SignInForm() {
         <CardHeader>
           <CardTitle className="text-xl">Cadastrar</CardTitle>
           <CardDescription>
-            Insira suas informações para criar uma conta.
+            Insira as informações para criar uma nova conta.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -196,9 +191,13 @@ export function SignInForm() {
               </div>
             )}
             <div className="grid mt-4">
-              <Button type="submit" onClick={handleSignIn} className="w-full">
-                Criar uma conta
-              </Button>
+              {CreateAccountButton ? (
+                <div onClick={handleSignIn}>{CreateAccountButton}</div>
+              ) : (
+                <Button type="submit" onClick={handleSignIn} className="w-full">
+                  Criar uma conta
+                </Button>
+              )}
             </div>
           </div>
           {errorResponse && (

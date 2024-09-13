@@ -71,7 +71,7 @@ import {
   PaginationContent,
   PaginationItem
 } from '@/components/ui/pagination'
-import EditProductDialog from '@/components/blocks/edit-product-dialog'
+import EditProductDialog from '@/components/custom/edit-product-dialog'
 
 export function Products() {
   return (

@@ -2,17 +2,24 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { TableCell, TableRow } from '@/components/ui/table'
 
-export function SellersTableRow(
-  nameInitials: string,
-  fullName: string,
-  email: string,
+interface SellersTableRowProps {
+  initials: string
+  fullName: string
+  email: string
   isStaff: boolean
-) {
+}
+
+export function SellersTableRow({
+  initials,
+  fullName,
+  email,
+  isStaff
+}: SellersTableRowProps) {
   return (
     <TableRow>
       <TableCell className="hidden sm:table-cell">
         <Avatar className="hidden h-12 w-12 sm:flex">
-          <AvatarFallback>{nameInitials}</AvatarFallback>
+          <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </TableCell>
       <TableCell>

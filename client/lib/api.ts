@@ -30,12 +30,38 @@ export async function postUser(
   const data = {
     username,
     password,
-    firstName,
-    lastName,
+    first_name: firstName,
+    last_name: lastName,
     email
   }
   try {
-    await api.post('api/users/', data)
+    const response = await api.post('api/users/', data)
+    return response
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
+
+export async function getUsers() {
+  try {
+    const response = await api.get('api/users/')
+
+    const usersWithDetails = response.data.map((user: any) => {
+      const fullName = `${user.first_name} ${user.last_name}`
+      const firstInitial = user.first_name?.[0] || ''
+      const lastInitial = user.last_name?.[0] || ''
+      const initials = `${firstInitial}${lastInitial}`
+      const isStaff = user.is_staff
+
+      return {
+        ...user,
+        initials,
+        fullName,
+        isStaff
+      }
+    })
+
+    return usersWithDetails
   } catch (e) {
     return Promise.reject(e)
   }

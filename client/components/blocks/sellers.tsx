@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link'
 import {
   ArrowLeft,
@@ -72,10 +73,50 @@ import {
   PaginationContent,
   PaginationItem
 } from '@/components/ui/pagination'
-import EditProductDialog from '@/components/blocks/edit-product-dialog'
+import EditProductDialog from '@/components/custom/edit-product-dialog'
 import { SellersTableRow } from '@/components/custom/sellers-table-row'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { getUsers } from '@/lib/api'
+import CreateUserDialog from '@/components/custom/create-user-dialog'
+
+interface User {
+  initials: string
+  fullName: string
+  email: string
+  isStaff: boolean
+}
 
 export function Sellers() {
+  const router = useRouter()
+  const [errorResponse, setErrorResponse] = useState(false)
+  const [users, setUsers] = useState<User[]>([])
+  const [counter, setCounter] = useState(0)
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      router.push('/login')
+    }
+  }, [router])
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const usersData = await getUsers()
+        setUsers(usersData)
+      } catch (e) {
+        setErrorResponse(true)
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
+  useEffect(() => {
+    setCounter(users.length)
+  }, [users])
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-white sm:flex">
@@ -352,12 +393,7 @@ export function Sellers() {
                     <span className="sr-only sm:not-sr-only">Exportar</span>
                   </Button>
                   <div className="max-sm:hidden">
-                    <Button size="sm" className="h-8 gap-1">
-                      <PlusCircle className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Criar Novo Usuário
-                      </span>
-                    </Button>
+                    <CreateUserDialog />
                   </div>
                 </div>
               </div>
@@ -381,31 +417,22 @@ export function Sellers() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {SellersTableRow(
-                          'GA',
-                          'Gabriel Aguiar',
-                          'gabriel@email.com',
-                          false
-                        )}
-                        {SellersTableRow(
-                          'GA',
-                          'Gabriel Aguiar',
-                          'gabriel@email.com',
-                          false
-                        )}
-                        {SellersTableRow(
-                          'GA',
-                          'Gabriel Aguiar',
-                          'gabriel@email.com',
-                          true
-                        )}
+                        {users.map((user) => (
+                          <SellersTableRow
+                            key={user.email}
+                            initials={user.initials}
+                            fullName={user.fullName}
+                            email={user.email}
+                            isStaff={user.isStaff}
+                          />
+                        ))}
                       </TableBody>
                     </Table>
                   </CardContent>
                   <CardFooter>
                     <div className="text-xs text-muted-foreground">
-                      Mostrando <strong>1-10</strong> de <strong>2</strong>{' '}
-                      vendedores
+                      Mostrando <strong>1-10</strong> de{' '}
+                      <strong>{counter}</strong> vendedores
                     </div>
                   </CardFooter>
                 </Card>
