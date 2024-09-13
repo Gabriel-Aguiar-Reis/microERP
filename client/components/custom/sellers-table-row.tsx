@@ -7,16 +7,18 @@ interface SellersTableRowProps {
   fullName: string
   email: string
   isStaff: boolean
+  func: () => void
 }
 
 export function SellersTableRow({
   initials,
   fullName,
   email,
-  isStaff
+  isStaff,
+  func
 }: SellersTableRowProps) {
   return (
-    <TableRow>
+    <TableRow onClick={func}>
       <TableCell className="hidden sm:table-cell">
         <Avatar className="hidden h-12 w-12 sm:flex">
           <AvatarFallback>{initials}</AvatarFallback>

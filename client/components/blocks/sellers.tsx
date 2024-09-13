@@ -81,10 +81,13 @@ import { getUsers } from '@/lib/api'
 import CreateUserDialog from '@/components/custom/create-user-dialog'
 
 interface User {
+  first_name: string
+  last_name: string
   initials: string
   fullName: string
   email: string
   isStaff: boolean
+  username: string
 }
 
 export function Sellers() {
@@ -92,6 +95,7 @@ export function Sellers() {
   const [errorResponse, setErrorResponse] = useState(false)
   const [users, setUsers] = useState<User[]>([])
   const [counter, setCounter] = useState(0)
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -105,6 +109,8 @@ export function Sellers() {
       try {
         const usersData = await getUsers()
         setUsers(usersData)
+        console.log(usersData)
+        setSelectedUser(usersData[0])
       } catch (e) {
         setErrorResponse(true)
       }
@@ -419,6 +425,7 @@ export function Sellers() {
                       <TableBody>
                         {users.map((user) => (
                           <SellersTableRow
+                            func={() => setSelectedUser(user)}
                             key={user.email}
                             initials={user.initials}
                             fullName={user.fullName}
@@ -440,25 +447,25 @@ export function Sellers() {
             </Tabs>
           </div>
           <div>
-            <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
-              <CardHeader className="flex flex-row justify-between items-start bg-muted/50">
-                <div className="grid gap-0.5">
-                  <CardTitle className="group flex items-center gap-2 text-lg">
-                    Sofia Davis
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                    >
-                      <Copy className="h-3 w-3" />
-                      <span className="sr-only">Copiar nome de usuário</span>
-                    </Button>
-                  </CardTitle>
-                  <CardDescription>sofia.davis@email.com</CardDescription>
-                </div>
-                <div className="flex items-center">
-                  <div className="ml-auto flex items-center gap-2">
-                    <div className="flex">
+            {selectedUser && (
+              <Card className="overflow-hidden">
+                <CardHeader className="flex flex-row justify-between items-start bg-muted/50">
+                  <div className="grid gap-0.5">
+                    <CardTitle className="group flex items-center gap-2 text-lg">
+                      {selectedUser.fullName}
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                      >
+                        <Copy className="h-3 w-3" />
+                        <span className="sr-only">Copiar nome de usuário</span>
+                      </Button>
+                    </CardTitle>
+                    <CardDescription>{selectedUser.email}</CardDescription>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="ml-auto flex items-center gap-2">
                       <Button
                         size="sm"
                         variant="destructive"
@@ -466,98 +473,111 @@ export function Sellers() {
                       >
                         <span className="sr-only sm:not-sr-only">Deletar</span>
                       </Button>
+                      <EditProductDialog />
                     </div>
-                    <EditProductDialog />
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6 text-sm">
-                <div>
-                  <ul className="grid gap-3">
-                    <li>
-                      <span className="font-semibold">Avatar</span>
-                    </li>
-                    <li className="flex justify-center">
-                      <Avatar className="m-2 hidden h-36 w-36 sm:flex">
-                        <AvatarFallback>SD</AvatarFallback>
-                      </Avatar>
-                    </li>
-                    <Separator className="my-2" />
-                    <div className="flex justify-between">
-                      <div>
-                        <li>
-                          <span className="font-semibold">Nome</span>
-                        </li>
-                        <li>
-                          <span>Sofia</span>
-                        </li>
+                </CardHeader>
+                <CardContent className="p-6 text-sm">
+                  <div>
+                    <ul className="grid gap-3">
+                      <li>
+                        <span className="font-semibold">Avatar</span>
+                      </li>
+                      <li className="flex justify-center">
+                        <Avatar className="m-2 hidden h-36 w-36 sm:flex">
+                          <AvatarFallback>
+                            {selectedUser.initials}
+                          </AvatarFallback>
+                        </Avatar>
+                      </li>
+                      <Separator className="my-2" />
+                      <div className="flex justify-between">
+                        <div>
+                          <li>
+                            <span className="font-semibold">Nome</span>
+                          </li>
+                          <li>
+                            <span>{selectedUser.first_name}</span>
+                          </li>
+                        </div>
+                        <div>
+                          <li>
+                            <span className="font-semibold">Sobrenome</span>
+                          </li>
+                          <li>
+                            <span>{selectedUser.last_name}</span>
+                          </li>
+                        </div>
+                        <div>
+                          <li>
+                            <span className="font-semibold">Usuário</span>
+                          </li>
+                          <li>
+                            <span>{selectedUser.username}</span>
+                          </li>
+                        </div>
                       </div>
-                      <div>
-                        <li>
-                          <span className="font-semibold">Sobrenome</span>
-                        </li>
-                        <li>
-                          <span>Davis</span>
-                        </li>
-                      </div>
-                      <div>
-                        <li>
-                          <span className="font-semibold">Usuário</span>
-                        </li>
-                        <li>
-                          <span>Sofia Davis</span>
-                        </li>
-                      </div>
-                    </div>
-                    <Separator className="my-2" />
-                    <li>
-                      <span className="font-semibold">Cargo</span>
-                    </li>
-                    <li>
-                      <div className="p-2 text-sm">
-                        <Badge variant="secondary">Vendedor</Badge>
-                      </div>
-                    </li>
-                    <Separator className="my-2" />
-                    <li>
-                      <div className="flex items-center">
-                        <span className="font-semibold">Vendas</span>
+                      <Separator className="my-2" />
+                      <li>
+                        <span className="font-semibold">Cargo</span>
+                      </li>
+                      <li>
+                        <div className="p-2 text-sm">
+                          <Badge variant="secondary">Vendedor</Badge>
+                          <Badge variant="secondary">
+                            {selectedUser.isStaff && 'Administrador'}
+                          </Badge>
+                        </div>
+                      </li>
+                      <Separator className="my-2" />
+                      <li>
+                        <div className="flex items-center">
+                          <span className="font-semibold">Vendas</span>
+                          <Button
+                            size="icon"
+                            variant="secondary"
+                            className="ml-2 h-6 w-6"
+                          >
+                            <Expand className="h-4 w-4" />
+                            <span className="sr-only">Visualizar vendas</span>
+                          </Button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+                  <div className="text-xs text-muted-foreground">
+                    Atualizado{' '}
+                    <time dateTime="2023-11-23">23 de Novembro de 2023</time>
+                  </div>
+                  <Pagination className="ml-auto mr-0 w-auto">
+                    <PaginationContent>
+                      <PaginationItem>
                         <Button
                           size="icon"
-                          variant="secondary"
-                          className="ml-2 h-6 w-6"
+                          variant="outline"
+                          className="h-6 w-6"
                         >
-                          <Expand className="h-4 w-4" />
-                          <span className="sr-only">Visualizar vendas</span>
+                          <ChevronLeft className="h-3.5 w-3.5" />
+                          <span className="sr-only">Venda Anterior</span>
                         </Button>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                <div className="text-xs text-muted-foreground">
-                  Atualizado{' '}
-                  <time dateTime="2023-11-23">23 de Novembro de 2023</time>
-                </div>
-                <Pagination className="ml-auto mr-0 w-auto">
-                  <PaginationContent>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronLeft className="h-3.5 w-3.5" />
-                        <span className="sr-only">Venda Anterior</span>
-                      </Button>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronRight className="h-3.5 w-3.5" />
-                        <span className="sr-only">Próxima Venda</span>
-                      </Button>
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </CardFooter>
-            </Card>
+                      </PaginationItem>
+                      <PaginationItem>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-6 w-6"
+                        >
+                          <ChevronRight className="h-3.5 w-3.5" />
+                          <span className="sr-only">Próxima Venda</span>
+                        </Button>
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
+                </CardFooter>
+              </Card>
+            )}
           </div>
         </main>
       </div>
