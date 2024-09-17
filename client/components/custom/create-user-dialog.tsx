@@ -22,6 +22,7 @@ export default function CreateUserDialog() {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[600px] sm:max-h-[640px] overflow-scroll">
           <SignInForm
+            isLoggedCreation={true}
             CreateAccountButton={
               <DialogClose asChild>
                 <Button type="submit" className="w-full">

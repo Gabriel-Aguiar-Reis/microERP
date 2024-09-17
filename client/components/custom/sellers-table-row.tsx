@@ -10,7 +10,7 @@ interface SellersTableRowProps {
   func: () => void
 }
 
-export function SellersTableRow({
+export default function SellersTableRow({
   initials,
   fullName,
   email,

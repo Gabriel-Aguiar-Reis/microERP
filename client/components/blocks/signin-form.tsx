@@ -17,9 +17,13 @@ import { postUser } from '@/lib/api'
 
 interface SignInFormProps {
   CreateAccountButton?: React.ReactNode
+  isLoggedCreation?: boolean
 }
 
-export function SignInForm({ CreateAccountButton }: SignInFormProps) {
+export function SignInForm({
+  CreateAccountButton,
+  isLoggedCreation
+}: SignInFormProps) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [firstName, setFirstName] = useState('')
@@ -205,12 +209,14 @@ export function SignInForm({ CreateAccountButton }: SignInFormProps) {
               <p>{errorMessage}</p>
             </div>
           )}
-          <div className="mt-4 text-center text-sm">
-            Já tem uma conta?{' '}
-            <Link href="/login" className="underline">
-              Entrar
-            </Link>
-          </div>
+          {!isLoggedCreation && (
+            <div className="mt-4 text-center text-sm">
+              Já tem uma conta?{' '}
+              <Link href="/login" className="underline">
+                Entrar
+              </Link>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

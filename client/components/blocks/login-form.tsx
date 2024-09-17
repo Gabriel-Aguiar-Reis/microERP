@@ -23,7 +23,7 @@ export function LoginForm() {
   const router = useRouter()
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('accessToken')
     if (token) {
       router.push('/home')
     }
@@ -31,13 +31,13 @@ export function LoginForm() {
 
   async function handleLogin() {
     try {
-      localStorage.removeItem('token')
+      localStorage.removeItem('accessToken')
       const response = await postToken(username, password)
       setErrorResponse(false)
       const token = response.data['access']
-      localStorage.setItem('token', token)
+      localStorage.setItem('accessToken', token)
 
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      // api.defaults.headers.common['Authorization'] = `Bearer ${token}`
       if (api.defaults.headers.common['Authorization'] === `Bearer ${token}`) {
         router.push('/home')
       }
