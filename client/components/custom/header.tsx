@@ -1,4 +1,6 @@
+'use client'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import {
   Home,
   Package,
@@ -10,7 +12,6 @@ import {
   User,
   Users2
 } from 'lucide-react'
-
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet'
 import {
@@ -36,6 +37,13 @@ interface HeaderProps {
 }
 
 export default function Header({ breadcrumbName }: HeaderProps) {
+  const router = useRouter()
+  function handleQuit(): void {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    router.push('/login')
+  }
+
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
       <Sheet>
@@ -157,7 +165,9 @@ export default function Header({ breadcrumbName }: HeaderProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem>Configurações</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Sair</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleQuit}>
+              <span>Sair</span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
