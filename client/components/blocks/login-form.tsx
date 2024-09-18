@@ -31,7 +31,6 @@ export function LoginForm() {
 
   async function handleLogin() {
     try {
-      localStorage.removeItem('accessToken')
       const response = await postToken(username, password)
       setErrorResponse(false)
       const token = response.data['access']
@@ -79,7 +78,7 @@ export function LoginForm() {
 
             {errorResponse && (
               <div className="text-red-500 text-sm p-2 bg-red-100 rounded-md">
-                <p>As credenciais informadas estão erradas.</p>
+                <p>O usuário ou senha informados estão errados.</p>
               </div>
             )}
 
