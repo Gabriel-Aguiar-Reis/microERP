@@ -46,7 +46,6 @@ import {
 import EditProductDialog from '@/components/custom/edit-product-dialog'
 import SellersTableRow from '@/components/custom/sellers-table-row'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { getUsers } from '@/lib/api'
 import CreateUserDialog from '@/components/custom/create-user-dialog'
 import AsideBar from '@/components/custom/aside-bar'
@@ -63,18 +62,10 @@ interface User {
 }
 
 export function Sellers() {
-  const router = useRouter()
   const [errorResponse, setErrorResponse] = useState(false)
   const [users, setUsers] = useState<User[]>([])
   const [counter, setCounter] = useState(0)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
-
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      router.push('/login')
-    }
-  }, [router])
 
   useEffect(() => {
     const fetchUsers = async () => {

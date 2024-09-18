@@ -37,7 +37,6 @@ export function LoginForm() {
       const token = response.data['access']
       localStorage.setItem('accessToken', token)
 
-      // api.defaults.headers.common['Authorization'] = `Bearer ${token}`
       if (api.defaults.headers.common['Authorization'] === `Bearer ${token}`) {
         router.push('/home')
       }
