@@ -1,8 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -14,15 +13,18 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { postUser } from '@/lib/api'
+import { Eye, EyeOff } from 'lucide-react'
 
 interface SignInFormProps {
   CreateAccountButton?: React.ReactNode
   isLoggedCreation?: boolean
+  fetchUsers: () => Promise<void>
 }
 
 export function SignInForm({
   CreateAccountButton,
-  isLoggedCreation
+  isLoggedCreation,
+  fetchUsers
 }: SignInFormProps) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -31,33 +33,61 @@ export function SignInForm({
   const [email, setEmail] = useState('')
   const [errorResponse, setErrorResponse] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const router = useRouter()
+  const [passwordVisible, setPasswordVisible] = useState(false)
 
   // Error states
   const [firstNameError, setFirstNameError] = useState('')
   const [lastNameError, setLastNameError] = useState('')
   const [emailError, setEmailError] = useState('')
+  const [usernameError, setUsernameError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
   const [formError, setFormError] = useState('') // General form error
 
   // Validation functions
-  const validateName = (name: string) => /^[a-zA-ZÀ-ÿ\s]+$/.test(name) // Allow letters and accents
+  const validateName = (name: string) => /^[a-zA-ZÀ-ÿ\s]+$/.test(name)
+  const validateUsername = (username: string) =>
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^0-9A-Za-z]).{6,24}$/.test(username)
   const validateEmail = (email: string) =>
-    /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email) // Basic email validation
+    /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)
+  const validatePassword = (password: string) =>
+    /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^0-9A-Za-z]).{8,32}$/.test(
+      password
+    )
 
   const handleBlurFirstName = () => {
     if (!validateName(firstName)) {
       setFirstNameError(
-        'Nome não pode conter números nem caractéres especiais.'
+        'Nome deve conter apenas letras (incluindo acentuadas) e espaços.'
       )
     } else {
       setFirstNameError('')
     }
   }
 
+  const handleBlurUsername = () => {
+    if (!validateUsername(username)) {
+      setUsernameError(
+        'O nome de usuário deve ter de 6 a 24 caracteres, conter pelo menos uma letra maiúscula, uma letra minúscula e um caractere especial.'
+      )
+    } else {
+      setUsernameError('')
+    }
+  }
+
+  const handleBlurPassword = () => {
+    if (!validatePassword(password)) {
+      setPasswordError(
+        'A senha deve ter de 8 a 32 caracteres, conter pelo menos um número, uma letra maiúscula, uma letra minúscula e um caractere especial.'
+      )
+    } else {
+      setPasswordError('')
+    }
+  }
+
   const handleBlurLastName = () => {
     if (!validateName(lastName)) {
       setLastNameError(
-        'Sobrenome não pode conter números nem caractéres especiais.'
+        'Sobrenome deve conter apenas letras (incluindo acentuadas) e espaços.'
       )
     } else {
       setLastNameError('')
@@ -66,7 +96,9 @@ export function SignInForm({
 
   const handleBlurEmail = () => {
     if (!validateEmail(email)) {
-      setEmailError('Email inválido.')
+      setEmailError(
+        'O email deve ser um endereço de email válido, como "exemplo@dominio.com".'
+      )
     } else {
       setEmailError('')
     }
@@ -94,8 +126,21 @@ export function SignInForm({
     }
 
     try {
-      if (!firstNameError && !lastNameError && !emailError) {
-        await postUser(username, password, firstName, lastName, email)
+      if (
+        !firstNameError &&
+        !lastNameError &&
+        !emailError &&
+        !passwordError &&
+        !usernameError
+      ) {
+        await postUser(
+          username,
+          password,
+          firstName,
+          lastName,
+          email,
+          fetchUsers
+        )
         setErrorResponse(false)
       }
     } catch (error: any) {
@@ -175,19 +220,45 @@ export function SignInForm({
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                onBlur={handleBlurUsername}
                 placeholder="Max_Robinson"
                 required
               />
+              {usernameError && (
+                <div className="text-red-500 text-sm p-2 bg-red-100 rounded-md">
+                  <p>{usernameError}</p>
+                </div>
+              )}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Senha</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="flex justify-beetwen items-center">
+                <Input
+                  id="password"
+                  type={passwordVisible ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onBlur={handleBlurPassword}
+                  required
+                />
+                {passwordVisible && (
+                  <Eye
+                    className="h-6 w-6 ml-4"
+                    onClick={() => setPasswordVisible(!passwordVisible)}
+                  />
+                )}
+                {!passwordVisible && (
+                  <EyeOff
+                    className="h-6 w-6 ml-4"
+                    onClick={() => setPasswordVisible(!passwordVisible)}
+                  />
+                )}
+              </div>
+              {passwordError && (
+                <div className="text-red-500 text-sm p-2 bg-red-100 rounded-md">
+                  <p>{passwordError}</p>
+                </div>
+              )}
             </div>
             {formError && (
               <div className="text-red-500 text-sm p-2 bg-red-100 rounded-md">

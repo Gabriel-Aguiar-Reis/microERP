@@ -7,8 +7,12 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import { SignInForm } from '@/components/blocks/signin-form'
-
-export default function CreateUserDialog() {
+interface CreateUserDialogProps {
+  fetchUsers: () => Promise<void>
+}
+export default function CreateUserDialog({
+  fetchUsers
+}: CreateUserDialogProps) {
   return (
     <div>
       <Dialog>
@@ -22,6 +26,7 @@ export default function CreateUserDialog() {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[600px] sm:max-h-[640px] overflow-scroll">
           <SignInForm
+            fetchUsers={fetchUsers}
             isLoggedCreation={true}
             CreateAccountButton={
               <DialogClose asChild>

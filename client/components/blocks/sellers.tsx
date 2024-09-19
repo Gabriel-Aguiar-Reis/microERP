@@ -38,20 +38,16 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem
-} from '@/components/ui/pagination'
-import EditProductDialog from '@/components/custom/edit-product-dialog'
 import SellersTableRow from '@/components/custom/sellers-table-row'
 import { useEffect, useState } from 'react'
 import { getUsers } from '@/lib/api'
 import CreateUserDialog from '@/components/custom/create-user-dialog'
 import AsideBar from '@/components/custom/aside-bar'
 import Header from '@/components/custom/header'
+import EditSellerDialog from '@/components/custom/edit-seller-dialog'
 
-interface User {
+export interface User {
+  id: string
   first_name: string
   last_name: string
   initials: string
@@ -67,18 +63,15 @@ export function Sellers() {
   const [counter, setCounter] = useState(0)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const usersData = await getUsers()
-        setUsers(usersData)
-        console.log(usersData)
-        setSelectedUser(usersData[0])
-      } catch (e) {
-        setErrorResponse(true)
-      }
+  const fetchUsers = async () => {
+    try {
+      const usersData = await getUsers()
+      setUsers(usersData)
+    } catch (e) {
+      setErrorResponse(true)
     }
-
+  }
+  useEffect(() => {
     fetchUsers()
   }, [])
 
@@ -132,7 +125,7 @@ export function Sellers() {
                     <span className="sr-only sm:not-sr-only">Exportar</span>
                   </Button>
                   <div className="max-sm:hidden">
-                    <CreateUserDialog />
+                    <CreateUserDialog fetchUsers={fetchUsers} />
                   </div>
                 </div>
               </div>
@@ -164,6 +157,7 @@ export function Sellers() {
                             fullName={user.fullName}
                             email={user.email}
                             isStaff={user.isStaff}
+                            username={user.username}
                           />
                         ))}
                       </TableBody>
@@ -206,7 +200,10 @@ export function Sellers() {
                       >
                         <span className="sr-only sm:not-sr-only">Deletar</span>
                       </Button>
-                      <EditProductDialog />
+                      <EditSellerDialog
+                        selectedUser={selectedUser}
+                        fetchUsers={fetchUsers}
+                      />
                     </div>
                   </div>
                 </CardHeader>
@@ -257,7 +254,7 @@ export function Sellers() {
                       <li>
                         <div className="p-2 text-sm">
                           <Badge variant="secondary">Vendedor</Badge>
-                          <Badge variant="secondary">
+                          <Badge variant="secondary" className="ml-2">
                             {selectedUser.isStaff && 'Administrador'}
                           </Badge>
                         </div>
@@ -279,36 +276,6 @@ export function Sellers() {
                     </ul>
                   </div>
                 </CardContent>
-                <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                  <div className="text-xs text-muted-foreground">
-                    Atualizado{' '}
-                    <time dateTime="2023-11-23">23 de Novembro de 2023</time>
-                  </div>
-                  <Pagination className="ml-auto mr-0 w-auto">
-                    <PaginationContent>
-                      <PaginationItem>
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="h-6 w-6"
-                        >
-                          <ChevronLeft className="h-3.5 w-3.5" />
-                          <span className="sr-only">Venda Anterior</span>
-                        </Button>
-                      </PaginationItem>
-                      <PaginationItem>
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="h-6 w-6"
-                        >
-                          <ChevronRight className="h-3.5 w-3.5" />
-                          <span className="sr-only">Próxima Venda</span>
-                        </Button>
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
-                </CardFooter>
               </Card>
             )}
           </div>

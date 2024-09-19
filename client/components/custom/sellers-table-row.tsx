@@ -5,6 +5,7 @@ import { TableCell, TableRow } from '@/components/ui/table'
 interface SellersTableRowProps {
   initials: string
   fullName: string
+  username: string
   email: string
   isStaff: boolean
   func: () => void
@@ -13,6 +14,7 @@ interface SellersTableRowProps {
 export default function SellersTableRow({
   initials,
   fullName,
+  username,
   email,
   isStaff,
   func
@@ -27,7 +29,9 @@ export default function SellersTableRow({
       <TableCell>
         <div className="grid gap-1">
           <p className="text-sm font-medium leading-none">{fullName}</p>
-          <p className="text-sm text-muted-foreground">{email}</p>
+          <p className="text-sm text-muted-foreground">
+            {email} - {username}
+          </p>
         </div>
       </TableCell>
       <TableCell>
