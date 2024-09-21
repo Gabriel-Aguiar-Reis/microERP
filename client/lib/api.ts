@@ -123,3 +123,23 @@ export async function patchUser({
     return Promise.reject(e)
   }
 }
+
+export async function deleteUser(
+  id: string,
+  username: string,
+  fetchUsers: () => Promise<void>
+) {
+  try {
+    const response = await api.delete(`api/users/${id}/`)
+    toast.success('Usuário deletado com sucesso!', {
+      description: `${username} foi removido da lista de vendedores.`
+    })
+    await fetchUsers()
+    return response
+  } catch (e) {
+    toast.warning('Usuário não foi deletado!', {
+      description: `Houve erro ao tentar deletar o usuário ${username}.`
+    })
+    return Promise.reject(e)
+  }
+}
