@@ -214,7 +214,7 @@ export function Sellers() {
                         <span className="font-semibold">Avatar</span>
                       </li>
                       <li className="flex justify-center">
-                        <Avatar className="m-2 hidden h-36 w-36 sm:flex">
+                        <Avatar className="m-2 hidden h-24 w-24 sm:flex">
                           <AvatarFallback>
                             {selectedUser.initials}
                           </AvatarFallback>
