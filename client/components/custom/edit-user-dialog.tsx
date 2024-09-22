@@ -17,15 +17,15 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { patchUser } from '@/lib/api'
 import { useState, useEffect } from 'react'
 
-interface EditSellerDialogProps {
+interface EditUserDialogProps {
   selectedUser: User
   fetchUsers: () => Promise<void>
 }
 
-export default function EditSellerDialog({
+export default function EditUserDialog({
   selectedUser,
   fetchUsers
-}: EditSellerDialogProps) {
+}: EditUserDialogProps) {
   const [username, setUsername] = useState('')
   const [isStaff, setIsStaff] = useState(selectedUser.isStaff)
   const [firstName, setFirstName] = useState('')
