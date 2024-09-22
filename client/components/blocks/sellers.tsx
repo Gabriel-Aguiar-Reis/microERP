@@ -44,7 +44,8 @@ import { getUsers } from '@/lib/api'
 import CreateUserDialog from '@/components/custom/create-user-dialog'
 import AsideBar from '@/components/custom/aside-bar'
 import Header from '@/components/custom/header'
-import EditSellerDialog from '@/components/custom/edit-seller-dialog'
+import EditUserDialog from '@/components/custom/edit-user-dialog'
+import DeleteUserDialog from '@/components/custom/delete-user-dialog'
 
 export interface User {
   id: string
@@ -193,14 +194,11 @@ export function Sellers() {
                   </div>
                   <div className="flex items-center">
                     <div className="ml-auto flex items-center gap-2">
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="h-8 gap-1 text-sm"
-                      >
-                        <span className="sr-only sm:not-sr-only">Deletar</span>
-                      </Button>
-                      <EditSellerDialog
+                      <DeleteUserDialog
+                        selectedUser={selectedUser}
+                        fetchUsers={fetchUsers}
+                      />
+                      <EditUserDialog
                         selectedUser={selectedUser}
                         fetchUsers={fetchUsers}
                       />

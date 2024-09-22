@@ -132,7 +132,7 @@ export async function deleteUser(
   try {
     const response = await api.delete(`api/users/${id}/`)
     toast.success('Usuário deletado com sucesso!', {
-      description: `${username} foi removido da lista de vendedores.`
+      description: `${username} foi removido da lista de usuários.`
     })
     await fetchUsers()
     return response
