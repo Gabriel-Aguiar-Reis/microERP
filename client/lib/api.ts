@@ -1,3 +1,4 @@
+import { User } from '@/components/blocks/sellers'
 import api from '@/lib/axios'
 import { toast } from 'sonner'
 
@@ -87,7 +88,8 @@ type PatchUserParams = {
   lastName?: string
   email?: string
   isStaff?: boolean
-  fetchUsers: () => Promise<void>
+  fetchUsers?: () => Promise<void>
+  workOn?: string
 }
 
 export async function patchUser({
@@ -98,7 +100,8 @@ export async function patchUser({
   lastName,
   email,
   isStaff,
-  fetchUsers
+  fetchUsers,
+  workOn
 }: PatchUserParams) {
   const data: Record<string, any> = {}
 
@@ -107,14 +110,16 @@ export async function patchUser({
   if (firstName !== undefined) data.first_name = firstName
   if (lastName !== undefined) data.last_name = lastName
   if (email !== undefined) data.email = email
+  if (workOn !== undefined) data.work_on = workOn
   if (isStaff !== undefined) data.isStaff = isStaff
-
   try {
     const response = await api.patch(`api/users/${id}/`, data)
     toast.success('Usuário modificado com sucesso!', {
       description: `${username} teve seus dados modificados.`
     })
-    await fetchUsers()
+    if (fetchUsers) {
+      await fetchUsers()
+    }
     return response
   } catch (e) {
     toast.warning('Usuário não foi modificado!', {
@@ -139,6 +144,30 @@ export async function deleteUser(
   } catch (e) {
     toast.warning('Usuário não foi deletado!', {
       description: `Houve erro ao tentar deletar o usuário ${username}.`
+    })
+    return Promise.reject(e)
+  }
+}
+
+export async function getUser(selectedUser: User) {
+  try {
+    const response = await api.get(`api/users/${selectedUser.id}/`)
+    return response
+  } catch (e) {
+    toast.warning('Erro detectado!', {
+      description: `Houve erro ao tentar encontrar o usuário ${selectedUser.username}.`
+    })
+    return Promise.reject(e)
+  }
+}
+
+export async function getInventory(work_on?: string) {
+  try {
+    const response = await api.get(`api/inventories/${work_on}/`)
+    return response
+  } catch (e) {
+    toast.warning('Erro detectado!', {
+      description: `Houve erro ao tentar encontrar o estoque atual.`
     })
     return Promise.reject(e)
   }

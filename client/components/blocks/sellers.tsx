@@ -46,6 +46,8 @@ import AsideBar from '@/components/custom/aside-bar'
 import Header from '@/components/custom/header'
 import EditUserDialog from '@/components/custom/edit-user-dialog'
 import DeleteUserDialog from '@/components/custom/delete-user-dialog'
+import UserSellingsDialog from '@/components/custom/user-sellings-dialog'
+import ApproveUsersDialog from '@/components/custom/approve-users-dialog'
 
 export interface User {
   id: string
@@ -56,6 +58,7 @@ export interface User {
   email: string
   isStaff: boolean
   username: string
+  work_on: string
 }
 
 export function Sellers() {
@@ -77,7 +80,9 @@ export function Sellers() {
   }, [])
 
   useEffect(() => {
-    setCounter(users.length)
+    let userCounter = 0
+    users.map((user) => user.work_on && (userCounter += 1))
+    setCounter(userCounter)
   }, [users])
 
   return (
@@ -97,6 +102,11 @@ export function Sellers() {
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             <Tabs defaultValue="all">
               <div className="flex items-center">
+                <ApproveUsersDialog
+                  users={users}
+                  inventoryId={'d07e8795-3d6d-4d1e-b810-39f23933dc35'}
+                  fetchUsers={fetchUsers}
+                />
                 <div className="ml-auto flex items-center gap-2">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -150,17 +160,22 @@ export function Sellers() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {users.map((user) => (
-                          <SellersTableRow
-                            func={() => setSelectedUser(user)}
-                            key={user.email}
-                            initials={user.initials}
-                            fullName={user.fullName}
-                            email={user.email}
-                            isStaff={user.isStaff}
-                            username={user.username}
-                          />
-                        ))}
+                        {users.map(
+                          (user) =>
+                            user.work_on && (
+                              <SellersTableRow
+                                func={() => setSelectedUser(user)}
+                                key={user.email}
+                                initials={user.initials}
+                                fullName={user.fullName}
+                                email={user.email}
+                                isStaff={user.isStaff}
+                                username={user.username}
+                                id={user.id}
+                                isApproveDialog={false}
+                              />
+                            )
+                        )}
                       </TableBody>
                     </Table>
                   </CardContent>
@@ -261,14 +276,7 @@ export function Sellers() {
                       <li>
                         <div className="flex items-center">
                           <span className="font-semibold">Vendas</span>
-                          <Button
-                            size="icon"
-                            variant="secondary"
-                            className="ml-2 h-6 w-6"
-                          >
-                            <Expand className="h-4 w-4" />
-                            <span className="sr-only">Visualizar vendas</span>
-                          </Button>
+                          <UserSellingsDialog selectedUser={selectedUser} />
                         </div>
                       </li>
                     </ul>
