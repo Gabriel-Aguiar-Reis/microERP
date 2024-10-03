@@ -111,7 +111,7 @@ export async function patchUser({
   if (lastName !== undefined) data.last_name = lastName
   if (email !== undefined) data.email = email
   if (workOn !== undefined) data.work_on = workOn
-  if (isStaff !== undefined) data.isStaff = isStaff
+  if (isStaff !== undefined) data.is_staff = isStaff
   try {
     const response = await api.patch(`api/users/${id}/`, data)
     toast.success('Usuário modificado com sucesso!', {
