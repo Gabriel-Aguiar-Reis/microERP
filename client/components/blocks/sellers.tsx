@@ -53,6 +53,7 @@ import EditUserDialog from '@/components/custom/edit-user-dialog'
 import DeleteUserDialog from '@/components/custom/delete-user-dialog'
 import UserSellingsDialog from '@/components/custom/user-sellings-dialog'
 import ApproveUsersDialog from '@/components/custom/approve-users-dialog'
+import { Sale } from '@/components/custom/sale-table-row'
 
 export interface User {
   id: string
@@ -64,6 +65,7 @@ export interface User {
   isStaff: boolean
   username: string
   work_on: string
+  sales: Sale[]
 }
 
 export function Sellers() {
@@ -74,7 +76,7 @@ export function Sellers() {
 
   // Estados de paginação
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5
+  const itemsPerPage = 4
 
   const fetchUsers = async () => {
     try {
@@ -135,25 +137,6 @@ export function Sellers() {
                   fetchUsers={fetchUsers}
                 />
                 <div className="ml-auto flex items-center gap-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-8 gap-1">
-                        <ListFilter className="h-3.5 w-3.5" />
-                        <span className="sr-only sm:not-sr-only">Filtrar</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Filtrar por</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuCheckboxItem checked>
-                        Active
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Archived
-                      </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                   <Button
                     size="sm"
                     variant="outline"
@@ -184,6 +167,7 @@ export function Sellers() {
                           </TableHead>
                           <TableHead>Usuário</TableHead>
                           <TableHead>Cargo</TableHead>
+                          <TableHead className="text-center">Vendas</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -200,6 +184,7 @@ export function Sellers() {
                                 username={user.username}
                                 id={user.id}
                                 isApproveDialog={false}
+                                sales={user.sales}
                               />
                             )
                         )}

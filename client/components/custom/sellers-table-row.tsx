@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { patchUser, getInventory } from '@/lib/api'
 import { toast } from 'sonner'
+import { Sale } from '@/components/custom/sale-table-row'
 
 interface SellersTableRowProps {
   initials?: string
@@ -16,6 +17,7 @@ interface SellersTableRowProps {
   isApproveDialog?: boolean
   id: string
   inventoryId?: string
+  sales?: Sale[]
 }
 
 export default function SellersTableRow({
@@ -28,7 +30,8 @@ export default function SellersTableRow({
   funcPromise,
   isApproveDialog,
   inventoryId,
-  id
+  id,
+  sales
 }: SellersTableRowProps) {
   async function handleClick() {
     try {
@@ -77,6 +80,11 @@ export default function SellersTableRow({
               </li>
             )}
           </ul>
+        </TableCell>
+      )}
+      {!isApproveDialog && (
+        <TableCell className="text-center">
+          <span>{sales?.length || 0}</span>
         </TableCell>
       )}
       {isApproveDialog && (
