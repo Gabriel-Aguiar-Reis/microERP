@@ -7,7 +7,43 @@ const api = axios.create({
   }
 })
 
-// Request interceptor to add Authorization header
+// Helper para redirecionar ao login e limpar os tokens
+function redirectToLogin() {
+  localStorage.removeItem('accessToken')
+  localStorage.removeItem('refreshToken')
+
+  if (typeof window !== 'undefined') {
+    window.location.href = '/login'
+  }
+}
+
+// Função para atualizar o token usando o refresh token
+async function refreshAccessToken() {
+  const refreshToken = localStorage.getItem('refreshToken')
+  if (!refreshToken) {
+    redirectToLogin()
+    return null
+  }
+
+  try {
+    const response = await api.post('/token/refresh/', {
+      refreshToken: refreshToken
+    })
+
+    const { accessToken, refreshToken: newRefreshToken } = response.data
+
+    // Armazena os novos tokens
+    localStorage.setItem('accessToken', accessToken)
+    localStorage.setItem('refreshToken', newRefreshToken)
+
+    return accessToken
+  } catch (error) {
+    console.error('Erro ao tentar fazer refresh do token', error)
+    return null
+  }
+}
+
+// Intercepta todas as requests para adicionar o token de autenticação
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken')
@@ -19,85 +55,33 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-// Function to refresh the access token
-async function refreshAccessToken() {
-  try {
-    const refreshToken = localStorage.getItem('refreshToken')
-    if (!refreshToken) {
-      throw new Error('No refresh token available')
-    }
-    const response = await api.post('/token/refresh/', {
-      refresh: refreshToken
-    })
-    const newAccessToken = response.data.access
-    const newRefreshToken = response.data.refresh
-
-    localStorage.setItem('accessToken', newAccessToken)
-    localStorage.setItem('refreshToken', newRefreshToken)
-
-    return newAccessToken
-  } catch (e) {
-    throw e
-  }
-}
-
-// Response interceptor to handle 401 errors and retry requests
-let isRefreshing = false
-let failedRequestsQueue: any[] = []
-
+// Intercepta as respostas para lidar com erros de autenticação
 api.interceptors.response.use(
-  (response) => response,
+  (response) => response, // Sucesso
   async (error) => {
     const originalRequest = error.config
 
-    // Se o erro é 401 e não está tentando já o refresh
+    // Se a resposta for 401 (não autorizado) e não for uma tentativa de refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
 
-      // Se já está atualizando o token, enfileirar a requisição
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedRequestsQueue.push({ resolve, reject })
-        })
-          .then((token) => {
-            originalRequest.headers['Authorization'] = `Bearer ${token}`
-            return api(originalRequest)
-          })
-          .catch((err) => Promise.reject(err))
-      }
+      const newAccessToken = await refreshAccessToken()
 
-      isRefreshing = true
-
-      try {
-        // Tentando renovar o access token
-        const newAccessToken = await refreshAccessToken()
-
-        // Atualizando headers e reenviando requisições
-        failedRequestsQueue.forEach((req) => req.resolve(newAccessToken))
-        failedRequestsQueue = []
-
+      if (newAccessToken) {
+        // Atualiza o header Authorization com o novo token
         originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
-        return api(originalRequest) // Retentar a requisição original
-      } catch (err) {
-        // Se a renovação falhar, limpar tokens e redirecionar para login
-        failedRequestsQueue.forEach((req) => req.reject(err))
-        failedRequestsQueue = []
 
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('refreshToken')
-
-        // Redirecionar para o login
-        if (window.location.pathname !== '/login') {
-          window.location.href = '/login'
-        }
-
-        return Promise.reject(err)
-      } finally {
-        isRefreshing = false
+        // Repete a request original com o novo token
+        return api(originalRequest)
+      } else {
+        // Se o refresh falhar, redireciona ao login
+        redirectToLogin()
+        return Promise.reject(error)
       }
     }
 
-    return Promise.reject(error) // Rejeitar todos os outros erros
+    // Rejeita qualquer outro erro
+    return Promise.reject(error)
   }
 )
 
