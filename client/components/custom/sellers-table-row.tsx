@@ -36,7 +36,8 @@ export default function SellersTableRow({
       const response = await patchUser({
         id,
         fetchUsers: funcPromise,
-        workOn: inventoryResponse.data.id
+        workOn: inventoryResponse.data.id,
+        username: username
       })
       return response
     } catch (e) {
