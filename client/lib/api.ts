@@ -29,7 +29,7 @@ export async function postUser(
   firstName: string,
   lastName: string,
   email: string,
-  fetchUsers: () => Promise<void>
+  fetchUsers?: () => Promise<void>
 ) {
   const data = {
     username,
@@ -43,7 +43,9 @@ export async function postUser(
     toast.success('Usuário criado com sucesso!', {
       description: `${username} foi criado.`
     })
-    await fetchUsers()
+    if (fetchUsers) {
+      await fetchUsers()
+    }
     return response
   } catch (e) {
     toast.warning('Usuário não foi criado!', {

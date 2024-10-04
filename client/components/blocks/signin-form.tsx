@@ -18,7 +18,7 @@ import { Eye, EyeOff } from 'lucide-react'
 interface SignInFormProps {
   CreateAccountButton?: React.ReactNode
   isLoggedCreation?: boolean
-  fetchUsers: () => Promise<void>
+  fetchUsers?: () => Promise<void>
 }
 
 export function SignInForm({
