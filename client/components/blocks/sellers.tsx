@@ -29,6 +29,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem
+} from '@/components/ui/pagination'
 import { Separator } from '@/components/ui/separator'
 import {
   Table,
@@ -67,6 +72,10 @@ export function Sellers() {
   const [counter, setCounter] = useState(0)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
 
+  // Estados de paginação
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 5
+
   const fetchUsers = async () => {
     try {
       const usersData = await getUsers()
@@ -75,6 +84,7 @@ export function Sellers() {
       setErrorResponse(true)
     }
   }
+
   useEffect(() => {
     fetchUsers()
   }, [])
@@ -85,6 +95,23 @@ export function Sellers() {
     setCounter(userCounter)
   }, [users])
 
+  // Filtrar usuários da página atual
+  const indexOfLastUser = currentPage * itemsPerPage
+  const indexOfFirstUser = indexOfLastUser - itemsPerPage
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser)
+
+  // Navegação de página
+  const nextPage = () => {
+    if (currentPage < Math.ceil(users.length / itemsPerPage)) {
+      setCurrentPage((prevPage) => prevPage + 1)
+    }
+  }
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1)
+    }
+  }
   return (
     <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
       <AsideBar section="Sellers" />
@@ -141,7 +168,7 @@ export function Sellers() {
                 </div>
               </div>
               <TabsContent value="all">
-                <Card x-chunk="dashboard-06-chunk-0">
+                <Card>
                   <CardHeader>
                     <CardTitle>Vendedores</CardTitle>
                     <CardDescription>
@@ -160,7 +187,7 @@ export function Sellers() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {users.map(
+                        {currentUsers.map(
                           (user) =>
                             user.work_on && (
                               <SellersTableRow
@@ -181,9 +208,43 @@ export function Sellers() {
                   </CardContent>
                   <CardFooter>
                     <div className="text-xs text-muted-foreground">
-                      Mostrando <strong>1-10</strong> de{' '}
-                      <strong>{counter}</strong> vendedores
+                      Mostrando{' '}
+                      <strong>
+                        {indexOfFirstUser + 1}-
+                        {Math.min(indexOfLastUser, counter)}
+                      </strong>{' '}
+                      de <strong>{counter}</strong> vendedores
                     </div>
+                    <Pagination className="ml-auto mr-0 w-auto">
+                      <PaginationContent>
+                        <PaginationItem>
+                          <Button
+                            onClick={prevPage}
+                            disabled={currentPage === 1}
+                            size="icon"
+                            variant="outline"
+                            className="h-6 w-6"
+                          >
+                            <ChevronLeft className="h-3.5 w-3.5" />
+                            <span className="sr-only">Anterior</span>
+                          </Button>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <Button
+                            onClick={nextPage}
+                            disabled={
+                              currentPage === Math.ceil(counter / itemsPerPage)
+                            }
+                            size="icon"
+                            variant="outline"
+                            className="h-6 w-6"
+                          >
+                            <ChevronRight className="h-3.5 w-3.5" />
+                            <span className="sr-only">Próximo</span>
+                          </Button>
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
                   </CardFooter>
                 </Card>
               </TabsContent>
