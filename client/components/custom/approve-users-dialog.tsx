@@ -17,6 +17,7 @@ import {
   TableBody
 } from '@/components/ui/table'
 import SellersTableRow from '@/components/custom/sellers-table-row'
+import { toast } from 'sonner'
 interface ApproveUsersDialogProps {
   users: User[]
   inventoryId: string
@@ -27,10 +28,24 @@ export default function ApproveUsersDialog({
   inventoryId,
   fetchUsers
 }: ApproveUsersDialogProps) {
+  function handleClick() {
+    const filteredUsers = users.filter((user) => !user.work_on)
+    if (filteredUsers.length === 0) {
+      toast.warning('Sem aprovações!', {
+        description: `Não há usuários para aprovar no estoque atual.`
+      })
+    }
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline" className="h-8 gap-1 text-sm">
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-8 gap-1 text-sm"
+          onClick={handleClick}
+        >
           <UserCheck className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only">Aprovar Usuários</span>
         </Button>
