@@ -15,12 +15,14 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { postToken } from '@/lib/api'
 import api from '@/lib/axios'
+import { Eye, EyeOff } from 'lucide-react'
 
 export function LoginForm() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errorResponse, setErrorResponse] = useState(false)
   const router = useRouter()
+  const [passwordVisible, setPasswordVisible] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken')
@@ -64,16 +66,28 @@ export function LoginForm() {
               />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">Senha</Label>
+              <div className="flex justify-beetwen items-center">
+                <Input
+                  id="password"
+                  type={passwordVisible ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                {passwordVisible && (
+                  <Eye
+                    className="h-6 w-6 ml-4"
+                    onClick={() => setPasswordVisible(!passwordVisible)}
+                  />
+                )}
+                {!passwordVisible && (
+                  <EyeOff
+                    className="h-6 w-6 ml-4"
+                    onClick={() => setPasswordVisible(!passwordVisible)}
+                  />
+                )}
               </div>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
             </div>
 
             {errorResponse && (
