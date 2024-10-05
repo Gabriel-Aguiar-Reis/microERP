@@ -55,6 +55,8 @@ import UserSellingsDialog from '@/components/custom/user-sellings-dialog'
 import ApproveUsersDialog from '@/components/custom/approve-users-dialog'
 import { Sale } from '@/components/custom/sale-table-row'
 
+import { utils, writeFile } from 'xlsx'
+import { v4 as uuidv4 } from 'uuid'
 export interface User {
   id: string
   first_name: string
@@ -66,6 +68,33 @@ export interface User {
   username: string
   work_on: string
   sales: Sale[]
+}
+
+const exportToExcel = (users: User[]) => {
+  // Mapeie os dados dos usuários para o formato desejado
+  const formattedUsers = users.map((user) => ({
+    Nome: user.fullName,
+    Email: user.email,
+    Cargo: user.isStaff ? 'Administrador e Vendedor' : 'Vendedor',
+    NumVendas: user.sales.length
+  }))
+
+  // Crie uma nova planilha a partir dos dados formatados
+  const ws = utils.json_to_sheet(formattedUsers)
+  const wb = utils.book_new()
+  utils.book_append_sheet(wb, ws, 'Vendedores')
+
+  // Obtenha a data atual no formato ddMMyyyy
+  const currentDate = new Date().toLocaleDateString('pt-BR').replace(/\//g, '')
+
+  // Gera um UUID para o nome do arquivo
+  const uuid = uuidv4()
+
+  // Cria o nome do arquivo no formato ddMMyyyy-vendedores-uuidv4.xlsx
+  const fileName = `${currentDate}-vendedores-${uuid}.xlsx`
+
+  // Exporta a planilha com o nome gerado
+  writeFile(wb, fileName)
 }
 
 export function Sellers() {
@@ -141,6 +170,7 @@ export function Sellers() {
                     size="sm"
                     variant="outline"
                     className="h-8 gap-1 text-sm"
+                    onClick={() => exportToExcel(users)}
                   >
                     <File className="h-3.5 w-3.5" />
                     <span className="sr-only sm:not-sr-only">Exportar</span>
