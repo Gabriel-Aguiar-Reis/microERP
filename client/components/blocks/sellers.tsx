@@ -72,12 +72,14 @@ export interface User {
 
 const exportToExcel = (users: User[]) => {
   // Mapeie os dados dos usuários para o formato desejado
-  const formattedUsers = users.map((user) => ({
-    Nome: user.fullName,
-    Email: user.email,
-    Cargo: user.isStaff ? 'Administrador e Vendedor' : 'Vendedor',
-    NumVendas: user.sales.length
-  }))
+  const formattedUsers = users
+    .filter((user) => user.work_on)
+    .map((user) => ({
+      Nome: user.fullName,
+      Email: user.email,
+      Cargo: user.isStaff ? 'Administrador e Vendedor' : 'Vendedor',
+      NumVendas: user.sales.length
+    }))
 
   // Crie uma nova planilha a partir dos dados formatados
   const ws = utils.json_to_sheet(formattedUsers)
