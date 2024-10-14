@@ -112,7 +112,18 @@ export function Sellers() {
   const fetchUsers = async () => {
     try {
       const usersData = await getUsers()
-      setUsers(usersData)
+
+      // Função de ordenação:
+      const sortedUsers = usersData.sort((a: User, b: User) => {
+        // Primeiro, verifique se ambos são administradores ou vendedores
+        if (a.isStaff && !b.isStaff) return -1 // a é admin, então vem antes
+        if (!a.isStaff && b.isStaff) return 1 // b é admin, então a vem depois
+
+        // Se ambos têm o mesmo cargo, ordene pelo nome completo
+        return a.fullName.localeCompare(b.fullName)
+      })
+
+      setUsers(sortedUsers)
     } catch (e) {
       setErrorResponse(true)
     }
