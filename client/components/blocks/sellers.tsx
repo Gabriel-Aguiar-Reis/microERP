@@ -109,7 +109,7 @@ export function Sellers() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 4
 
-  const fetchUsers = async () => {
+  const fetchUsers: () => Promise<void> = async () => {
     try {
       const usersData = await getUsers()
 
