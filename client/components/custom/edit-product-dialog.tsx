@@ -13,8 +13,37 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Product } from '@/components/blocks/products'
+import { patchProduct } from '@/lib/api'
+import { useState } from 'react'
 
-export default function EditProductDialog() {
+export default function EditProductDialog({
+  productData,
+  func
+}: {
+  productData: Product
+  func: () => Promise<void>
+}) {
+  const [commercialId, setCommercialId] = useState(productData.commercial_id)
+  const [name, setName] = useState(productData.name)
+  const [description, setDescription] = useState(productData.description)
+  const [costPrice, setCostPrice] = useState(productData.cost_price)
+  const [sellPrice, setSellPrice] = useState(productData.sell_price)
+  const id = productData.id
+  async function handleClick() {
+    try {
+      await patchProduct({
+        id,
+        commercialId,
+        name,
+        description,
+        costPrice,
+        sellPrice,
+        fetchProducts: func
+      })
+    } catch (e) {}
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -44,7 +73,8 @@ export default function EditProductDialog() {
               <li>
                 <Input
                   id="commercial-id"
-                  defaultValue="PD01"
+                  defaultValue={productData.commercial_id}
+                  onChange={(e) => setCommercialId(e.target.value)}
                   className="col-span-1"
                 />
               </li>
@@ -60,7 +90,8 @@ export default function EditProductDialog() {
               <li>
                 <Input
                   id="name"
-                  defaultValue="Nome do Produto"
+                  defaultValue={productData.name}
+                  onChange={(e) => setName(e.target.value)}
                   className="col-span-3"
                 />
               </li>
@@ -78,7 +109,8 @@ export default function EditProductDialog() {
                   <Input
                     id="sell-price"
                     type="number"
-                    defaultValue="9.99"
+                    defaultValue={productData.cost_price}
+                    onChange={(e) => setCostPrice(e.target.valueAsNumber)}
                     min="0"
                     className="col-span-2"
                   />
@@ -96,7 +128,8 @@ export default function EditProductDialog() {
                   <Input
                     id="sell-price"
                     type="number"
-                    defaultValue="19.99"
+                    defaultValue={productData.sell_price}
+                    onChange={(e) => setSellPrice(e.target.valueAsNumber)}
                     min="0"
                     className="col-span-2"
                   />
@@ -128,7 +161,8 @@ export default function EditProductDialog() {
               <li>
                 <Textarea
                   id="description"
-                  defaultValue="Descrição do produto."
+                  defaultValue={productData.description}
+                  onChange={(e) => setDescription(e.target.value)}
                   className="col-span-3"
                 />
               </li>
@@ -137,7 +171,9 @@ export default function EditProductDialog() {
         </div>
         <DialogFooter>
           <DialogClose>
-            <Button type="submit">Salvar</Button>
+            <Button onClick={handleClick} type="submit">
+              Salvar
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

@@ -1,3 +1,4 @@
+import { Product } from '@/components/blocks/products'
 import { User } from '@/components/blocks/sellers'
 import api from '@/lib/axios'
 import { toast } from 'sonner'
@@ -170,6 +171,77 @@ export async function getInventory(work_on?: string) {
   } catch (e) {
     toast.warning('Erro detectado!', {
       description: `Houve erro ao tentar encontrar o estoque atual.`
+    })
+    return Promise.reject(e)
+  }
+}
+
+export async function getProducts(): Promise<Product[]> {
+  try {
+    const response = await api.get('api/products/')
+    return response.data
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
+
+export interface patchProductParams {
+  id: string
+  commercialId?: string
+  name?: string
+  description?: string
+  costPrice?: number
+  sellPrice?: number
+  fetchProducts?: () => Promise<void>
+}
+
+export async function patchProduct({
+  id,
+  commercialId,
+  name,
+  description,
+  costPrice,
+  sellPrice,
+  fetchProducts
+}: patchProductParams) {
+  const data: Record<string, any> = {}
+  if (commercialId !== undefined) data.commercial_id = commercialId
+  if (name !== undefined) data.name = name
+  if (description !== undefined) data.description = description
+  if (costPrice !== undefined) data.cost_price = costPrice
+  if (sellPrice !== undefined) data.sell_price = sellPrice
+
+  try {
+    const response = await api.patch(`api/products/${id}/`, data)
+    toast.success('Produto modificado com sucesso!', {
+      description: `O produto teve seus dados modificados.`
+    })
+    if (fetchProducts) {
+      await fetchProducts()
+    }
+    return response
+  } catch (e) {
+    toast.warning('Produto não foi modificado!', {
+      description: `Houve erro ao tentar modificar o produto.`
+    })
+    return Promise.reject(e)
+  }
+}
+
+export async function deleteProduct(
+  id: string,
+  fetchProducts: () => Promise<void>
+) {
+  try {
+    const response = await api.delete(`api/products/${id}/`)
+    toast.success('Produto deletado com sucesso!', {
+      description: `O produto foi removido do seu estoque.`
+    })
+    await fetchProducts()
+    return response
+  } catch (e) {
+    toast.warning('Produto não foi deletado!', {
+      description: `Houve erro ao tentar deletar o produto.`
     })
     return Promise.reject(e)
   }
