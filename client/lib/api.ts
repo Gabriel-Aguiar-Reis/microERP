@@ -246,3 +246,41 @@ export async function deleteProduct(
     return Promise.reject(e)
   }
 }
+
+export async function postProduct({
+  commercialId,
+  name,
+  description,
+  costPrice,
+  sellPrice,
+  fetchProducts
+}: {
+  commercialId: string
+  name: string
+  description: string
+  costPrice: number
+  sellPrice: number
+  fetchProducts: () => Promise<void>
+}) {
+  const data = {
+    commercial_id: commercialId,
+    name,
+    description,
+    cost_price: costPrice,
+    sell_price: sellPrice,
+    fetchProducts
+  }
+  try {
+    const response = await api.post('api/products/', data)
+    toast.success('Produto criado com sucesso!', {
+      description: `O produto ${commercialId} foi adicionado ao seu estoque.`
+    })
+    await fetchProducts()
+    return response
+  } catch (e) {
+    toast.warning('Produto não foi criado!', {
+      description: `Houve erro ao tentar criar o produto.`
+    })
+    return Promise.reject(e)
+  }
+}

@@ -39,6 +39,9 @@ import { deleteProduct, getProducts } from '@/lib/api'
 import { useEffect, useState } from 'react'
 import ProductTableRow from '@/components/custom/product-table.row'
 import DeleteProductDialog from '@/components/custom/delete-product-dialog'
+import CreateProductDialog from '@/components/custom/create-product-dialog'
+import { utils, writeFile } from 'xlsx'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface Product {
   id: string
@@ -58,6 +61,36 @@ export function Products() {
   // Estados de paginação
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 4
+
+  const exportToExcel = (products: Product[]) => {
+    // Mapeie os dados dos usuários para o formato desejado
+    const formattedProducts = products.map((product) => ({
+      Código: product.commercial_id,
+      Nome: product.name,
+      Preço_de_Custo: product.cost_price,
+      Preço_de_Venda: product.sell_price,
+      Descrição: product.description
+    }))
+
+    // Crie uma nova planilha a partir dos dados formatados
+    const ws = utils.json_to_sheet(formattedProducts)
+    const wb = utils.book_new()
+    utils.book_append_sheet(wb, ws, 'Produtos')
+
+    // Obtenha a data atual no formato ddMMyyyy
+    const currentDate = new Date()
+      .toLocaleDateString('pt-BR')
+      .replace(/\//g, '')
+
+    // Gera um UUID para o nome do arquivo
+    const uuid = uuidv4()
+
+    // Cria o nome do arquivo no formato ddMMyyyy-vendedores-uuidv4.xlsx
+    const fileName = `${currentDate}-produtos-${uuid}.xlsx`
+
+    // Exporta a planilha com o nome gerado
+    writeFile(wb, fileName)
+  }
 
   const fetchProducts: () => Promise<void> = async () => {
     try {
@@ -145,17 +178,13 @@ export function Products() {
                     size="sm"
                     variant="outline"
                     className="h-8 gap-1 text-sm"
+                    onClick={() => exportToExcel(products)}
                   >
                     <File className="h-3.5 w-3.5" />
                     <span className="sr-only sm:not-sr-only">Exportar</span>
                   </Button>
                   <div className="max-sm:hidden">
-                    <Button size="sm" className="h-8 gap-1">
-                      <PlusCircle className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Criar Novo Produto
-                      </span>
-                    </Button>
+                    <CreateProductDialog fetchProducts={fetchProducts} />
                   </div>
                 </div>
               </div>
