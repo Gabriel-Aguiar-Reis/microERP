@@ -62,6 +62,15 @@ export function Products() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 4
 
+  const updateProductInState = (updatedProduct: Product) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product
+      )
+    )
+    setSelectedProduct(updatedProduct) // Atualiza o card do produto selecionado
+  }
+
   const exportToExcel = (products: Product[]) => {
     // Mapeie os dados dos usuários para o formato desejado
     const formattedProducts = products.map((product) => ({
@@ -300,6 +309,7 @@ export function Products() {
                       <EditProductDialog
                         productData={selectedProduct}
                         func={fetchProducts}
+                        updateProduct={updateProductInState}
                       />
                     </div>
                   </div>

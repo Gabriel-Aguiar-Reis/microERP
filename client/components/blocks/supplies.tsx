@@ -29,6 +29,8 @@ import { useEffect, useState } from 'react'
 import { getSupplies } from '@/lib/api'
 import SupplyTableRow from '@/components/custom/supply-table-row'
 import { Product } from '@/components/blocks/products'
+import { utils, writeFile } from 'xlsx'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface SupplyProduct {
   product: Product
@@ -106,6 +108,45 @@ export function Supplies() {
     setCounter(supplyCounter)
   }, [supplies])
 
+  const exportToExcel = () => {
+    // Mapeie os dados de fornecimentos para o formato desejado
+    const formattedSupplies = supplies.map((supply) => ({
+      Código: supply.commercial_id,
+      Data: new Date(supply.supply_date).toLocaleDateString('pt-BR'),
+      Produtos: JSON.stringify(
+        supply.products_details.map((productDetail) => ({
+          commercial_id: productDetail.product.commercial_id,
+          quantity: productDetail.quantity,
+          cost_price: productDetail.product.cost_price,
+          sell_price: productDetail.product.sell_price
+        }))
+      ),
+      'Valor Total': supply.products_details.reduce(
+        (total, item) => total + item.quantity * item.product.sell_price,
+        0
+      )
+    }))
+
+    // Crie uma nova planilha a partir dos dados formatados
+    const ws = utils.json_to_sheet(formattedSupplies)
+    const wb = utils.book_new()
+    utils.book_append_sheet(wb, ws, 'Fornecimentos')
+
+    // Obtenha a data atual no formato ddMMyyyy
+    const currentDate = new Date()
+      .toLocaleDateString('pt-BR')
+      .replace(/\//g, '')
+
+    // Gera um UUID para o nome do arquivo
+    const uuid = uuidv4()
+
+    // Cria o nome do arquivo no formato ddMMyyyy-fornecimentos-uuidv4.xlsx
+    const fileName = `${currentDate}-fornecimentos-${uuid}.xlsx`
+
+    // Exporta a planilha com o nome gerado
+    writeFile(wb, fileName)
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
       <AsideBar section="Supplies" />
@@ -128,6 +169,7 @@ export function Supplies() {
                     size="sm"
                     variant="outline"
                     className="h-7 gap-1 text-sm"
+                    onClick={exportToExcel}
                   >
                     <File className="h-3.5 w-3.5" />
                     <span className="sr-only sm:not-sr-only">Exportar</span>

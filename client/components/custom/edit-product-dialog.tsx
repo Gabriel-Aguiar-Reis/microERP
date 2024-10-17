@@ -20,10 +20,12 @@ import { useState } from 'react'
 
 export default function EditProductDialog({
   productData,
-  func
+  func,
+  updateProduct
 }: {
   productData: Product
   func: () => Promise<void>
+  updateProduct: (updatedProduct: Product) => void
 }) {
   const [commercialId, setCommercialId] = useState(productData.commercial_id)
   const [name, setName] = useState(productData.name)
@@ -33,18 +35,23 @@ export default function EditProductDialog({
   const id = productData.id
   async function handleClick() {
     try {
-      await patchProduct({
+      const updatedProduct = {
         id,
-        commercialId,
+        commercial_id: commercialId,
         name,
         description,
-        costPrice,
-        sellPrice,
-        fetchProducts: func
-      })
-    } catch (e) {}
-  }
+        cost_price: costPrice,
+        sell_price: sellPrice,
+        func
+      }
 
+      await patchProduct(updatedProduct)
+
+      updateProduct(updatedProduct) // Atualiza o estado do produto no componente pai
+    } catch (e) {
+      console.error(e)
+    }
+  }
   return (
     <Dialog>
       <DialogTrigger asChild>
