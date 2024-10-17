@@ -1,13 +1,10 @@
+'use client'
+import { ChevronLeft, ChevronRight, File, Plus } from 'lucide-react'
 import {
-  Expand,
-  File,
-  ListFilter,
-  Plus,
-  PlusCircle,
-  Trash2
-} from 'lucide-react'
-
-import { Badge } from '@/components/ui/badge'
+  Pagination,
+  PaginationContent,
+  PaginationItem
+} from '@/components/ui/pagination'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -18,17 +15,8 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
-import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow
@@ -36,8 +24,88 @@ import {
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 import AsideBar from '@/components/custom/aside-bar'
 import Header from '@/components/custom/header'
+import CreateSupplyDialog from '@/components/custom/create-supply-dialog'
+import { useEffect, useState } from 'react'
+import { getSupplies } from '@/lib/api'
+import SupplyTableRow from '@/components/custom/supply-table-row'
+import { Product } from '@/components/blocks/products'
+
+export interface SupplyProduct {
+  product: Product
+  product_id: string
+  quantity: number
+}
+
+export interface Supply {
+  id: string
+  commercial_id: string
+  supply_date: string
+  products_details: SupplyProduct[]
+}
 
 export function Supplies() {
+  const [supplies, setSupplies] = useState<Supply[]>([])
+  const [fetchError, setFetchError] = useState(false)
+
+  const [counter, setCounter] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 4
+
+  const indexOfLastSupply = currentPage * itemsPerPage
+  const indexOfFirstSupply = indexOfLastSupply - itemsPerPage
+  const currentSupplies = supplies.slice(indexOfFirstSupply, indexOfLastSupply)
+
+  const nextPage = () => {
+    if (currentPage < Math.ceil(supplies.length / itemsPerPage)) {
+      setCurrentPage((prevPage) => prevPage + 1)
+    }
+  }
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1)
+    }
+  }
+
+  const fetchSupplies: () => Promise<void> = async () => {
+    try {
+      const suppliesData: Supply[] = await getSupplies()
+
+      const sortedSupplies = suppliesData.sort((a: Supply, b: Supply) => {
+        const regex = /([A-Za-z]+)(\d+)/
+        const aMatch = a.commercial_id.match(regex)
+        const bMatch = b.commercial_id.match(regex)
+
+        if (aMatch && bMatch) {
+          const [, aLetter, aNumber] = aMatch
+          const [, bLetter, bNumber] = bMatch
+
+          if (aLetter !== bLetter) {
+            return aLetter.localeCompare(bLetter)
+          }
+
+          return parseInt(aNumber) - parseInt(bNumber)
+        }
+
+        return 0
+      })
+
+      setSupplies(sortedSupplies)
+    } catch (e) {
+      setFetchError(true)
+    }
+  }
+
+  useEffect(() => {
+    fetchSupplies()
+  }, [])
+
+  useEffect(() => {
+    let supplyCounter = 0
+    supplies.map((supply) => (supplyCounter += 1))
+    setCounter(supplyCounter)
+  }, [supplies])
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
       <AsideBar section="Supplies" />
@@ -56,31 +124,6 @@ export function Supplies() {
             <Tabs defaultValue="all">
               <div className="flex items-center">
                 <div className="ml-auto flex items-center gap-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-7 gap-1 text-sm"
-                      >
-                        <ListFilter className="h-3.5 w-3.5" />
-                        <span className="sr-only sm:not-sr-only">Filtrar</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Filtrar por</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuCheckboxItem checked>
-                        Fulfilled
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Declined
-                      </DropdownMenuCheckboxItem>
-                      <DropdownMenuCheckboxItem>
-                        Refunded
-                      </DropdownMenuCheckboxItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                   <Button
                     size="sm"
                     variant="outline"
@@ -90,12 +133,7 @@ export function Supplies() {
                     <span className="sr-only sm:not-sr-only">Exportar</span>
                   </Button>
                   <div className="max-sm:hidden">
-                    <Button size="sm" className="h-8 gap-1">
-                      <PlusCircle className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Criar Novo Fornecimento
-                      </span>
-                    </Button>
+                    <CreateSupplyDialog fetchSupplies={fetchSupplies} />
                   </div>
                 </div>
               </div>
@@ -113,9 +151,6 @@ export function Supplies() {
                         <TableRow>
                           <TableHead>Código</TableHead>
                           <TableHead className="hidden md:table-cell">
-                            Registrado por
-                          </TableHead>
-                          <TableHead className="hidden md:table-cell">
                             Data
                           </TableHead>
                           <TableHead className="hidden md:table-cell">
@@ -128,61 +163,55 @@ export function Supplies() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        <TableRow className="bg-accent">
-                          <TableCell>
-                            <Badge className="text-xs" variant="secondary">
-                              F082024
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-11-23
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            <div className="flex">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="h-8 gap-1 text-sm items-center"
-                              >
-                                <Expand className="h-3.5 w-3.5" />
-                                <span className="sr-only sm:not-sr-only">
-                                  Visualizar
-                                </span>
-                              </Button>
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            R$329,00
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            <div className="flex">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="h-8 gap-1 text-sm items-center"
-                              >
-                                <Trash2 className="h-3.5 w-3.5" />
-                                <span className="sr-only sm:not-sr-only">
-                                  Deletar
-                                </span>
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
+                        {currentSupplies.map((supply) => (
+                          <SupplyTableRow
+                            key={supply.id}
+                            supply={supply}
+                            fetchSupplies={fetchSupplies}
+                          />
+                        ))}
                       </TableBody>
                     </Table>
                   </CardContent>
                   <CardFooter>
                     <div className="text-xs text-muted-foreground">
-                      Mostrando <strong>1-10</strong> de <strong>1</strong>{' '}
-                      fornecimentos
+                      Mostrando{' '}
+                      <strong>
+                        {indexOfFirstSupply + 1}-
+                        {Math.min(indexOfLastSupply, counter)}
+                      </strong>{' '}
+                      de <strong>{counter}</strong> fornecimentos
                     </div>
+                    <Pagination className="ml-auto mr-0 w-auto">
+                      <PaginationContent>
+                        <PaginationItem>
+                          <Button
+                            onClick={prevPage}
+                            disabled={currentPage === 1}
+                            size="icon"
+                            variant="outline"
+                            className="h-6 w-6"
+                          >
+                            <ChevronLeft className="h-3.5 w-3.5" />
+                            <span className="sr-only">Anterior</span>
+                          </Button>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <Button
+                            onClick={nextPage}
+                            disabled={
+                              currentPage === Math.ceil(counter / itemsPerPage)
+                            }
+                            size="icon"
+                            variant="outline"
+                            className="h-6 w-6"
+                          >
+                            <ChevronRight className="h-3.5 w-3.5" />
+                            <span className="sr-only">Próximo</span>
+                          </Button>
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
                   </CardFooter>
                 </Card>
               </TabsContent>

@@ -1,5 +1,6 @@
 import { Product } from '@/components/blocks/products'
 import { User } from '@/components/blocks/sellers'
+import { SupplyProduct } from '@/components/blocks/supplies'
 import api from '@/lib/axios'
 import { toast } from 'sonner'
 
@@ -176,6 +177,38 @@ export async function getInventory(work_on?: string) {
   }
 }
 
+export async function patchInventory({
+  id,
+  name,
+  description,
+  owner,
+  supplyIds
+}: {
+  id: string
+  name?: string
+  description?: string
+  owner?: string
+  supplyIds?: string[]
+}) {
+  const data: Record<string, any> = {}
+  if (name !== undefined) data.name = name
+  if (description !== undefined) data.description = description
+  if (owner !== undefined) data.owner = owner
+  if (supplyIds !== undefined) data.supply_ids = supplyIds
+  try {
+    const response = await api.patch(`api/inventories/${id}`, data)
+    toast.success('Inventário modificado com sucesso!', {
+      description: `O inventário teve seus dados modificados.`
+    })
+    return response
+  } catch (e) {
+    toast.warning('Inventário não foi modificado!', {
+      description: `Houve erro ao tentar modificar o inventário atual.`
+    })
+    return Promise.reject(e)
+  }
+}
+
 export async function getProducts(): Promise<Product[]> {
   try {
     const response = await api.get('api/products/')
@@ -280,6 +313,72 @@ export async function postProduct({
   } catch (e) {
     toast.warning('Produto não foi criado!', {
       description: `Houve erro ao tentar criar o produto.`
+    })
+    return Promise.reject(e)
+  }
+}
+
+export async function getSupplies() {
+  try {
+    const response = await api.get(`api/supplies/`)
+    return response.data
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
+
+export async function postSupply({
+  commercialId,
+  selectedProducts,
+  inventoryId,
+  fetchSupplies
+}: {
+  commercialId: string
+  selectedProducts: SupplyProduct[]
+  inventoryId: string
+  fetchSupplies: () => Promise<void>
+}) {
+  const data = {
+    commercial_id: commercialId,
+    products: selectedProducts
+  }
+  try {
+    const response = await api.post('api/supplies/', data)
+
+    const supplyId = response.data.id
+    const inventoryData: Record<string, any> = {}
+    inventoryData.supply_ids = [supplyId]
+    await api.patch(`api/inventories/${inventoryId}/`, inventoryData)
+    await fetchSupplies()
+    toast.success('Fornecimento criado com sucesso!', {
+      description: `O Fornecimento ${commercialId} foi adicionado ao seu estoque.`
+    })
+    return response
+  } catch (e) {
+    toast.warning('Fornecimento não foi criado!', {
+      description: `Houve erro ao tentar criar o fornecimento.`
+    })
+    return Promise.reject(e)
+  }
+}
+
+export async function deleteSupply({
+  supplyId,
+  fetchSupplies
+}: {
+  supplyId: string
+  fetchSupplies: () => Promise<void>
+}) {
+  try {
+    const response = await api.delete(`api/supplies/${supplyId}/`)
+    toast.success('Fornecimento deletado com sucesso!', {
+      description: `O fornecimento foi removido do estoque.`
+    })
+    await fetchSupplies()
+    return response
+  } catch (e) {
+    toast.warning('Fornecimento não foi deletado!', {
+      description: `Houve erro ao tentar deletar fornecimento.`
     })
     return Promise.reject(e)
   }
