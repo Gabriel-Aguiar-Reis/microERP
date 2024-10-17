@@ -1,4 +1,5 @@
 import { Supply } from '@/components/blocks/supplies'
+import SupplyProductsDialog from '@/components/custom/supply-products-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
@@ -50,16 +51,7 @@ export default function SupplyTableRow({
       </TableCell>
       <TableCell className="hidden md:table-cell">{formattedDate}</TableCell>
       <TableCell className="hidden md:table-cell">
-        <div className="flex">
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-8 gap-1 text-sm items-center"
-          >
-            <Expand className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only">Visualizar</span>
-          </Button>
-        </div>
+        <SupplyProductsDialog supply={supply} />
       </TableCell>
       <TableCell className="hidden md:table-cell">
         {getTotalCostPrice()}

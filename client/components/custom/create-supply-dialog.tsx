@@ -234,7 +234,7 @@ export default function CreateSupplyDialog({
                     <ProductTableRow
                       key={product.commercial_id}
                       productData={product}
-                      isInSupplyDialog={true}
+                      isInSupplyPostDialog={true}
                       SupplyDialogFunc={() => handleAddProduct(product)}
                     />
                   ))}

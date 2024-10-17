@@ -7,13 +7,17 @@ import { PlusCircle } from 'lucide-react'
 export default function ProductTableRow({
   productData,
   func,
-  isInSupplyDialog,
-  SupplyDialogFunc
+  isInSupplyPostDialog,
+  isSupplyProductsViewDialog,
+  SupplyDialogFunc,
+  quantity
 }: {
   productData: Product
   func?: () => void
-  isInSupplyDialog?: boolean
+  isInSupplyPostDialog?: boolean
+  isSupplyProductsViewDialog?: boolean
   SupplyDialogFunc?: () => void
+  quantity?: number
 }) {
   return (
     <TableRow onClick={func}>
@@ -38,7 +42,10 @@ export default function ProductTableRow({
           currency: 'BRL'
         })}
       </TableCell>
-      {isInSupplyDialog && (
+      <TableCell className="text-center">
+        {isSupplyProductsViewDialog && <span>{quantity}</span>}
+      </TableCell>
+      {isInSupplyPostDialog && (
         <TableCell className="text-center">
           <Button
             size="sm"
