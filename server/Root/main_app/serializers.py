@@ -74,7 +74,7 @@ class SaleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sale
-        fields = ['id', 'seller', 'inventory', 'sale_date', 'products', 'products_details']
+        fields = ['id', 'seller', 'inventory', 'sale_date', 'products', 'products_details', 'payment_method']
 
     def validate(self, data):
         inventory = self.instance.inventory if self.instance else data.get('inventory')

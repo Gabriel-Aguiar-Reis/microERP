@@ -102,6 +102,7 @@ class Sale(models.Model):
     inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE, blank=False, null=False, related_name='sales')
     sale_date = models.DateTimeField(auto_now_add=True)
     products = models.ManyToManyField(Product, through=SaleProduct, related_name='sales')
+    payment_method = models.CharField(max_length=30, blank=False)
 
     def __str__(self):
         return f'({self.sale_date}) {self.seller}'

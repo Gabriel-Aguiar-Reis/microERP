@@ -27,7 +27,6 @@ import { Separator } from '@/components/ui/separator'
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow
@@ -39,8 +38,9 @@ import { getSales, getUsers } from '@/lib/api'
 import { useEffect, useState } from 'react'
 import { User } from '@/components/blocks/sellers'
 import SaleTableRow from '@/components/custom/sale-table-row'
+import SaleProductCardRow from '@/components/custom/sale-product-card-row'
 
-interface ProductDetails {
+export interface ProductDetails {
   product: {
     commercial_id: string
     cost_price: number
@@ -58,11 +58,32 @@ export interface Sale {
   products_details: ProductDetails[]
   sale_date: string
   seller: string
+  payment_method: string
 }
 
 export function Sales() {
   const [sales, setSales] = useState<Sale[]>([])
   const [users, setUsers] = useState<User[]>([])
+  const [selectedSale, setSelectedSale] = useState<Sale | null>(null)
+
+  function formatDate(sale_date: string): string {
+    const date = new Date(sale_date)
+    return date.toLocaleDateString('pt-BR')
+  }
+
+  function getTotalSalePrice() {
+    let totalSalePrice = 0
+    if (selectedSale) {
+      selectedSale.products_details.map((detail) => {
+        let productTotal = detail.product.sell_price * detail.quantity
+        totalSalePrice += productTotal
+      })
+    }
+    return totalSalePrice.toLocaleString('pt-br', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+  }
 
   const fetchSales: () => Promise<void> = async () => {
     try {
@@ -78,9 +99,18 @@ export function Sales() {
     } catch (e) {}
   }
 
+  function getUserInfo(selectedSale: Sale) {
+    if (selectedSale) {
+      const userInfo: User = users.filter(
+        (user) => user.id === selectedSale.seller
+      )[0]
+      return userInfo
+    }
+  }
+
   useEffect(() => {
-    fetchSales()
     fetchUsers()
+    fetchSales()
   }, [])
 
   return (
@@ -148,7 +178,7 @@ export function Sales() {
                             Custo Total
                           </TableHead>
                           <TableHead className="text-center">
-                            Lucro Total
+                            Venda Total
                           </TableHead>
                         </TableRow>
                       </TableHeader>
@@ -158,6 +188,7 @@ export function Sales() {
                             key={sale.id}
                             mapedSale={sale}
                             users={users}
+                            func={() => setSelectedSale(sale)}
                           />
                         ))}
                       </TableBody>
@@ -174,120 +205,90 @@ export function Sales() {
             </Tabs>
           </div>
           <div>
-            <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
-              <CardHeader className="flex flex-row justify-between items-start bg-muted/50">
-                <div className="grid gap-0.5">
-                  <CardTitle className="group flex items-center gap-2 text-lg">
-                    Venda AB013C
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                    >
-                      <Copy className="h-3 w-3" />
-                      <span className="sr-only">Copiar Código da Venda</span>
-                    </Button>
-                  </CardTitle>
-                  <CardDescription>
-                    Data: 23 de Novembro de 2023
-                  </CardDescription>
-                </div>
-                <div className="flex items-center">
-                  <div className="ml-auto flex items-center gap-2">
-                    <div className="flex">
+            {selectedSale && (
+              <Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
+                <CardHeader className="flex flex-row justify-between items-start bg-muted/50">
+                  <div className="grid gap-0.5">
+                    <CardTitle className="group flex items-center gap-2 text-lg">
+                      Venda {selectedSale.id}
                       <Button
-                        size="sm"
-                        variant="destructive"
-                        className="h-8 gap-1 text-sm"
+                        size="icon"
+                        variant="outline"
+                        className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
                       >
-                        <span className="sr-only sm:not-sr-only">Deletar</span>
+                        <Copy className="h-3 w-3" />
+                        <span className="sr-only">Copiar Código da Venda</span>
                       </Button>
-                    </div>
-                    {/* <EditProductDialog /> */}
+                    </CardTitle>
+                    <CardDescription>
+                      Data: {formatDate(selectedSale.sale_date)}
+                    </CardDescription>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-6 text-sm">
-                <div className="grid gap-3">
-                  <div className="font-semibold">Detalhes da Venda</div>
-                  <ul className="grid gap-3">
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Glimmer Lamps x <span>2</span>
-                      </span>
-                      <span>R$250,00</span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span className="text-muted-foreground">
-                        Aqua Filters x <span>1</span>
-                      </span>
-                      <span>R$49,00</span>
-                    </li>
-                  </ul>
-                  <Separator className="my-2" />
-                  <ul className="grid gap-3">
-                    <li className="flex items-center justify-between font-semibold">
-                      <span className="text-muted-foreground">Total</span>
-                      <span>R$329,00</span>
-                    </li>
-                    <li>
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold">
-                          Método de Pagamento
-                        </span>
-                        <span>Cartão de Credito</span>
+                  <div className="flex items-center">
+                    <div className="ml-auto flex items-center gap-2">
+                      <div className="flex">
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="h-8 gap-1 text-sm"
+                        >
+                          <span className="sr-only sm:not-sr-only">
+                            Deletar
+                          </span>
+                        </Button>
                       </div>
-                    </li>
-                  </ul>
-                </div>
-                <Separator className="my-4" />
-                <div className="grid gap-3">
-                  <div className="font-semibold">Informações do Vendedor</div>
-                  <dl className="grid gap-3">
-                    <div className="flex items-center justify-between">
-                      <dt className="text-muted-foreground">Vendedor</dt>
-                      <dd>Liam Johnson</dd>
+                      {/* <EditProductDialog /> */}
                     </div>
-                    <div className="flex items-center justify-between">
-                      <dt className="text-muted-foreground">Email</dt>
-                      <dd>
-                        <a href="mailto:">liam@acme.com</a>
-                      </dd>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <dt className="text-muted-foreground">Telefone</dt>
-                      <dd>
-                        <a href="https://api.whatsapp.com/send?phone=">
-                          +55 12 98123-4567
-                        </a>
-                      </dd>
-                    </div>
-                  </dl>
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                <div className="text-xs text-muted-foreground">
-                  Atualizado{' '}
-                  <time dateTime="2023-11-23">23 de Novembro de 2023</time>
-                </div>
-                <Pagination className="ml-auto mr-0 w-auto">
-                  <PaginationContent>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronLeft className="h-3.5 w-3.5" />
-                        <span className="sr-only">Venda Anterior</span>
-                      </Button>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <Button size="icon" variant="outline" className="h-6 w-6">
-                        <ChevronRight className="h-3.5 w-3.5" />
-                        <span className="sr-only">Próxima Venda</span>
-                      </Button>
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </CardFooter>
-            </Card>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6 text-sm">
+                  <div className="grid gap-3">
+                    <div className="font-semibold">Detalhes da Venda</div>
+                    <ul className="grid gap-3">
+                      {selectedSale.products_details.map((productDetail) => (
+                        <SaleProductCardRow
+                          key={productDetail.product.commercial_id}
+                          productData={productDetail}
+                        />
+                      ))}
+                    </ul>
+                    <Separator className="my-2" />
+                    <ul className="grid gap-3">
+                      <li className="flex items-center justify-between font-semibold">
+                        <span className="text-muted-foreground">Total</span>
+                        <span>{getTotalSalePrice()}</span>
+                      </li>
+                      <li>
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold">
+                            Método de Pagamento
+                          </span>
+                          <span>{selectedSale.payment_method}</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <Separator className="my-4" />
+                  <div className="grid gap-3">
+                    <div className="font-semibold">Informações do Vendedor</div>
+                    <dl className="grid gap-3">
+                      <div className="flex items-center justify-between">
+                        <dt className="text-muted-foreground">Vendedor</dt>
+                        <dd>{getUserInfo(selectedSale)?.fullName}</dd>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <dt className="text-muted-foreground">Email</dt>
+                        <dd>
+                          <a href="mailto:">
+                            {getUserInfo(selectedSale)?.email}
+                          </a>
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </main>
       </div>

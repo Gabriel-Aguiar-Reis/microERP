@@ -1,17 +1,17 @@
-import { Expand } from 'lucide-react'
 import { Sale } from '@/components/blocks/sales'
 import { User } from '@/components/blocks/sellers'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { TableRow, TableCell } from '@/components/ui/table'
 import SaleProductsDialog from '@/components/custom/sale-products-dialog'
 
 export default function SaleTableRow({
   mapedSale,
-  users
+  users,
+  func
 }: {
   mapedSale: Sale
   users: User[]
+  func: () => void
 }) {
   function formatDate(sale_date: string): string {
     const date = new Date(sale_date)
@@ -51,12 +51,11 @@ export default function SaleTableRow({
     return totalProductQty
   }
 
-  let userInfo: User = users.filter((user) => user.id === mapedSale.seller)[0]
-  console.log('userInfo', userInfo)
+  const userInfo: User = users.filter((user) => user.id === mapedSale.seller)[0]
   return (
-    <TableRow className="bg-accent">
+    <TableRow className="bg-accent" onClick={func}>
       <TableCell>
-        <Badge className="text-xs" variant="secondary">
+        <Badge className="text-xs text-center" variant="secondary">
           {mapedSale.id}
         </Badge>
       </TableCell>
