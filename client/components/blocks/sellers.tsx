@@ -43,7 +43,7 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { Tabs, TabsContent } from '@/components/ui/tabs'
-import SellersTableRow from '@/components/custom/sellers-table-row'
+import SellerTableRow from '@/components/custom/seller-table-row'
 import { useEffect, useState } from 'react'
 import { getUsers } from '@/lib/api'
 import CreateUserDialog from '@/components/custom/create-user-dialog'
@@ -53,7 +53,7 @@ import EditUserDialog from '@/components/custom/edit-user-dialog'
 import DeleteUserDialog from '@/components/custom/delete-user-dialog'
 import UserSellingsDialog from '@/components/custom/user-sellings-dialog'
 import ApproveUsersDialog from '@/components/custom/approve-users-dialog'
-import { Sale } from '@/components/custom/sale-table-row'
+import { Sale } from '@/components/blocks/sales'
 
 import { utils, writeFile } from 'xlsx'
 import { v4 as uuidv4 } from 'uuid'
@@ -217,7 +217,7 @@ export function Sellers() {
                         {currentUsers.map(
                           (user) =>
                             user.work_on && (
-                              <SellersTableRow
+                              <SellerTableRow
                                 func={() => setSelectedUser(user)}
                                 key={user.email}
                                 initials={user.initials}

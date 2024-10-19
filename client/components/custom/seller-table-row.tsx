@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { patchUser, getInventory } from '@/lib/api'
 import { toast } from 'sonner'
-import { Sale } from '@/components/custom/sale-table-row'
+import { Sale } from '@/components/blocks/sales'
 
 interface SellersTableRowProps {
   initials?: string
@@ -20,7 +20,7 @@ interface SellersTableRowProps {
   sales?: Sale[]
 }
 
-export default function SellersTableRow({
+export default function SellerTableRow({
   initials,
   fullName,
   username,

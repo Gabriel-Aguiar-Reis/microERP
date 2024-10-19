@@ -16,7 +16,7 @@ import {
   TableHead,
   TableBody
 } from '@/components/ui/table'
-import SellersTableRow from '@/components/custom/sellers-table-row'
+import SellerTableRow from '@/components/custom/seller-table-row'
 import { toast } from 'sonner'
 interface ApproveUsersDialogProps {
   users: User[]
@@ -69,7 +69,7 @@ export default function ApproveUsersDialog({
             {users.map(
               (user) =>
                 !user.work_on && (
-                  <SellersTableRow
+                  <SellerTableRow
                     key={user.email}
                     inventoryId={inventoryId}
                     isApproveDialog={true}

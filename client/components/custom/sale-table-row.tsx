@@ -1,65 +1,58 @@
+import { Expand } from 'lucide-react'
+import { Sale } from '@/components/blocks/sales'
+import { User } from '@/components/blocks/sellers'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { TableRow, TableCell } from '@/components/ui/table'
+import SaleProductsDialog from '@/components/custom/sale-products-dialog'
 
-interface ProductDetails {
-  product: {
-    commercial_id: string
-    cost_price: number
-    description: string
-    id: string
-    name: string
-    sell_price: number
+export default function SaleTableRow({
+  mapedSale,
+  users
+}: {
+  mapedSale: Sale
+  users: User[]
+}) {
+  function formatDate(sale_date: string): string {
+    const date = new Date(sale_date)
+    return date.toLocaleDateString('pt-BR')
   }
-  quantity: number
-}
 
-export interface Sale {
-  id: string
-  inventory: string
-  products_details: ProductDetails[]
-  sale_date: string
-  seller: string
-}
+  function getTotalSalePrice() {
+    let totalSalePrice = 0
+    mapedSale.products_details.map((detail) => {
+      let productTotal = detail.product.sell_price * detail.quantity
+      totalSalePrice += productTotal
+    })
+    return totalSalePrice.toLocaleString('pt-br', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+  }
 
-function formatDate(sale_date: string): string {
-  const date = new Date(sale_date)
-  return date.toLocaleDateString('pt-BR')
-}
+  function getTotalCostPrice() {
+    let totalCostPrice = 0
+    mapedSale.products_details.map((detail) => {
+      let productTotal = detail.product.cost_price * detail.quantity
+      totalCostPrice += productTotal
+    })
+    return totalCostPrice.toLocaleString('pt-br', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+  }
 
-function getTotalSalePrice(mapedSale: Sale) {
-  let totalSalePrice = 0
-  mapedSale.products_details.map((detail) => {
-    let productTotal = detail.product.sell_price * detail.quantity
-    totalSalePrice += productTotal
-  })
-  return totalSalePrice.toLocaleString('pt-br', {
-    style: 'currency',
-    currency: 'BRL'
-  })
-}
+  function getProductsQty() {
+    let totalProductQty = 0
+    mapedSale.products_details.map((detail) => {
+      let productQty = detail.quantity
+      totalProductQty += productQty
+    })
+    return totalProductQty
+  }
 
-function getTotalCostPrice(mapedSale: Sale) {
-  let totalCostPrice = 0
-  mapedSale.products_details.map((detail) => {
-    let productTotal = detail.product.cost_price * detail.quantity
-    totalCostPrice += productTotal
-  })
-  return totalCostPrice.toLocaleString('pt-br', {
-    style: 'currency',
-    currency: 'BRL'
-  })
-}
-
-function getProductsQty(mapedSale: Sale) {
-  let totalProductQty = 0
-  mapedSale.products_details.map((detail) => {
-    let productQty = detail.quantity
-    totalProductQty += productQty
-  })
-  return totalProductQty
-}
-
-export default function SaleTableRow(mapedSale: Sale) {
+  let userInfo: User = users.filter((user) => user.id === mapedSale.seller)[0]
+  console.log('userInfo', userInfo)
   return (
     <TableRow className="bg-accent">
       <TableCell>
@@ -68,14 +61,20 @@ export default function SaleTableRow(mapedSale: Sale) {
         </Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">
+        {userInfo.first_name + ' ' + userInfo.last_name}
+      </TableCell>
+      <TableCell className="hidden md:table-cell">
         {formatDate(mapedSale.sale_date)}
       </TableCell>
-      <TableCell className="text-center">{getProductsQty(mapedSale)}</TableCell>
+      <TableCell className="text-center">{getProductsQty()}</TableCell>
+      <TableCell className="text-center">
+        <SaleProductsDialog sale={mapedSale} />
+      </TableCell>
       <TableCell className="text-center text-red-500">
-        {getTotalCostPrice(mapedSale)}
+        {getTotalCostPrice()}
       </TableCell>
       <TableCell className="text-right text-green-500">
-        {getTotalSalePrice(mapedSale)}
+        {getTotalSalePrice()}
       </TableCell>
     </TableRow>
   )

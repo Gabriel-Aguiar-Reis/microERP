@@ -18,7 +18,8 @@ import {
 } from '@/components/ui/table'
 import { getUser } from '@/lib/api'
 import { useState } from 'react'
-import SaleTableRow, { Sale } from '@/components/custom/sale-table-row'
+import SaleTableRow from '@/components/custom/seller-sales-table-row'
+import { Sale } from '@/components/blocks/sales'
 import { toast } from 'sonner'
 interface UserSellingsDialog {
   selectedUser: User

@@ -84,18 +84,6 @@ export async function getUsers() {
   }
 }
 
-type PatchUserParams = {
-  id: string
-  username?: string
-  password?: string
-  firstName?: string
-  lastName?: string
-  email?: string
-  isStaff?: boolean
-  fetchUsers?: () => Promise<void>
-  workOn?: string
-}
-
 export async function patchUser({
   id,
   username,
@@ -106,7 +94,17 @@ export async function patchUser({
   isStaff,
   fetchUsers,
   workOn
-}: PatchUserParams) {
+}: {
+  id: string
+  username?: string
+  password?: string
+  firstName?: string
+  lastName?: string
+  email?: string
+  isStaff?: boolean
+  fetchUsers?: () => Promise<void>
+  workOn?: string
+}) {
   const data: Record<string, any> = {}
 
   if (username !== undefined) data.username = username
@@ -218,16 +216,6 @@ export async function getProducts(): Promise<Product[]> {
   }
 }
 
-export interface patchProductParams {
-  id: string
-  commercialId?: string
-  name?: string
-  description?: string
-  costPrice?: number
-  sellPrice?: number
-  fetchProducts?: () => Promise<void>
-}
-
 export async function patchProduct({
   id,
   commercialId,
@@ -236,7 +224,15 @@ export async function patchProduct({
   costPrice,
   sellPrice,
   fetchProducts
-}: patchProductParams) {
+}: {
+  id: string
+  commercialId?: string
+  name?: string
+  description?: string
+  costPrice?: number
+  sellPrice?: number
+  fetchProducts?: () => Promise<void>
+}) {
   const data: Record<string, any> = {}
   if (commercialId !== undefined) data.commercial_id = commercialId
   if (name !== undefined) data.name = name
@@ -380,6 +376,15 @@ export async function deleteSupply({
     toast.warning('Fornecimento não foi deletado!', {
       description: `Houve erro ao tentar deletar fornecimento.`
     })
+    return Promise.reject(e)
+  }
+}
+
+export async function getSales() {
+  try {
+    const response = await api.get(`api/sales/`)
+    return response.data
+  } catch (e) {
     return Promise.reject(e)
   }
 }
