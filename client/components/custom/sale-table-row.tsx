@@ -51,7 +51,9 @@ export default function SaleTableRow({
     return totalProductQty
   }
 
-  const userInfo: User = users.filter((user) => user.id === mapedSale.seller)[0]
+  const userInfo: User | undefined = users.find(
+    (user) => user.id === mapedSale.seller
+  )
   return (
     <TableRow className="bg-accent" onClick={func}>
       <TableCell>
@@ -60,15 +62,15 @@ export default function SaleTableRow({
         </Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">
-        {userInfo.first_name + ' ' + userInfo.last_name}
+        {userInfo && userInfo.first_name + ' ' + userInfo.last_name}
       </TableCell>
       <TableCell className="hidden md:table-cell">
         {formatDate(mapedSale.sale_date)}
       </TableCell>
-      <TableCell className="text-center">{getProductsQty()}</TableCell>
       <TableCell className="text-center">
         <SaleProductsDialog sale={mapedSale} />
       </TableCell>
+      <TableCell className="text-center">{getProductsQty()}</TableCell>
       <TableCell className="text-center text-red-500">
         {getTotalCostPrice()}
       </TableCell>

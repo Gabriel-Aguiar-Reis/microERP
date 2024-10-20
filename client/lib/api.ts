@@ -16,6 +16,7 @@ export async function postToken(username: string, password: string) {
     if (typeof window !== 'undefined') {
       localStorage.setItem('accessToken', response.data.access)
       localStorage.setItem('refreshToken', response.data.refresh)
+      localStorage.setItem('username', username)
       api.defaults.headers.common['Authorization'] =
         `Bearer ${response.data.access}`
     }
@@ -384,6 +385,89 @@ export async function getSales() {
   try {
     const response = await api.get(`api/sales/`)
     return response.data
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
+
+export async function postSale({
+  paymentMethod,
+  products,
+  inventory,
+  users,
+  fetchSales,
+  fetchInventoryProducts
+}: {
+  paymentMethod: string
+  products: SupplyProduct[]
+  inventory: string
+  users: User[]
+  fetchSales: () => Promise<void>
+  fetchInventoryProducts: () => Promise<void>
+}) {
+  const user = users.find(
+    (user) => user.username === localStorage.getItem('username')
+  )
+  let data = {}
+  if (user) {
+    data = {
+      payment_method: paymentMethod,
+      products,
+      inventory,
+      seller: user.id
+    }
+  }
+
+  try {
+    const response = await api.post(`api/sales/`, data)
+    await fetchSales()
+    await fetchInventoryProducts()
+    toast.success('Venda criada com sucesso!', {
+      description: `A venda foi adicionada ao seu estoque.`
+    })
+    return response
+  } catch (e) {
+    toast.warning('Venda não foi criada!', {
+      description: `Houve erro ao tentar criar a venda.`
+    })
+    return Promise.reject(e)
+  }
+}
+
+export async function deleteSale({
+  saleId,
+  fetchSales,
+  fetchProducts
+}: {
+  saleId: string
+  fetchSales: () => Promise<void>
+  fetchProducts: () => Promise<void>
+}) {
+  try {
+    const response = await api.delete(`api/sales/${saleId}/`)
+    toast.success('Venda deletada com sucesso!', {
+      description: `A venda foi deletada do seu estoque.`
+    })
+    await fetchSales()
+    await fetchProducts()
+    return response
+  } catch (e) {
+    toast.warning('Venda não foi deletada!', {
+      description: `Houve erro ao tentar deletar a venda.`
+    })
+    return Promise.reject(e)
+  }
+}
+
+export async function getInventoryProducts({
+  inventoryId
+}: {
+  inventoryId: string
+}) {
+  try {
+    const response = await api.get(`api/inventories/${inventoryId}/`)
+    console.log(response.data?.inventory_products_details)
+    return response.data?.inventory_products_details
   } catch (e) {
     return Promise.reject(e)
   }

@@ -33,7 +33,7 @@ import { utils, writeFile } from 'xlsx'
 import { v4 as uuidv4 } from 'uuid'
 
 export interface SupplyProduct {
-  product: Product
+  product?: Product
   product_id: string
   quantity: number
 }
@@ -115,14 +115,16 @@ export function Supplies() {
       Data: new Date(supply.supply_date).toLocaleDateString('pt-BR'),
       Produtos: JSON.stringify(
         supply.products_details.map((productDetail) => ({
-          commercial_id: productDetail.product.commercial_id,
+          commercial_id:
+            productDetail.product && productDetail.product.commercial_id,
           quantity: productDetail.quantity,
-          cost_price: productDetail.product.cost_price,
-          sell_price: productDetail.product.sell_price
+          cost_price: productDetail.product && productDetail.product.cost_price,
+          sell_price: productDetail.product && productDetail.product.sell_price
         }))
       ),
       'Valor Total': supply.products_details.reduce(
-        (total, item) => total + item.quantity * item.product.sell_price,
+        (total, item) =>
+          total + item.quantity * (item.product ? item.product.sell_price : 1),
         0
       )
     }))

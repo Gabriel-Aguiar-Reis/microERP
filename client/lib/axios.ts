@@ -11,6 +11,7 @@ const api = axios.create({
 function redirectToLogin() {
   localStorage.removeItem('accessToken')
   localStorage.removeItem('refreshToken')
+  localStorage.removeItem('username')
 
   if (typeof window !== 'undefined') {
     window.location.href = '/login'

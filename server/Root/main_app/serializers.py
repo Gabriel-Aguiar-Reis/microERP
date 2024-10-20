@@ -123,8 +123,6 @@ class SaleSerializer(serializers.ModelSerializer):
                     existing_sale_product.quantity = quantity_to_deduct
                     existing_sale_product.save()
 
-                    if inventory_product.quantity == 0:
-                        inventory_product.delete()
                 else:
                     if inventory_product.quantity < quantity_to_deduct:
                         raise serializers.ValidationError(f"Quantidade insuficiente do produto {product.name} no estoque.")
@@ -137,9 +135,6 @@ class SaleSerializer(serializers.ModelSerializer):
                         product=product,
                         quantity=quantity_to_deduct
                     )
-
-                    if inventory_product.quantity == 0:
-                        inventory_product.delete()
 
         instance.save()
         return instance
@@ -167,9 +162,6 @@ class SaleSerializer(serializers.ModelSerializer):
                     product=product, 
                     quantity=quantity_to_deduct
                 )
-
-                if inventory_product.quantity == 0:
-                    inventory_product.delete()
 
         return sale
 

@@ -8,15 +8,19 @@ export default function ProductTableRow({
   productData,
   func,
   isInSupplyPostDialog,
+  isInSalePostDialog,
   isSupplyProductsViewDialog,
   SupplyDialogFunc,
+  SaleDialogFunc,
   quantity
 }: {
   productData: Product
   func?: () => void
   isInSupplyPostDialog?: boolean
+  isInSalePostDialog?: boolean
   isSupplyProductsViewDialog?: boolean
   SupplyDialogFunc?: () => void
+  SaleDialogFunc?: () => void
   quantity?: number
 }) {
   return (
@@ -42,9 +46,11 @@ export default function ProductTableRow({
           currency: 'BRL'
         })}
       </TableCell>
-      <TableCell className="text-center">
-        {isSupplyProductsViewDialog && <span>{quantity}</span>}
-      </TableCell>
+      {isSupplyProductsViewDialog && (
+        <TableCell className="text-center">
+          <span>{quantity}</span>
+        </TableCell>
+      )}
       {isInSupplyPostDialog && (
         <TableCell className="text-center">
           <Button
@@ -57,6 +63,22 @@ export default function ProductTableRow({
             <span className="sr-only sm:not-sr-only">Adicionar</span>
           </Button>
         </TableCell>
+      )}
+      {isInSalePostDialog && (
+        <>
+          <TableCell className="text-center">{quantity}</TableCell>
+          <TableCell className="text-center">
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 gap-1 text-sm items-center"
+              onClick={SaleDialogFunc}
+            >
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only">Adicionar</span>
+            </Button>
+          </TableCell>
+        </>
       )}
     </TableRow>
   )

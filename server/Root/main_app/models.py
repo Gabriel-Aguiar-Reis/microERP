@@ -104,5 +104,28 @@ class Sale(models.Model):
     products = models.ManyToManyField(Product, through=SaleProduct, related_name='sales')
     payment_method = models.CharField(max_length=30, blank=False)
 
+    def delete(self, *args, **kwargs):
+        with transaction.atomic():
+            # Iterate through all SaleProduct records linked to this Sale
+            sale_products = SaleProduct.objects.filter(sale=self)
+            
+            for sale_product in sale_products:
+                product = sale_product.product
+                inventory_product = InventoryProduct.objects.filter(
+                    inventory=self.inventory, 
+                    product=product
+                ).first()
+                
+                if not inventory_product:
+                    # If the product doesn't exist in inventory, raise an error
+                    raise ValidationError(f"O produto {product.name} não existe no estoque {self.inventory.name}.")
+                
+                # Return the sold quantity to the inventory, even if quantity becomes 0
+                inventory_product.quantity += sale_product.quantity
+                inventory_product.save()
+
+            # After returning all products to inventory, delete the sale
+            super(Sale, self).delete(*args, **kwargs)
+
     def __str__(self):
         return f'({self.sale_date}) {self.seller}'

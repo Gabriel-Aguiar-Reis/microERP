@@ -4,11 +4,9 @@ import {
   ChevronRight,
   Copy,
   File,
-  Plus,
-  PlusCircle
+  PencilRuler,
+  Plus
 } from 'lucide-react'
-
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -34,21 +32,17 @@ import {
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 import AsideBar from '@/components/custom/aside-bar'
 import Header from '@/components/custom/header'
-import { getSales, getUsers } from '@/lib/api'
+import { getInventoryProducts, getSales, getUsers } from '@/lib/api'
 import { useEffect, useState } from 'react'
 import { User } from '@/components/blocks/sellers'
 import SaleTableRow from '@/components/custom/sale-table-row'
 import SaleProductCardRow from '@/components/custom/sale-product-card-row'
+import CreateSaleDialog from '@/components/custom/create-sale-dialog'
+import { Product } from '@/components/blocks/products'
+import DeleteSaleDialog from '@/components/custom/delete-sale-dialog'
 
 export interface ProductDetails {
-  product: {
-    commercial_id: string
-    cost_price: number
-    description: string
-    id: string
-    name: string
-    sell_price: number
-  }
+  product: Product
   quantity: number
 }
 
@@ -65,6 +59,60 @@ export function Sales() {
   const [sales, setSales] = useState<Sale[]>([])
   const [users, setUsers] = useState<User[]>([])
   const [selectedSale, setSelectedSale] = useState<Sale | null>(null)
+  const [counter, setCounter] = useState(0)
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 3
+
+  const indexOfLastSale = currentPage * itemsPerPage
+  const indexOfFirstSale = indexOfLastSale - itemsPerPage
+  const currentSales = sales.slice(indexOfFirstSale, indexOfLastSale)
+
+  const [products, setProducts] = useState<ProductDetails[]>([])
+
+  const fetchProducts: () => Promise<void> = async () => {
+    try {
+      const inventoryId: string = 'd07e8795-3d6d-4d1e-b810-39f23933dc35'
+      const productData: ProductDetails[] = await getInventoryProducts({
+        inventoryId
+      })
+
+      const sortedProducts = productData.sort(
+        (a: ProductDetails, b: ProductDetails) => {
+          const regex = /([A-Za-z]+)(\d+)/
+          const aMatch = a.product.commercial_id.match(regex)
+          const bMatch = b.product.commercial_id.match(regex)
+
+          if (aMatch && bMatch) {
+            const [, aLetter, aNumber] = aMatch
+            const [, bLetter, bNumber] = bMatch
+
+            if (aLetter !== bLetter) {
+              return aLetter.localeCompare(bLetter)
+            }
+
+            return parseInt(aNumber) - parseInt(bNumber)
+          }
+
+          return 0
+        }
+      )
+
+      setProducts(sortedProducts)
+    } catch (e) {}
+  }
+
+  const nextPage = () => {
+    if (currentPage < Math.ceil(sales.length / itemsPerPage)) {
+      setCurrentPage((prevPage) => prevPage + 1)
+    }
+  }
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1)
+    }
+  }
 
   function formatDate(sale_date: string): string {
     const date = new Date(sale_date)
@@ -85,17 +133,20 @@ export function Sales() {
     })
   }
 
-  const fetchSales: () => Promise<void> = async () => {
-    try {
-      const response = await getSales()
-      setSales(response)
-    } catch (e) {}
-  }
-
   const fetchUsers: () => Promise<void> = async () => {
     try {
       const response = await getUsers()
       setUsers(response)
+    } catch (e) {}
+  }
+
+  const fetchSales: () => Promise<void> = async () => {
+    try {
+      const response = await getSales()
+      const sortedSales = response.sort((a: Sale, b: Sale) => {
+        return new Date(b.sale_date).getTime() - new Date(a.sale_date).getTime()
+      })
+      setSales(sortedSales)
     } catch (e) {}
   }
 
@@ -111,7 +162,14 @@ export function Sales() {
   useEffect(() => {
     fetchUsers()
     fetchSales()
+    fetchProducts()
   }, [])
+
+  useEffect(() => {
+    let saleCounter = 0
+    sales.map((sale) => (saleCounter += 1))
+    setCounter(saleCounter)
+  }, [sales])
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
@@ -139,14 +197,12 @@ export function Sales() {
                     <File className="h-3.5 w-3.5" />
                     <span className="sr-only sm:not-sr-only">Exportar</span>
                   </Button>
-                  <div className="max-sm:hidden">
-                    <Button size="sm" className="h-8 gap-1">
-                      <PlusCircle className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Criar Nova Venda
-                      </span>
-                    </Button>
-                  </div>
+                  <CreateSaleDialog
+                    fetchSales={fetchSales}
+                    users={users}
+                    products={products}
+                    fetchProducts={fetchProducts}
+                  />
                 </div>
               </div>
               <TabsContent value="all">
@@ -183,7 +239,7 @@ export function Sales() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {sales.map((sale) => (
+                        {currentSales.map((sale) => (
                           <SaleTableRow
                             key={sale.id}
                             mapedSale={sale}
@@ -196,9 +252,43 @@ export function Sales() {
                   </CardContent>
                   <CardFooter>
                     <div className="text-xs text-muted-foreground">
-                      Mostrando <strong>1-10</strong> de <strong>1</strong>{' '}
-                      vendas
+                      Mostrando{' '}
+                      <strong>
+                        {indexOfFirstSale + 1}-
+                        {Math.min(indexOfLastSale, counter)}
+                      </strong>{' '}
+                      de <strong>{counter}</strong> vendas
                     </div>
+                    <Pagination className="ml-auto mr-0 w-auto">
+                      <PaginationContent>
+                        <PaginationItem>
+                          <Button
+                            onClick={prevPage}
+                            disabled={currentPage === 1}
+                            size="icon"
+                            variant="outline"
+                            className="h-6 w-6"
+                          >
+                            <ChevronLeft className="h-3.5 w-3.5" />
+                            <span className="sr-only">Anterior</span>
+                          </Button>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <Button
+                            onClick={nextPage}
+                            disabled={
+                              currentPage === Math.ceil(counter / itemsPerPage)
+                            }
+                            size="icon"
+                            variant="outline"
+                            className="h-6 w-6"
+                          >
+                            <ChevronRight className="h-3.5 w-3.5" />
+                            <span className="sr-only">Próximo</span>
+                          </Button>
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
                   </CardFooter>
                 </Card>
               </TabsContent>
@@ -226,18 +316,17 @@ export function Sales() {
                   </div>
                   <div className="flex items-center">
                     <div className="ml-auto flex items-center gap-2">
-                      <div className="flex">
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="h-8 gap-1 text-sm"
-                        >
-                          <span className="sr-only sm:not-sr-only">
-                            Deletar
-                          </span>
-                        </Button>
-                      </div>
-                      {/* <EditProductDialog /> */}
+                      <DeleteSaleDialog
+                        selectedSale={selectedSale}
+                        fetchSales={fetchSales}
+                        fetchProducts={fetchProducts}
+                      />
+                      <Button size="sm" className="h-8 gap-1">
+                        <PencilRuler className="h-3.5 w-3.5" />
+                        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                          Editar
+                        </span>
+                      </Button>
                     </div>
                   </div>
                 </CardHeader>
