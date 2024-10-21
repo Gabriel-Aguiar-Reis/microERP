@@ -40,6 +40,8 @@ import SaleProductCardRow from '@/components/custom/sale-product-card-row'
 import CreateSaleDialog from '@/components/custom/create-sale-dialog'
 import { Product } from '@/components/blocks/products'
 import DeleteSaleDialog from '@/components/custom/delete-sale-dialog'
+import { utils, writeFile } from 'xlsx'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface ProductDetails {
   product: Product
@@ -159,6 +161,58 @@ export function Sales() {
     }
   }
 
+  const exportToExcel = () => {
+    // Mapeie os dados dos usuários para o formato desejado
+    const formattedSales = sales.map((sale) => ({
+      Código: sale.id,
+      Vendedor:
+        getUserInfo(sale)?.first_name + ' ' + getUserInfo(sale)?.last_name,
+      Data: new Date(sale.sale_date).toLocaleDateString('pt-BR'),
+      Produtos: JSON.stringify(
+        sale.products_details.map((productDetail) => ({
+          commercial_id:
+            productDetail.product && productDetail.product.commercial_id,
+          quantity: productDetail.quantity,
+          cost_price: productDetail.product && productDetail.product.cost_price,
+          sell_price: productDetail.product && productDetail.product.sell_price
+        }))
+      ),
+      Quantidade: sale.products_details.reduce(
+        (total, item) => total + item.quantity,
+        0
+      ),
+      'Custo Total': sale.products_details.reduce(
+        (total, item) =>
+          total + item.quantity * (item.product ? item.product.cost_price : 1),
+        0
+      ),
+      'Venda Total': sale.products_details.reduce(
+        (total, item) =>
+          total + item.quantity * (item.product ? item.product.sell_price : 1),
+        0
+      )
+    }))
+
+    // Crie uma nova planilha a partir dos dados formatados
+    const ws = utils.json_to_sheet(formattedSales)
+    const wb = utils.book_new()
+    utils.book_append_sheet(wb, ws, 'Vendas')
+
+    // Obtenha a data atual no formato ddMMyyyy
+    const currentDate = new Date()
+      .toLocaleDateString('pt-BR')
+      .replace(/\//g, '')
+
+    // Gera um UUID para o nome do arquivo
+    const uuid = uuidv4()
+
+    // Cria o nome do arquivo no formato ddMMyyyy-vendedores-uuidv4.xlsx
+    const fileName = `${currentDate}-vendas-${uuid}.xlsx`
+
+    // Exporta a planilha com o nome gerado
+    writeFile(wb, fileName)
+  }
+
   useEffect(() => {
     fetchUsers()
     fetchSales()
@@ -193,6 +247,7 @@ export function Sales() {
                     size="sm"
                     variant="outline"
                     className="h-7 gap-1 text-sm"
+                    onClick={exportToExcel}
                   >
                     <File className="h-3.5 w-3.5" />
                     <span className="sr-only sm:not-sr-only">Exportar</span>
@@ -321,12 +376,12 @@ export function Sales() {
                         fetchSales={fetchSales}
                         fetchProducts={fetchProducts}
                       />
-                      <Button size="sm" className="h-8 gap-1">
+                      {/* <Button size="sm" className="h-8 gap-1">
                         <PencilRuler className="h-3.5 w-3.5" />
                         <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                           Editar
                         </span>
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 </CardHeader>
