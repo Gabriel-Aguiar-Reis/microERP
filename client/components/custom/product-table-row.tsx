@@ -12,7 +12,8 @@ export default function ProductTableRow({
   isSupplyProductsViewDialog,
   SupplyDialogFunc,
   SaleDialogFunc,
-  quantity
+  quantity,
+  isInInventoryTable
 }: {
   productData: Product
   func?: () => void
@@ -22,6 +23,7 @@ export default function ProductTableRow({
   SupplyDialogFunc?: () => void
   SaleDialogFunc?: () => void
   quantity?: number
+  isInInventoryTable?: boolean
 }) {
   return (
     <TableRow onClick={func}>
@@ -79,6 +81,9 @@ export default function ProductTableRow({
             </Button>
           </TableCell>
         </>
+      )}
+      {isInInventoryTable && (
+        <TableCell className="text-center">{quantity}</TableCell>
       )}
     </TableRow>
   )
