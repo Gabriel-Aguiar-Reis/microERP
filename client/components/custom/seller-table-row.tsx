@@ -35,14 +35,16 @@ export default function SellerTableRow({
 }: SellersTableRowProps) {
   async function handleClick() {
     try {
-      const inventoryResponse = await getInventory(inventoryId)
-      const response = await patchUser({
-        id,
-        fetchUsers: funcPromise,
-        workOn: inventoryResponse.data.id,
-        username: username
-      })
-      return response
+      if (inventoryId) {
+        const inventoryResponse = await getInventory(inventoryId)
+        const response = await patchUser({
+          id,
+          fetchUsers: funcPromise,
+          workOn: inventoryResponse.data.id,
+          username: username
+        })
+        return response
+      }
     } catch (e) {
       toast.warning('Erro detectado!', {
         description: `Houve erro ao tentar adicionar o usuário ao estoque.`

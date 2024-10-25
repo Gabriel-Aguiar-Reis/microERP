@@ -13,6 +13,7 @@ import Header from '@/components/custom/header'
 import { useEffect, useState } from 'react'
 import { ProductDetails, Sale } from '@/components/blocks/sales'
 import {
+  getInventory,
   getInventoryProducts,
   getSales,
   getSupplies,
@@ -22,8 +23,17 @@ import { User } from '@/components/blocks/sellers'
 import { Supply } from '@/components/blocks/supplies'
 import { Product } from '@/components/blocks/products'
 
+export interface Inventory {
+  id: string
+  name?: string
+  description?: string
+  owner?: string
+  supplyIds?: string[]
+}
+
 export function HomePage() {
   const [products, setProducts] = useState<ProductDetails[]>([])
+  const [inventory, setInventory] = useState<Inventory>()
   const [users, setUsers] = useState<User[]>([])
   const [sales, setSales] = useState<Sale[]>([])
   const [supplies, setSupplies] = useState<Supply[]>([])
@@ -225,17 +235,23 @@ export function HomePage() {
     }
   }
 
+  const fetchInventory = async () => {
+    const response = await getInventory('d07e8795-3d6d-4d1e-b810-39f23933dc35')
+    setInventory(response.data)
+  }
+
   useEffect(() => {
     fetchUsers()
     fetchSales()
     fetchProducts()
     fetchSupplies()
+    fetchInventory()
   }, [])
   return (
     <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">
       <AsideBar section="Home" />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <Header />
+        <Header inventoryName={inventory?.name} />
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
           <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4 mx-auto">
             <Card>

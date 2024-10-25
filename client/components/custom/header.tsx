@@ -34,14 +34,19 @@ import { Input } from '@/components/ui/input'
 
 interface HeaderProps {
   breadcrumbName?: string
+  inventoryName?: string
 }
 
-export default function Header({ breadcrumbName }: HeaderProps) {
+export default function Header({ breadcrumbName, inventoryName }: HeaderProps) {
   const router = useRouter()
   function handleQuit(): void {
     localStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
     router.push('/login')
+  }
+
+  const handleConfig = () => {
+    window.location.href = '/settings'
   }
 
   return (
@@ -134,7 +139,7 @@ export default function Header({ breadcrumbName }: HeaderProps) {
             </BreadcrumbItem>
           ) : (
             <h1 className="rounded-md bg-slate-100 text-slate-500 px-2">
-              Preciosas Semijoias
+              {inventoryName}
             </h1>
           )}
         </BreadcrumbList>
@@ -163,7 +168,9 @@ export default function Header({ breadcrumbName }: HeaderProps) {
           <DropdownMenuContent align="end" className="mx-12">
             <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Configurações</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleConfig}>
+              Configurações
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleQuit}>
               <span>Sair</span>

@@ -1,5 +1,6 @@
 import { Product } from '@/components/blocks/products'
 import { User } from '@/components/blocks/sellers'
+import { Inventory } from '@/components/blocks/home'
 import { SupplyProduct } from '@/components/blocks/supplies'
 import api from '@/lib/axios'
 import { toast } from 'sonner'
@@ -164,9 +165,9 @@ export async function getUser(selectedUser: User) {
   }
 }
 
-export async function getInventory(work_on?: string) {
+export async function getInventory(id: string) {
   try {
-    const response = await api.get(`api/inventories/${work_on}/`)
+    const response = await api.get(`api/inventories/${id}/`)
     return response
   } catch (e) {
     toast.warning('Erro detectado!', {
@@ -182,20 +183,14 @@ export async function patchInventory({
   description,
   owner,
   supplyIds
-}: {
-  id: string
-  name?: string
-  description?: string
-  owner?: string
-  supplyIds?: string[]
-}) {
+}: Inventory) {
   const data: Record<string, any> = {}
   if (name !== undefined) data.name = name
   if (description !== undefined) data.description = description
   if (owner !== undefined) data.owner = owner
   if (supplyIds !== undefined) data.supply_ids = supplyIds
   try {
-    const response = await api.patch(`api/inventories/${id}`, data)
+    const response = await api.patch(`api/inventories/${id}/`, data)
     toast.success('Inventário modificado com sucesso!', {
       description: `O inventário teve seus dados modificados.`
     })
