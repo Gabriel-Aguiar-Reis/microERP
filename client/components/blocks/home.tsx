@@ -177,9 +177,24 @@ export function HomePage() {
   const fetchSales = async () => {
     try {
       const response = await getSales()
-      setSales(response)
-    } catch (e) {}
+      const currentDate = new Date()
+      const currentMonth = currentDate.getMonth()
+      const currentYear = currentDate.getFullYear()
+
+      const filteredSales = response.filter((sale: Sale) => {
+        const saleDate = new Date(sale.sale_date)
+        return (
+          saleDate.getMonth() === currentMonth &&
+          saleDate.getFullYear() === currentYear
+        )
+      })
+
+      setSales(filteredSales)
+    } catch (e) {
+      console.error(e)
+    }
   }
+
   const fetchProducts = async () => {
     try {
       const response = await getInventoryProducts({
@@ -188,11 +203,26 @@ export function HomePage() {
       setProducts(response)
     } catch (e) {}
   }
+
   const fetchSupplies = async () => {
     try {
       const response = await getSupplies()
-      setSupplies(response)
-    } catch (e) {}
+      const currentDate = new Date()
+      const currentMonth = currentDate.getMonth()
+      const currentYear = currentDate.getFullYear()
+
+      const filteredSupplies = response.filter((supply: Supply) => {
+        const supplyDate = new Date(supply.supply_date) // Supondo que exista um campo supply_date
+        return (
+          supplyDate.getMonth() === currentMonth &&
+          supplyDate.getFullYear() === currentYear
+        )
+      })
+
+      setSupplies(filteredSupplies)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   useEffect(() => {
@@ -217,9 +247,6 @@ export function HomePage() {
                 <div className="text-2xl font-bold text-red-500">
                   - {getTotalCost()}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  + 20.1% em relação a julho
-                </p>
               </CardContent>
             </Card>
             <Card>
@@ -237,9 +264,6 @@ export function HomePage() {
                     currency: 'BRL'
                   })}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  + 60.7% em relação a julho
-                </p>
               </CardContent>
             </Card>
             <Card>
@@ -249,15 +273,12 @@ export function HomePage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">+ {getSalesQty()}</div>
-                <p className="text-xs text-muted-foreground">
-                  + 19% em relação a julho
-                </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Média valor vendas
+                  Média vendas
                 </CardTitle>
                 <ChartNoAxesCombined className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
@@ -269,9 +290,6 @@ export function HomePage() {
                     currency: 'BRL'
                   })}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  + 32% em relação a julho
-                </p>
               </CardContent>
             </Card>
             <Card>
@@ -302,7 +320,14 @@ export function HomePage() {
                   {greatesSellerBySalesAmount()?.greatestSeller.fullName}
                 </div>
                 <p className="text-xs text-muted-foreground text-green-500">
-                  + R$ {greatesSellerBySalesAmount()?.maxAmount}
+                  +{' '}
+                  {greatesSellerBySalesAmount()?.maxAmount.toLocaleString(
+                    'pt-br',
+                    {
+                      style: 'currency',
+                      currency: 'BRL'
+                    }
+                  )}
                 </p>
               </CardContent>
             </Card>
@@ -315,9 +340,6 @@ export function HomePage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">+ {getSuppliesQty()}</div>
-                <p className="text-xs text-muted-foreground">
-                  + 32% em relação a julho
-                </p>
               </CardContent>
             </Card>
             <Card>
@@ -345,7 +367,14 @@ export function HomePage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  + R$ {getTotalAmountByPaymentMethod('Dinheiro')}
+                  +{' '}
+                  {getTotalAmountByPaymentMethod('Dinheiro').toLocaleString(
+                    'pt-br',
+                    {
+                      style: 'currency',
+                      currency: 'BRL'
+                    }
+                  )}
                 </div>
                 <p className="text-xs text-muted-foreground">Dinheiro</p>
               </CardContent>
@@ -359,7 +388,13 @@ export function HomePage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  + R$ {getTotalAmountByPaymentMethod('Cartão de Crédito')}
+                  +{' '}
+                  {getTotalAmountByPaymentMethod(
+                    'Cartão de Crédito'
+                  ).toLocaleString('pt-br', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  })}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Cartão de Crédito
@@ -375,7 +410,13 @@ export function HomePage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  + R$ {getTotalAmountByPaymentMethod('Cartão de Débito')}
+                  +{' '}
+                  {getTotalAmountByPaymentMethod(
+                    'Cartão de Débito'
+                  ).toLocaleString('pt-br', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  })}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Cartão de Débito
@@ -391,7 +432,14 @@ export function HomePage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  + R$ {getTotalAmountByPaymentMethod('PIX')}
+                  +{' '}
+                  {getTotalAmountByPaymentMethod('PIX').toLocaleString(
+                    'pt-br',
+                    {
+                      style: 'currency',
+                      currency: 'BRL'
+                    }
+                  )}
                 </div>
                 <p className="text-xs text-muted-foreground">PIX</p>
               </CardContent>
