@@ -7,6 +7,7 @@ import {
   File,
   ListFilter,
   Plus,
+  Search,
   User
 } from 'lucide-react'
 
@@ -29,6 +30,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
 import {
   Pagination,
   PaginationContent,
@@ -104,6 +106,7 @@ export function Sellers() {
   const [users, setUsers] = useState<User[]>([])
   const [counter, setCounter] = useState(0)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
 
   // Estados de paginação
   const [currentPage, setCurrentPage] = useState(1)
@@ -142,7 +145,13 @@ export function Sellers() {
   // Filtrar usuários da página atual
   const indexOfLastUser = currentPage * itemsPerPage
   const indexOfFirstUser = indexOfLastUser - itemsPerPage
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser)
+  const currentUsers = users
+    .filter(
+      (user) =>
+        user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .slice(indexOfFirstUser, indexOfLastUser)
 
   // Navegação de página
   const nextPage = () => {
@@ -190,6 +199,16 @@ export function Sellers() {
                   </Button>
                   <div className="max-sm:hidden">
                     <CreateUserDialog fetchUsers={fetchUsers} />
+                  </div>
+                  <div className="relative ml-auto flex-1 md:grow-0">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground translate-y-0.5" />
+                    <Input
+                      type="search"
+                      placeholder="Pesquisar..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+                    />
                   </div>
                 </div>
               </div>

@@ -6,7 +6,8 @@ import {
   Copy,
   File,
   Plus,
-  PlusCircle
+  PlusCircle,
+  Search
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -18,6 +19,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import {
   Table,
@@ -57,6 +59,7 @@ export function Products() {
   const [fetchError, setFetchError] = useState(false)
   const [counter, setCounter] = useState(0)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
 
   // Estados de paginação
   const [currentPage, setCurrentPage] = useState(1)
@@ -147,10 +150,13 @@ export function Products() {
   // Filtrar usuários da página atual
   const indexOfLastProduct = currentPage * itemsPerPage
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage
-  const currentProducts = products.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  )
+  const currentProducts = products
+    .filter(
+      (product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.commercial_id.toLowerCase().includes(searchTerm.toLowerCase()) // Filtrar pelo nome ou ID
+    )
+    .slice(indexOfFirstProduct, indexOfLastProduct)
 
   // Navegação de página
   const nextPage = () => {
@@ -194,6 +200,16 @@ export function Products() {
                   </Button>
                   <div className="max-sm:hidden">
                     <CreateProductDialog fetchProducts={fetchProducts} />
+                  </div>
+                  <div className="relative ml-auto flex-1 md:grow-0">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground translate-y-0.5" />
+                    <Input
+                      type="search"
+                      placeholder="Pesquisar..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+                    />
                   </div>
                 </div>
               </div>

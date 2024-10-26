@@ -1,6 +1,6 @@
 'use client'
-import { ChevronLeft, ChevronRight, File, Plus } from 'lucide-react'
-
+import { ChevronLeft, ChevronRight, File, Plus, Search } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -36,13 +36,13 @@ export function Inventory() {
   const [products, setProducts] = useState<ProductDetails[]>([])
   const [fetchError, setFetchError] = useState(false)
   const [counter, setCounter] = useState(0)
+  const [searchTerm, setSearchTerm] = useState('')
 
   // Estados de paginação
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 4
   const filteredProducts = products.filter((detail) => detail.quantity > 0)
-
-  const exportToExcel = (products: ProductDetails[]) => {
+  const exportToExcel = () => {
     // Mapeie os dados dos usuários para o formato desejado
     const formattedProducts = filteredProducts.map((detail) => ({
       Código: detail.product.commercial_id,
@@ -118,10 +118,16 @@ export function Inventory() {
   // Filtrar usuários da página atual
   const indexOfLastProduct = currentPage * itemsPerPage
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage
-  const currentProducts = products.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  )
+  const currentProducts = products
+    .filter((detail) => detail.quantity > 0) // Produtos com quantidade > 0
+    .filter(
+      (detail) =>
+        detail.product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        detail.product.commercial_id
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) // Filtrar pelo nome ou ID
+    )
+    .slice(indexOfFirstProduct, indexOfLastProduct)
 
   // Navegação de página
   const nextPage = () => {
@@ -158,11 +164,21 @@ export function Inventory() {
                     size="sm"
                     variant="outline"
                     className="h-8 gap-1 text-sm"
-                    onClick={() => exportToExcel(products)}
+                    onClick={() => exportToExcel()}
                   >
                     <File className="h-3.5 w-3.5" />
                     <span className="sr-only sm:not-sr-only">Exportar</span>
                   </Button>
+                  <div className="relative ml-auto flex-1 md:grow-0">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground translate-y-0.5" />
+                    <Input
+                      type="search"
+                      placeholder="Pesquisar..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+                    />
+                  </div>
                 </div>
               </div>
               <TabsContent value="all">

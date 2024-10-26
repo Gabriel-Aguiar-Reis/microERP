@@ -145,38 +145,32 @@ export default function Header({ breadcrumbName, inventoryName }: HeaderProps) {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="relative ml-auto flex-1 md:grow-0">
-        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground translate-y-0.5" />
-        <Input
-          type="search"
-          placeholder="Pesquisar..."
-          className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-        />
-      </div>
-      <div className="max-sm:hidden">
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            asChild
-            className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-          >
-            <Button size="icon" className="overflow-hidden rounded-full">
-              <User
-                color="white"
-                className="h-4 w-4 transition-all group-hover:scale-110"
-              />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="mx-12">
-            <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleConfig}>
-              Configurações
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleQuit}>
-              <span>Sair</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="max-sm:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              asChild
+              className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-slate-900 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
+            >
+              <Button size="icon" className="overflow-hidden rounded-full">
+                <User
+                  color="white"
+                  className="h-4 w-4 transition-all group-hover:scale-110"
+                />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="mx-12">
+              <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleConfig}>
+                Configurações
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleQuit}>
+                <span>Sair</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   )

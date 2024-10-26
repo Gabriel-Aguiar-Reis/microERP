@@ -4,9 +4,10 @@ import {
   ChevronRight,
   Copy,
   File,
-  PencilRuler,
-  Plus
+  Plus,
+  Search
 } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -62,13 +63,32 @@ export function Sales() {
   const [users, setUsers] = useState<User[]>([])
   const [selectedSale, setSelectedSale] = useState<Sale | null>(null)
   const [counter, setCounter] = useState(0)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 3
 
   const indexOfLastSale = currentPage * itemsPerPage
   const indexOfFirstSale = indexOfLastSale - itemsPerPage
-  const currentSales = sales.slice(indexOfFirstSale, indexOfLastSale)
+  const currentSales = sales
+    .filter((sale) => {
+      // Encontra o vendedor correspondente
+      const user = users.find((user) => user.id === sale.seller)
+      const formattedDate = new Date(sale.sale_date)
+        .toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        })
+        .replace(/\//g, '') // Formata para "ddMMyyyy"
+
+      // Verifica se o termo de pesquisa corresponde ao nome completo ou à data formatada
+      return (
+        user?.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        formattedDate.includes(searchTerm)
+      )
+    })
+    .slice(indexOfFirstSale, indexOfLastSale)
 
   const [products, setProducts] = useState<ProductDetails[]>([])
 
@@ -258,6 +278,16 @@ export function Sales() {
                     products={products}
                     fetchProducts={fetchProducts}
                   />
+                  <div className="relative ml-auto flex-1 md:grow-0">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground translate-y-0.5" />
+                    <Input
+                      type="search"
+                      placeholder="Pesquisar..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+                    />
+                  </div>
                 </div>
               </div>
               <TabsContent value="all">

@@ -1,5 +1,5 @@
 'use client'
-import { ChevronLeft, ChevronRight, File, Plus } from 'lucide-react'
+import { ChevronLeft, ChevronRight, File, Plus, Search } from 'lucide-react'
 import {
   Pagination,
   PaginationContent,
@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -48,6 +49,7 @@ export interface Supply {
 export function Supplies() {
   const [supplies, setSupplies] = useState<Supply[]>([])
   const [fetchError, setFetchError] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const [counter, setCounter] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
@@ -55,7 +57,21 @@ export function Supplies() {
 
   const indexOfLastSupply = currentPage * itemsPerPage
   const indexOfFirstSupply = indexOfLastSupply - itemsPerPage
-  const currentSupplies = supplies.slice(indexOfFirstSupply, indexOfLastSupply)
+  const currentSupplies = supplies
+    .filter((supply) => {
+      const formattedDate = new Date(supply.supply_date)
+        .toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        })
+        .replace(/\//g, '') // Formata para "ddMMyyyy"
+      return (
+        supply.commercial_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        formattedDate.includes(searchTerm)
+      )
+    })
+    .slice(indexOfFirstSupply, indexOfLastSupply)
 
   const nextPage = () => {
     if (currentPage < Math.ceil(supplies.length / itemsPerPage)) {
@@ -178,6 +194,16 @@ export function Supplies() {
                   </Button>
                   <div className="max-sm:hidden">
                     <CreateSupplyDialog fetchSupplies={fetchSupplies} />
+                  </div>
+                  <div className="relative ml-auto flex-1 md:grow-0">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground translate-y-0.5" />
+                    <Input
+                      type="search"
+                      placeholder="Pesquisar..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
+                    />
                   </div>
                 </div>
               </div>
