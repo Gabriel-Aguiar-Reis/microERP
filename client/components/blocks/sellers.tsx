@@ -75,6 +75,7 @@ export interface User {
 const exportToExcel = (users: User[]) => {
   // Mapeie os dados dos usuários para o formato desejado
   const formattedUsers = users
+    .filter((user) => user.first_name !== 'sAdmin')
     .filter((user) => user.work_on)
     .map((user) => ({
       Nome: user.fullName,
@@ -146,6 +147,7 @@ export function Sellers() {
   const indexOfLastUser = currentPage * itemsPerPage
   const indexOfFirstUser = indexOfLastUser - itemsPerPage
   const currentUsers = users
+    .filter((user) => user.first_name !== 'sAdmin')
     .filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
