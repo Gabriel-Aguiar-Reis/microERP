@@ -397,8 +397,8 @@ export async function postSale({
   products: SupplyProduct[]
   inventory: string
   users: User[]
-  fetchSales: () => Promise<void>
-  fetchInventoryProducts: () => Promise<void>
+  fetchSales?: () => Promise<void>
+  fetchInventoryProducts?: () => Promise<void>
 }) {
   const user = users.find(
     (user) => user.username === localStorage.getItem('username')
@@ -415,8 +415,12 @@ export async function postSale({
 
   try {
     const response = await api.post(`api/sales/`, data)
-    await fetchSales()
-    await fetchInventoryProducts()
+    if (fetchSales) {
+      await fetchSales()
+    }
+    if (fetchInventoryProducts) {
+      await fetchInventoryProducts()
+    }
     toast.success('Venda criada com sucesso!', {
       description: `A venda foi adicionada ao seu estoque.`
     })
