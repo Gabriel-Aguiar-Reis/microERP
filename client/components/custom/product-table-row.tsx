@@ -27,7 +27,7 @@ export default function ProductTableRow({
 }) {
   return (
     <TableRow onClick={func}>
-      <TableCell className="hidden sm:table-cell">
+      <TableCell className="hidden md:table-cell text-center">
         <div className="bg-slate-200 rounded-lg h-16 w-16"></div>
       </TableCell>
       <TableCell>
@@ -35,14 +35,16 @@ export default function ProductTableRow({
           {productData.commercial_id}
         </Badge>
       </TableCell>
-      <TableCell>{productData.name}</TableCell>
-      <TableCell className="text-center">
+      <TableCell className="hidden md:table-cell text-center">
+        {productData.name}
+      </TableCell>
+      <TableCell className="hidden md:table-cell text-center">
         {productData.cost_price.toLocaleString('pt-br', {
           style: 'currency',
           currency: 'BRL'
         })}
       </TableCell>
-      <TableCell className="text-center">
+      <TableCell className="hidden md:table-cell text-center">
         {productData.sell_price.toLocaleString('pt-br', {
           style: 'currency',
           currency: 'BRL'

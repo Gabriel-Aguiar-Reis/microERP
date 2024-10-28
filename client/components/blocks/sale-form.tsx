@@ -196,10 +196,12 @@ export default function SaleForm() {
           </Select>
         </div>
         <div className="grid grid-cols-4">
-          <Card className="col-span-3 h-[360px] overflow-scroll">
+          <Card className="col-span-4 h-[360px] sm:col-span-3 overflow-scroll">
             <CardHeader>
               <div className="flex items-center">
-                <CardDescription>Lista de Produtos no Estoque</CardDescription>
+                <CardDescription className="hidden md:table-cell">
+                  Lista de Produtos no Estoque
+                </CardDescription>
                 <div className="relative ml-auto flex-1 md:grow-0">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground translate-y-0.5" />
                   <Input
@@ -216,20 +218,20 @@ export default function SaleForm() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="hidden sm:table-cell">
+                    <TableHead className="hidden md:table-cell text-center">
                       Imagem
                     </TableHead>
                     <TableHead>Código</TableHead>
-                    <TableHead>Nome</TableHead>
+                    <TableHead className="hidden md:table-cell text-center">
+                      Nome
+                    </TableHead>
                     <TableHead className="hidden md:table-cell text-center">
                       Preço de Custo
                     </TableHead>
                     <TableHead className="hidden md:table-cell text-center">
                       Preço de Venda
                     </TableHead>
-                    <TableHead className="hidden md:table-cell text-center">
-                      Quantidade
-                    </TableHead>
+                    <TableHead className="text-center">Quantidade</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -246,7 +248,7 @@ export default function SaleForm() {
               </Table>
             </CardContent>
           </Card>
-          <Card className="ml-4 max-h-[360px] overflow-scroll">
+          <Card className="col-span-4 max-sm:mt-4 sm:col-span-1 sm:ml-4 max-h-[360px] overflow-scroll">
             <CardHeader>
               <CardDescription>Listagem da Venda</CardDescription>
             </CardHeader>
