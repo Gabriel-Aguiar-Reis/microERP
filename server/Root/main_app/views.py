@@ -3,6 +3,7 @@ from drf_yasg.utils import swagger_auto_schema
 from .models import User, Supply, Sale, Inventory, Product
 from .serializers import UserSerializer, SupplySerializer, SaleSerializer, InventorySerializer, ProductSerializer
 from .permissions import IsStaffOrCreatingNonStaff, IsStaffOrReadOnly
+from rest_framework.exceptions import NotFound
 
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
@@ -18,14 +19,37 @@ class UserListCreateView(generics.ListCreateAPIView):
         return super().post(request, *args, **kwargs)
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsStaffOrCreatingNonStaff]
+
+    def get_object(self):
+        """
+        Override para buscar usuário tanto por UUID quanto por username.
+        """
+        # Verificar se estamos buscando pelo UUID ou pelo username
+        pk = self.kwargs.get('pk')
+        username = self.kwargs.get('username')
+
+        if pk:
+            # Buscar pelo UUID
+            try:
+                return User.objects.get(id=pk)
+            except User.DoesNotExist:
+                raise NotFound('User not found with this UUID.')
+        
+        elif username:
+            # Buscar pelo username
+            try:
+                return User.objects.get(username=username)
+            except User.DoesNotExist:
+                raise NotFound('User not found with this username.')
+        
+        raise NotFound('No identifier provided.')
 
     @swagger_auto_schema(tags=['user'])
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
-
+    
     @swagger_auto_schema(tags=['user'])
     def put(self, request, *args, **kwargs):
         return super().put(request, *args, **kwargs)

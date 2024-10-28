@@ -102,7 +102,7 @@ export function SellerLoginForm() {
           </div>
           <div className="mt-4 text-center text-sm">
             Não possui uma conta?{' '}
-            <Link href="/signin" className="underline">
+            <Link href="/sellersignin" className="underline">
               Se cadastrar
             </Link>
           </div>

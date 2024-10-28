@@ -165,6 +165,18 @@ export async function getUser(selectedUser: User) {
   }
 }
 
+export async function getUserByUsername(username: string) {
+  try {
+    const response = await api.get(`api/users/username/${username}/`)
+    return response
+  } catch (e) {
+    toast.warning('Erro detectado!', {
+      description: `Houve erro ao tentar encontrar o usuário ${username}.`
+    })
+    return Promise.reject(e)
+  }
+}
+
 export async function getInventory(id: string) {
   try {
     const response = await api.get(`api/inventories/${id}/`)
@@ -389,27 +401,24 @@ export async function postSale({
   paymentMethod,
   products,
   inventory,
-  users,
   fetchSales,
   fetchInventoryProducts
 }: {
   paymentMethod: string
   products: SupplyProduct[]
   inventory: string
-  users: User[]
   fetchSales?: () => Promise<void>
   fetchInventoryProducts?: () => Promise<void>
 }) {
-  const user = users.find(
-    (user) => user.username === localStorage.getItem('username')
-  )
+  const username = localStorage.getItem('username') || ''
+  const user = await getUserByUsername(username)
   let data = {}
   if (user) {
     data = {
       payment_method: paymentMethod,
       products,
       inventory,
-      seller: user.id
+      seller: user.data.id
     }
   }
 
@@ -465,7 +474,6 @@ export async function getInventoryProducts({
 }) {
   try {
     const response = await api.get(`api/inventories/${inventoryId}/`)
-    console.log(response.data?.inventory_products_details)
     return response.data?.inventory_products_details
   } catch (e) {
     return Promise.reject(e)

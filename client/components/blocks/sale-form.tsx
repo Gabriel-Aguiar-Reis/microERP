@@ -1,16 +1,6 @@
 'use client'
-import { PlusCircle, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -31,16 +21,9 @@ import {
 import ProductTableRow from '@/components/custom/product-table-row'
 import { Product } from '@/components/blocks/products'
 import { useEffect, useState } from 'react'
-import {
-  getInventoryProducts,
-  getProducts,
-  getUsers,
-  postSale,
-  postSupply
-} from '@/lib/api'
+import { getInventoryProducts, getUsers, postSale } from '@/lib/api'
 import SupplyCard from '@/components/custom/supply-card'
 import { SupplyProduct } from '@/components/blocks/supplies'
-import { User } from '@/components/blocks/sellers'
 import { ProductDetails } from '@/components/blocks/sales'
 
 import {
@@ -59,7 +42,6 @@ export default function SaleForm() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [products, setProducts] = useState<ProductDetails[]>([])
-  const [users, setUsers] = useState<User[]>([])
 
   const handleAddProduct = (product: Product) => {
     setSelectedProducts((prevProducts) => {
@@ -126,22 +108,14 @@ export default function SaleForm() {
       await postSale({
         paymentMethod,
         products: selectedProducts,
-        inventory: 'd07e8795-3d6d-4d1e-b810-39f23933dc35',
-        users
+        inventory: 'd07e8795-3d6d-4d1e-b810-39f23933dc35'
       })
+      window.location.href = '/endform'
     } catch (e) {
       return Promise.reject(e)
     }
   }
 
-  const fetchUsers = async () => {
-    try {
-      const response = await getUsers()
-      setUsers(response.data)
-    } catch (e) {
-      console.error(e)
-    }
-  }
   const fetchInventoryProducts: () => Promise<void> = async () => {
     try {
       const inventoryId: string = 'd07e8795-3d6d-4d1e-b810-39f23933dc35'
@@ -186,7 +160,6 @@ export default function SaleForm() {
 
   useEffect(() => {
     fetchInventoryProducts()
-    fetchUsers()
   }, [])
 
   return (

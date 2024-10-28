@@ -1,4 +1,4 @@
-import SaleForm from '@/components/blocks/sale-form'
+import EndSaleForm from '@/components/blocks/end-sale-form'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 }
 
 export default function Home() {
-  return <SaleForm />
+  return <EndSaleForm />
 }

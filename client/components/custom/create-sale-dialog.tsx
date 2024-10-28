@@ -51,12 +51,10 @@ import {
 
 export default function CreateSaleDialog({
   fetchSales,
-  users,
   products,
   fetchProducts
 }: {
   fetchSales: () => Promise<void>
-  users: User[]
   products: ProductDetails[]
   fetchProducts: () => Promise<void>
 }) {
@@ -131,7 +129,6 @@ export default function CreateSaleDialog({
         paymentMethod,
         products: selectedProducts,
         inventory: 'd07e8795-3d6d-4d1e-b810-39f23933dc35',
-        users,
         fetchSales,
         fetchInventoryProducts: fetchProducts
       })

@@ -13,7 +13,9 @@ function redirectToLogin() {
   localStorage.removeItem('refreshToken')
   localStorage.removeItem('username')
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && window.location.href.includes('/form')) {
+    window.location.href = '/sellerlogin'
+  } else if (typeof window !== 'undefined') {
     window.location.href = '/login'
   }
 }
@@ -61,6 +63,10 @@ api.interceptors.response.use(
   (response) => response, // Sucesso
   async (error) => {
     const originalRequest = error.config
+
+    if (error.response?.status === 404) {
+      redirectToLogin()
+    }
 
     // Se a resposta for 401 (não autorizado) e não for uma tentativa de refresh
     if (error.response?.status === 401 && !originalRequest._retry) {

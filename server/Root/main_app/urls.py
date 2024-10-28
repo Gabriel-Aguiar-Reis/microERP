@@ -11,6 +11,7 @@ from .views import (
 urlpatterns = [
     path('users/', UserListCreateView.as_view(), name='user-list-create'),
     path('users/<uuid:pk>/', UserDetailView.as_view(), name='user-detail'),
+    path('users/username/<str:username>/', UserDetailView.as_view(), name='user-detail-username'),
     path('supplies/', SupplyListCreateView.as_view(), name='supply-list-create'),
     path('supplies/<uuid:pk>/', SupplyDestroyView.as_view(), name='supply-destroy'),
     path('sales/', SaleListCreateView.as_view(), name='sale-list-create'),

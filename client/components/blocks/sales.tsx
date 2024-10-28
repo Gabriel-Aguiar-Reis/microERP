@@ -274,7 +274,6 @@ export function Sales() {
                   </Button>
                   <CreateSaleDialog
                     fetchSales={fetchSales}
-                    users={users}
                     products={products}
                     fetchProducts={fetchProducts}
                   />
