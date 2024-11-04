@@ -13,6 +13,7 @@ import Header from '@/components/custom/header'
 import { useEffect, useState } from 'react'
 import { ProductDetails, Sale } from '@/components/blocks/sales'
 import {
+  getInventories,
   getInventory,
   getInventoryProducts,
   getSales,
@@ -23,7 +24,7 @@ import { User } from '@/components/blocks/sellers'
 import { Supply } from '@/components/blocks/supplies'
 import { Product } from '@/components/blocks/products'
 
-export interface Inventory {
+export interface InventoryInterface {
   id: string
   name?: string
   description?: string
@@ -33,7 +34,7 @@ export interface Inventory {
 
 export function HomePage() {
   const [products, setProducts] = useState<ProductDetails[]>([])
-  const [inventory, setInventory] = useState<Inventory>()
+  const [inventory, setInventory] = useState<InventoryInterface>()
   const [users, setUsers] = useState<User[]>([])
   const [sales, setSales] = useState<Sale[]>([])
   const [supplies, setSupplies] = useState<Supply[]>([])
@@ -207,8 +208,9 @@ export function HomePage() {
 
   const fetchProducts = async () => {
     try {
+      const inventories: InventoryInterface[] = await getInventories()
       const response = await getInventoryProducts({
-        inventoryId: 'd07e8795-3d6d-4d1e-b810-39f23933dc35'
+        inventoryId: inventories[0].id
       })
       setProducts(response)
     } catch (e) {}
@@ -236,7 +238,8 @@ export function HomePage() {
   }
 
   const fetchInventory = async () => {
-    const response = await getInventory('d07e8795-3d6d-4d1e-b810-39f23933dc35')
+    const inventories: InventoryInterface[] = await getInventories()
+    const response = await getInventory(inventories[0].id)
     setInventory(response.data)
   }
 

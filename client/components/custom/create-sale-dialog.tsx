@@ -28,15 +28,9 @@ import {
 import ProductTableRow from '@/components/custom/product-table-row'
 import { Product } from '@/components/blocks/products'
 import { useEffect, useState } from 'react'
-import {
-  getInventoryProducts,
-  getProducts,
-  postSale,
-  postSupply
-} from '@/lib/api'
+import { getInventories, postSale } from '@/lib/api'
 import SupplyCard from '@/components/custom/supply-card'
 import { SupplyProduct } from '@/components/blocks/supplies'
-import { User } from '@/components/blocks/sellers'
 import { ProductDetails } from '@/components/blocks/sales'
 
 import {
@@ -48,6 +42,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { InventoryInterface } from '@/components/blocks/home'
 
 export default function CreateSaleDialog({
   fetchSales,
@@ -62,6 +57,7 @@ export default function CreateSaleDialog({
   const [selectedProducts, setSelectedProducts] = useState<SupplyProduct[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [inventories, setInventories] = useState<InventoryInterface[]>([])
 
   const handleAddProduct = (product: Product) => {
     setSelectedProducts((prevProducts) => {
@@ -128,7 +124,7 @@ export default function CreateSaleDialog({
       await postSale({
         paymentMethod,
         products: selectedProducts,
-        inventory: 'd07e8795-3d6d-4d1e-b810-39f23933dc35',
+        inventory: inventories[0].id,
         fetchSales,
         fetchInventoryProducts: fetchProducts
       })
@@ -153,6 +149,19 @@ export default function CreateSaleDialog({
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) // Filter by name or commercial ID
     )
+
+  const fetchInventories: () => Promise<void> = async () => {
+    try {
+      const inventories: InventoryInterface[] = await getInventories()
+      setInventories(inventories)
+    } catch (e) {
+      return Promise.reject(e)
+    }
+  }
+
+  useEffect(() => {
+    fetchInventories()
+  }, [])
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>

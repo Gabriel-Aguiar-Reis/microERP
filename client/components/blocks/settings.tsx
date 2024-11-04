@@ -12,14 +12,16 @@ import { Input } from '@/components/ui/input'
 import AsideBar from '@/components/custom/aside-bar'
 import Header from '@/components/custom/header'
 import { useEffect, useState } from 'react'
-import { getUsers, patchInventory, patchUser } from '@/lib/api'
+import { getInventories, getUsers, patchInventory, patchUser } from '@/lib/api'
 import { User } from '@/components/blocks/sellers'
+import { InventoryInterface } from '@/components/blocks/home'
 
 export function SettingsPage() {
   const [users, setUsers] = useState<User[]>([])
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const [passwordError, setPasswordError] = useState('')
+  const [inventories, setInventories] = useState<InventoryInterface[]>([])
 
   const validatePassword = (password: string) =>
     /^(?=.*?[0-9])(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[^0-9A-Za-z]).{8,32}$/.test(
@@ -36,7 +38,7 @@ export function SettingsPage() {
   }
   const changeInventoryName: () => Promise<void> = async () => {
     try {
-      await patchInventory({ id: 'd07e8795-3d6d-4d1e-b810-39f23933dc35', name })
+      await patchInventory({ id: inventories[0].id, name })
     } catch (e) {
       return Promise.reject(e)
     }
@@ -54,11 +56,23 @@ export function SettingsPage() {
       return Promise.reject(e)
     }
   }
+
+  const fetchInventories: () => Promise<void> = async () => {
+    try {
+      const inventories: InventoryInterface[] = await getInventories()
+      setInventories(inventories)
+    } catch (e) {
+      return Promise.reject(e)
+    }
+  }
+
   const fetchUsers = async () => {
     const response = await getUsers()
     setUsers(response)
   }
+
   useEffect(() => {
+    fetchInventories()
     fetchUsers()
   }, [])
 

@@ -33,7 +33,12 @@ import {
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 import AsideBar from '@/components/custom/aside-bar'
 import Header from '@/components/custom/header'
-import { getInventoryProducts, getSales, getUsers } from '@/lib/api'
+import {
+  getInventories,
+  getInventoryProducts,
+  getSales,
+  getUsers
+} from '@/lib/api'
 import { useEffect, useState } from 'react'
 import { User } from '@/components/blocks/sellers'
 import SaleTableRow from '@/components/custom/sale-table-row'
@@ -43,6 +48,7 @@ import { Product } from '@/components/blocks/products'
 import DeleteSaleDialog from '@/components/custom/delete-sale-dialog'
 import { utils, writeFile } from 'xlsx'
 import { v4 as uuidv4 } from 'uuid'
+import { InventoryInterface } from '@/components/blocks/home'
 
 export interface ProductDetails {
   product: Product
@@ -94,7 +100,8 @@ export function Sales() {
 
   const fetchProducts: () => Promise<void> = async () => {
     try {
-      const inventoryId: string = 'd07e8795-3d6d-4d1e-b810-39f23933dc35'
+      const inventories: InventoryInterface[] = await getInventories()
+      const inventoryId: string = inventories[0].id
       const productData: ProductDetails[] = await getInventoryProducts({
         inventoryId
       })

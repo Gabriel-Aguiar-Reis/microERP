@@ -47,7 +47,7 @@ import {
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 import SellerTableRow from '@/components/custom/seller-table-row'
 import { useEffect, useState } from 'react'
-import { getUsers } from '@/lib/api'
+import { getInventories, getUsers } from '@/lib/api'
 import CreateUserDialog from '@/components/custom/create-user-dialog'
 import AsideBar from '@/components/custom/aside-bar'
 import Header from '@/components/custom/header'
@@ -56,6 +56,7 @@ import DeleteUserDialog from '@/components/custom/delete-user-dialog'
 import UserSellingsDialog from '@/components/custom/user-sellings-dialog'
 import ApproveUsersDialog from '@/components/custom/approve-users-dialog'
 import { Sale } from '@/components/blocks/sales'
+import { InventoryInterface } from '@/components/blocks/home'
 
 import { utils, writeFile } from 'xlsx'
 import { v4 as uuidv4 } from 'uuid'
@@ -108,6 +109,7 @@ export function Sellers() {
   const [counter, setCounter] = useState(0)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [inventories, setInventories] = useState<InventoryInterface[]>([])
 
   // Estados de paginação
   const [currentPage, setCurrentPage] = useState(1)
@@ -133,7 +135,17 @@ export function Sellers() {
     }
   }
 
+  const fetchInventories: () => Promise<void> = async () => {
+    try {
+      const inventories: InventoryInterface[] = await getInventories()
+      setInventories(inventories)
+    } catch (e) {
+      return Promise.reject(e)
+    }
+  }
+
   useEffect(() => {
+    fetchInventories()
     fetchUsers()
   }, [])
 
@@ -186,7 +198,7 @@ export function Sellers() {
               <div className="flex items-center">
                 <ApproveUsersDialog
                   users={users}
-                  inventoryId={'d07e8795-3d6d-4d1e-b810-39f23933dc35'}
+                  inventoryId={inventories[0].id}
                   fetchUsers={fetchUsers}
                 />
                 <div className="ml-auto flex items-center gap-2">

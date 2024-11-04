@@ -25,12 +25,13 @@ import {
 } from '@/components/ui/pagination'
 import AsideBar from '@/components/custom/aside-bar'
 import Header from '@/components/custom/header'
-import { getInventoryProducts } from '@/lib/api'
+import { getInventories, getInventoryProducts } from '@/lib/api'
 import { useEffect, useState } from 'react'
 import ProductTableRow from '@/components/custom/product-table-row'
 import { utils, writeFile } from 'xlsx'
 import { v4 as uuidv4 } from 'uuid'
 import { ProductDetails } from '@/components/blocks/sales'
+import { InventoryInterface } from '@/components/blocks/home'
 
 export function Inventory() {
   const [products, setProducts] = useState<ProductDetails[]>([])
@@ -75,7 +76,8 @@ export function Inventory() {
 
   const fetchProducts: () => Promise<void> = async () => {
     try {
-      const inventoryId: string = 'd07e8795-3d6d-4d1e-b810-39f23933dc35'
+      const inventories: InventoryInterface[] = await getInventories()
+      const inventoryId: string = inventories[0].id
       const productData: ProductDetails[] = await getInventoryProducts({
         inventoryId
       })

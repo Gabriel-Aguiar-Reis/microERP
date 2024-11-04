@@ -28,9 +28,10 @@ import {
 import ProductTableRow from '@/components/custom/product-table-row'
 import { Product } from '@/components/blocks/products'
 import { useEffect, useState } from 'react'
-import { getProducts, postSupply } from '@/lib/api'
+import { getInventories, getProducts, postSupply } from '@/lib/api'
 import SupplyCard from '@/components/custom/supply-card'
 import { SupplyProduct } from '@/components/blocks/supplies'
+import { InventoryInterface } from '@/components/blocks/home'
 
 export default function CreateSupplyDialog({
   fetchSupplies
@@ -44,6 +45,7 @@ export default function CreateSupplyDialog({
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('') // New state for search input
   const [commercialIdError, setCommercialIdError] = useState('')
+  const [inventories, setInventories] = useState<InventoryInterface[]>([])
 
   const handleBlurCommercialId = () => {
     if (!commercialId) {
@@ -82,7 +84,17 @@ export default function CreateSupplyDialog({
     }
   }
 
+  const fetchInventories: () => Promise<void> = async () => {
+    try {
+      const inventories: InventoryInterface[] = await getInventories()
+      setInventories(inventories)
+    } catch (e) {
+      return Promise.reject(e)
+    }
+  }
+
   useEffect(() => {
+    fetchInventories()
     fetchProducts()
   }, [])
 
@@ -140,7 +152,7 @@ export default function CreateSupplyDialog({
       await postSupply({
         commercialId,
         selectedProducts,
-        inventoryId: 'd07e8795-3d6d-4d1e-b810-39f23933dc35',
+        inventoryId: inventories[0].id,
         fetchSupplies
       })
     } catch (e) {

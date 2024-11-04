@@ -21,7 +21,7 @@ import {
 import ProductTableRow from '@/components/custom/product-table-row'
 import { Product } from '@/components/blocks/products'
 import { useEffect, useState } from 'react'
-import { getInventoryProducts, getUsers, postSale } from '@/lib/api'
+import { getInventories, getInventoryProducts, postSale } from '@/lib/api'
 import SupplyCard from '@/components/custom/supply-card'
 import { SupplyProduct } from '@/components/blocks/supplies'
 import { ProductDetails } from '@/components/blocks/sales'
@@ -35,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { InventoryInterface } from '@/components/blocks/home'
 
 export default function SaleForm() {
   const [paymentMethod, setPaymentMethod] = useState('')
@@ -105,10 +106,11 @@ export default function SaleForm() {
 
   const handleClick = async () => {
     try {
+      const inventories: InventoryInterface[] = await getInventories()
       await postSale({
         paymentMethod,
         products: selectedProducts,
-        inventory: 'd07e8795-3d6d-4d1e-b810-39f23933dc35'
+        inventory: inventories[0].id
       })
       window.location.href = '/endform'
     } catch (e) {
@@ -118,9 +120,9 @@ export default function SaleForm() {
 
   const fetchInventoryProducts: () => Promise<void> = async () => {
     try {
-      const inventoryId: string = 'd07e8795-3d6d-4d1e-b810-39f23933dc35'
+      const inventories: InventoryInterface[] = await getInventories()
       const productData: ProductDetails[] = await getInventoryProducts({
-        inventoryId
+        inventoryId: inventories[0].id
       })
 
       const sortedProducts = productData.sort(
