@@ -109,7 +109,7 @@ export function Sellers() {
   const [counter, setCounter] = useState(0)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [inventories, setInventories] = useState<InventoryInterface[]>([])
+  const [inventory, setInventory] = useState<InventoryInterface | null>(null)
 
   // Estados de paginação
   const [currentPage, setCurrentPage] = useState(1)
@@ -137,8 +137,8 @@ export function Sellers() {
 
   const fetchInventories: () => Promise<void> = async () => {
     try {
-      const inventories: InventoryInterface[] = await getInventories()
-      setInventories(inventories)
+      const findedInventories: InventoryInterface[] = await getInventories()
+      setInventory(findedInventories[0])
     } catch (e) {
       return Promise.reject(e)
     }
@@ -198,7 +198,7 @@ export function Sellers() {
               <div className="flex items-center">
                 <ApproveUsersDialog
                   users={users}
-                  inventoryId={inventories[0].id}
+                  inventoryId={inventory ? inventory.id : ''}
                   fetchUsers={fetchUsers}
                 />
                 <div className="ml-auto flex items-center gap-2">
