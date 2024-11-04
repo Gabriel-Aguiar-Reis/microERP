@@ -65,8 +65,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'ERPserver.urls'
@@ -128,10 +127,15 @@ SWAGGER_SETTINGS = {
 WSGI_APPLICATION = 'ERPserver.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://preciosassemijoiasdb_user:7VmYwzJFP6pZJ8xqWytbtMjAErW4LxXY@dpg-cskf6apu0jms73bb6p9g-a/preciosassemijoiasdb',
+        conn_max_age=600
+    )
 }
 
 # Password validation
