@@ -1,6 +1,6 @@
 import { Product } from '@/components/blocks/products'
 import { User } from '@/components/blocks/sellers'
-import { Inventory } from '@/components/blocks/home'
+import { InventoryInterface } from '@/components/blocks/home'
 import { SupplyProduct } from '@/components/blocks/supplies'
 import api from '@/lib/axios'
 import { toast } from 'sonner'
@@ -177,6 +177,15 @@ export async function getUserByUsername(username: string) {
   }
 }
 
+export async function getInventories() {
+  try {
+    const response = await api.get(`api/inventories/`)
+    return response.data
+  } catch (e) {
+    return Promise.reject(e)
+  }
+}
+
 export async function getInventory(id: string) {
   try {
     const response = await api.get(`api/inventories/${id}/`)
@@ -195,7 +204,7 @@ export async function patchInventory({
   description,
   owner,
   supplyIds
-}: Inventory) {
+}: InventoryInterface) {
   const data: Record<string, any> = {}
   if (name !== undefined) data.name = name
   if (description !== undefined) data.description = description
