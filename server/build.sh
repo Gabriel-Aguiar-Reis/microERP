@@ -7,7 +7,7 @@ poetry shell
 
 poetry install
 
-cd root
+cd Root
 
 python manage.py makemigrations
 
