@@ -15,7 +15,7 @@ export default function ProductTableRow({
   quantity,
   isInInventoryTable
 }: {
-  productData: Product
+  productData?: Product
   func?: () => void
   isInSupplyPostDialog?: boolean
   isInSalePostDialog?: boolean
@@ -32,20 +32,20 @@ export default function ProductTableRow({
       </TableCell>
       <TableCell>
         <Badge className="text-xs" variant="secondary">
-          {productData.commercial_id}
+          {productData?.commercial_id}
         </Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell text-center">
-        {productData.name}
+        {productData?.name}
       </TableCell>
       <TableCell className="hidden md:table-cell text-center">
-        {productData.cost_price.toLocaleString('pt-br', {
+        {productData?.cost_price.toLocaleString('pt-br', {
           style: 'currency',
           currency: 'BRL'
         })}
       </TableCell>
       <TableCell className="hidden md:table-cell text-center">
-        {productData.sell_price.toLocaleString('pt-br', {
+        {productData?.sell_price.toLocaleString('pt-br', {
           style: 'currency',
           currency: 'BRL'
         })}
