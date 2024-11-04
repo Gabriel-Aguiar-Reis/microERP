@@ -33,8 +33,9 @@ export default function SupplyTableRow({
     let totalCostPrice = 0
     supply.products_details.map(
       (productInfo) =>
-        (totalCostPrice +=
-          productInfo.product.cost_price * productInfo.quantity)
+        (totalCostPrice += productInfo.product
+          ? productInfo.product.cost_price * productInfo.quantity
+          : 0 * productInfo.quantity)
     )
     return totalCostPrice.toLocaleString('pt-br', {
       style: 'currency',
