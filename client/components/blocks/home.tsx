@@ -77,7 +77,7 @@ export function HomePage() {
   }
 
   const getSaleAverage = () => {
-    return getTotalSell() / getSalesQty()
+    return getTotalSell() / getSalesQty() || 0
   }
 
   const greatestSellerBySalesNumber = () => {
