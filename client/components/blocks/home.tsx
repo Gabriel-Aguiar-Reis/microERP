@@ -88,14 +88,28 @@ export function HomePage() {
     let greatestSeller: User = users[0]
     let maxSales = 0
 
+    const currentDate = new Date()
+    const currentMonth = currentDate.getMonth()
+    const currentYear = currentDate.getFullYear()
+
     users.forEach((user) => {
-      const userSalesCount = user.sales.length
+      // Filtrar as vendas do usuário para incluir apenas as que ocorreram no mês atual
+      const currentMonthSales = user.sales.filter((sale) => {
+        const saleDate = new Date(sale.sale_date)
+        return (
+          saleDate.getMonth() === currentMonth &&
+          saleDate.getFullYear() === currentYear
+        )
+      })
+
+      const userSalesCount = currentMonthSales.length
 
       if (userSalesCount > maxSales) {
         maxSales = userSalesCount
         greatestSeller = user
       }
     })
+
     return greatestSeller
   }
 
@@ -107,18 +121,36 @@ export function HomePage() {
     let greatestSeller: User = users[0]
     let maxAmount = 0
 
+    const currentDate = new Date()
+    const currentMonth = currentDate.getMonth()
+    const currentYear = currentDate.getFullYear()
+
     users.forEach((user) => {
       let salesAmount = 0
-      user.sales.forEach((sale) => {
+
+      // Filtrar as vendas para incluir apenas as do mês atual
+      const currentMonthSales = user.sales.filter((sale) => {
+        const saleDate = new Date(sale.sale_date)
+        return (
+          saleDate.getMonth() === currentMonth &&
+          saleDate.getFullYear() === currentYear
+        )
+      })
+
+      // Calcular o valor total das vendas do mês atual
+      currentMonthSales.forEach((sale) => {
         sale.products_details.forEach((detail) => {
           salesAmount += detail.quantity * detail.product.sell_price
         })
       })
+
+      // Atualizar o maior vendedor caso o total de vendas seja o maior encontrado até agora
       if (salesAmount > maxAmount) {
         maxAmount = salesAmount
         greatestSeller = user
       }
     })
+
     return { greatestSeller, maxAmount }
   }
 
