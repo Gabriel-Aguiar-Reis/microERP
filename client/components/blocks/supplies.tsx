@@ -120,9 +120,25 @@ export function Supplies() {
 
   useEffect(() => {
     let supplyCounter = 0
-    supplies.map((supply) => (supplyCounter += 1))
+    supplies
+      .filter((supply) => {
+        const formattedDate = new Date(supply.supply_date)
+          .toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          })
+          .replace(/\//g, '') // Formata para "ddMMyyyy"
+        return (
+          supply.commercial_id
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          formattedDate.includes(searchTerm)
+        )
+      })
+      .map((supply) => (supplyCounter += 1))
     setCounter(supplyCounter)
-  }, [supplies])
+  }, [searchTerm, supplies])
 
   const exportToExcel = () => {
     // Mapeie os dados de fornecimentos para o formato desejado

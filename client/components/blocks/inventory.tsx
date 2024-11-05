@@ -113,9 +113,20 @@ export function Inventory() {
 
   useEffect(() => {
     let productsCounter = 0
-    products.map(() => (productsCounter += 1))
+    products
+      .filter((detail) => detail.quantity > 0) // Produtos com quantidade > 0
+      .filter(
+        (detail) =>
+          detail.product.name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          detail.product.commercial_id
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) // Filtrar pelo nome ou ID
+      )
+      .map(() => (productsCounter += 1))
     setCounter(productsCounter)
-  }, [products])
+  }, [products, searchTerm])
 
   // Filtrar usuários da página atual
   const indexOfLastProduct = currentPage * itemsPerPage

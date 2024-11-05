@@ -91,7 +91,8 @@ export function Sales() {
       // Verifica se o termo de pesquisa corresponde ao nome completo ou à data formatada
       return (
         user?.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        formattedDate.includes(searchTerm)
+        formattedDate.includes(searchTerm) ||
+        sale.id.toLowerCase().includes(searchTerm.toLowerCase())
       )
     })
     .slice(indexOfFirstSale, indexOfLastSale)
@@ -248,9 +249,28 @@ export function Sales() {
 
   useEffect(() => {
     let saleCounter = 0
-    sales.map((sale) => (saleCounter += 1))
+    sales
+      .filter((sale) => {
+        // Encontra o vendedor correspondente
+        const user = users.find((user) => user.id === sale.seller)
+        const formattedDate = new Date(sale.sale_date)
+          .toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          })
+          .replace(/\//g, '') // Formata para "ddMMyyyy"
+
+        // Verifica se o termo de pesquisa corresponde ao nome completo ou à data formatada
+        return (
+          user?.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          formattedDate.includes(searchTerm) ||
+          sale.id.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      })
+      .map((sale) => (saleCounter += 1))
     setCounter(saleCounter)
-  }, [sales])
+  }, [sales, searchTerm, users])
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-slate-50 bg-muted/40">

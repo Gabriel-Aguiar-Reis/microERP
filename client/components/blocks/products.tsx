@@ -143,9 +143,15 @@ export function Products() {
 
   useEffect(() => {
     let productsCounter = 0
-    products.map(() => (productsCounter += 1))
+    products
+      .filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.commercial_id.toLowerCase().includes(searchTerm.toLowerCase()) // Filtrar pelo nome ou ID
+      )
+      .map(() => (productsCounter += 1))
     setCounter(productsCounter)
-  }, [products])
+  }, [products, searchTerm])
 
   // Filtrar usuários da página atual
   const indexOfLastProduct = currentPage * itemsPerPage
