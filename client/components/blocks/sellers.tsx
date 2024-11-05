@@ -159,7 +159,7 @@ export function Sellers() {
   const indexOfLastUser = currentPage * itemsPerPage
   const indexOfFirstUser = indexOfLastUser - itemsPerPage
   const currentUsers = users
-    .filter((user) => user.first_name !== 'sAdmin')
+    .filter((user) => user.username !== 'sAdmin')
     .filter(
       (user) =>
         user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
