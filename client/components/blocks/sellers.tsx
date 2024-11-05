@@ -151,9 +151,19 @@ export function Sellers() {
 
   useEffect(() => {
     let userCounter = 0
-    users.map((user) => user.work_on && (userCounter += 1))
+    users
+      .filter((user) => user.username !== 'sAdmin')
+      .filter(
+        (user) =>
+          user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .map(
+        (user) =>
+          user.username !== 'sAdmin' && user.work_on && (userCounter += 1)
+      )
     setCounter(userCounter)
-  }, [users])
+  }, [searchTerm, users])
 
   // Filtrar usuários da página atual
   const indexOfLastUser = currentPage * itemsPerPage
