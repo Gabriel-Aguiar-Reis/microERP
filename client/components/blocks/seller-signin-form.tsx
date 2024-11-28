@@ -254,6 +254,24 @@ export function SellerSignInForm() {
               <p>{errorMessage}</p>
             </div>
           )}
+          <div className="grid mt-4">
+            <div>
+              <Button type="submit" onClick={handleSignIn} className="w-full">
+                Criar uma conta
+              </Button>
+            </div>
+          </div>
+          {errorResponse && (
+            <div className="mt-2 text-red-500 text-sm p-2 bg-red-100 rounded-md">
+              <p>{errorMessage}</p>
+            </div>
+          )}
+          <div className="mt-4 text-center text-sm">
+            Já tem uma conta?{' '}
+            <Link href="/sellerlogin" className="underline">
+              Entrar
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>
